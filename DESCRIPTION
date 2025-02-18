@@ -13,6 +13,8 @@ RoxygenNote: 7.3.2
 Depends: 
     tidyverse
 Imports: 
+    broom,
+    dials,
     parsnip,
     recipes,
     rsample,
