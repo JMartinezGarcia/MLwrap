@@ -1,4 +1,12 @@
-create_recipe <- function(df, formula, dep_var, num_vars, cat_vars, norm_num_vars,
+create_recipe <- function(formula, data){
+
+  rec = recipes::recipe(formula, data = df)
+
+  return(rec)
+}
+
+
+preprocessing <- function(df, formula, dep_var, num_vars, cat_vars, norm_num_vars,
                        encode_cat_vars, encode_dep_var){
 
           rec = recipes::recipe(formula, data = df)
@@ -38,7 +46,7 @@ create_recipe <- function(df, formula, dep_var, num_vars, cat_vars, norm_num_var
           if (!is.null(encode_cat_vars)){
             if(encode_cat_vars == "all"){
 
-              rec <- rec %>% recipes::step_dummy(all_of(cat_vars))
+              rec <- rec %>% recipes::step_dummy(all_of(cat_vars), one_hot = T)
 
             } else{
 
