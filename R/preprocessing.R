@@ -1,6 +1,6 @@
 create_recipe <- function(formula, data){
 
-  rec = recipes::recipe(formula, data = df)
+  rec = recipes::recipe(formula = formula, data = data)
 
   return(rec)
 }
