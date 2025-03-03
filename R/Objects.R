@@ -61,14 +61,12 @@ HyperparametersNN <- R6::R6Class("Neural Network Hyperparameters",
           n_neurons = NULL,
           learning_rate = NULL,
           activation_func = NULL,
-          default = NULL,
           n_neurons_tune = NULL,
           learning_rate_tune = NULL,
           activation_func_tune = NULL,
 
           initialize = function(n_neurons = NULL, learning_rate = NULL, activation_func = NULL){
 
-            self$default = TRUE
             self$n_neurons = n_neurons
             self$learning_rate = learning_rate
             self$activation_func = activation_func
@@ -86,18 +84,15 @@ HyperparametersNN <- R6::R6Class("Neural Network Hyperparameters",
             if (is.null(self$n_neurons)){
 
               #### DEFAULT VALUES
-
-              self$default = TRUE
+              self$n_neurons = c(5,20)
               self$n_neurons_tune = tune::tune()
 
             } else if (length(self$n_neurons) == 1) {
 
-              self$default = FALSE
               self$n_neurons_tune = self$n_neurons
 
             } else {
 
-              self$default = FALSE
               self$n_neurons_tune = tune::tune()
 
             }
@@ -111,18 +106,15 @@ HyperparametersNN <- R6::R6Class("Neural Network Hyperparameters",
             if (is.null(self$learning_rate)){
 
               #### DEFAULT VALUES
-
-              self$default = TRUE
+              self$learning_rate = c(1e-3, 1e-1)
               self$learning_rate_tune = tune::tune()
 
             } else if (length(self$learning_rate) == 1) {
 
-              self$default = FALSE
               self$learning_rate_tune = self$learning_rate
 
             } else {
 
-              self$default = FALSE
               self$learning_rate_tune = tune::tune()
 
             }
@@ -135,18 +127,15 @@ HyperparametersNN <- R6::R6Class("Neural Network Hyperparameters",
               if (is.null(self$activation_func)){
 
                 #### DEFAULT VALUES
-
-                self$default = TRUE
+                self$activation_func = c("tanh", "relu", "sigmoid")
                 self$activation_func_tune = tune::tune()
 
               } else if (length(self$activation_func) == 1) {
 
-                self$default = FALSE
                 self$activation_func_tune = self$activation_func
 
               } else {
 
-                self$default = FALSE
                 self$activation_func_tune = tune::tune()
 
               }
