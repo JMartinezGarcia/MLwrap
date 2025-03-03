@@ -53,7 +53,7 @@ encode_target <- function(rec, type_task, dep_var){
 
 }
 
-preprocessing <- function(df, formula, dep_var, num_vars, cat_vars, norm_num_vars,
+transformer <- function(df, formula, dep_var, num_vars, cat_vars, norm_num_vars,
                        encode_cat_vars, encode_dep_var){
 
           rec = create_recipe(formula = formula, data = df)
@@ -101,6 +101,20 @@ preprocessing <- function(df, formula, dep_var, num_vars, cat_vars, norm_num_var
 
           }
 
-          return(rec)
+          set.seed(123)
 
-    }
+          train_test_split <- rsample::initial_split(
+            data   = df,
+            prop   = 0.8
+          )
+
+          train_data <- rsample::training(train_test_split)
+          test_data  <- rsample::testing(train_test_split)
+
+          tidy_object <- TidyMLObject$new(dataframe = df, train_data = train_data, test_data = test_data, transformer = rec)
+
+          return(tidy_object)
+
+}
+
+
