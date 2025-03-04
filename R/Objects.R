@@ -12,6 +12,9 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
     workflow = NULL,
     metrics = NULL,
     tuner = NULL,
+    tuner_fit = NULL,
+    final_models = NULL,
+    task = NULL,
 
     initialize = function(full_data, transformer){
 
@@ -25,6 +28,9 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
       self$workflow = NULL
       self$metrics = NULL
       self$tuner = NULL
+      self$tuner_fit = NULL
+      self$final_models = NULL
+      self$task = NULL
     },
 
     add_train_data = function(train_data){
@@ -72,6 +78,24 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
     add_metrics = function(metrics){
 
       self$metrics <- metrics
+
+    },
+
+    add_tuner_fit = function(tuner_fit){
+
+      self$tuner_fit <- tuner_fit
+
+    },
+
+    add_final_models = function(models){
+
+      self$final_models = models
+
+    },
+
+    add_task = function(task){
+
+      self$task = task
 
     }
 

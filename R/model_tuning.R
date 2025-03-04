@@ -1,3 +1,24 @@
+######
+
+    #### BORRAR!!!!
+create_nn <- function(hyperparams, task, epochs){
+
+  model = parsnip::mlp(
+    hidden_units = hyperparams$n_neurons_tune,
+    epochs = epochs,
+    learn_rate = hyperparams$learning_rate_tune,
+    activation = hyperparams$activation_func_tune
+  ) %>%
+    parsnip::set_engine("brulee") %>%
+    parsnip::set_mode(task) %>%
+    parsnip::translate()
+
+  return(model)
+}
+
+#######
+
+
 create_workflow <- function(tidy_object){
 
     workflow = workflows::workflow() %>%
@@ -97,6 +118,8 @@ tune_models <- function(tidy_object, tuner, sampling_method, hyperparams_grid){
 
           )
 
+          tuner_fit <- tuner_object
+
 
 
         } else if (tuner == "Grid Search CV"){
@@ -150,12 +173,40 @@ model_tuning <- function(tidy_object, tuner, metrics){
 
                 tuner_fit = tune_models(tidy_object, "Bayesian Optimization", val_set, hyperparam_grid)
 
+                tidy_object$add_tuner_fit(tuner_fit)
+
+                # ENTRENAMIENTO FINAL
+                # =============================================================================
+
+                best_hyper <- workflows::select_best(tuner_fit, metric = metrics)
+
+
+                final_workflow = workflows::update_model(create_nn(best_hyper, task = task, epochs = 100))
+
+                tidy_object$add_workflow(final_workflow)
+
+                final_model <- workflows::finalize_workflow(
+                  x = tidy_object$workflow,
+                  parameters = best_hyper
+                )
+
+                final_model <- final_model %>%
+                  fit(
+                    data = tidy_object$train
+                  )
+
+                tidy_object$add_final_models(final_model)
+
               } else{
+
+                ### NO TUNING
 
 
               }
 
             } else{
+
+              ##### OTHER MODELS
 
               set.seed(123)
 

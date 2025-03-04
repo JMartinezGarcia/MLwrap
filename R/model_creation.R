@@ -1,8 +1,8 @@
-create_nn <- function(hyperparams, task){
+create_nn <- function(hyperparams, task, epochs){
 
   model = parsnip::mlp(
     hidden_units = hyperparams$n_neurons_tune,
-    epochs = 10,
+    epochs = epochs,
     learn_rate = hyperparams$learning_rate_tune,
     activation = hyperparams$activation_func_tune
   ) %>%
@@ -23,9 +23,11 @@ create_models <- function(tidy_object, model_names, hyperparams = NULL, task = "
 
                     tidy_object$add_hyperparameters(hyperparams)
 
+                    tidy_object$add_task(task)
+
                     if (model_names == "Neural Network"){
 
-                      model = create_nn(hyperparams = hyperparams, task = task)
+                      model = create_nn(hyperparams = hyperparams, task = task, epochs = 10)
 
                       tidy_object$add_models(model)
 
