@@ -37,4 +37,6 @@ create_models <- function(tidy_object, model_names, hyperparams = NULL, task = "
 
 
                     }
+
+                    return(tidy_object)
 }

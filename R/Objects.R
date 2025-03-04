@@ -4,6 +4,7 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
 
     full_data = NULL,
     train = NULL,
+    validation = NULL,
     test = NULL,
     transformer = NULL,
     hyperparameters = NULL,
@@ -12,11 +13,12 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
     metrics = NULL,
     tuner = NULL,
 
-    initialize = function(full_data, train_data, test_data, transformer){
+    initialize = function(full_data, transformer){
 
       self$full_data = full_data
-      self$train = train_data
-      self$test = test_data
+      self$train = train
+      self$validation = validation
+      self$test = test
       self$transformer = transformer
       self$hyperparameters = NULL
       self$models = NULL
@@ -25,29 +27,52 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
       self$tuner = NULL
     },
 
+    add_train_data = function(train_data){
+
+      self$train <- train_data
+
+    },
+
+    add_validation_data = function(validation_data){
+
+      self$validation <- validation_data
+
+    },
+
+    add_test_data = function(test_data){
+
+      self$test <- test_data
+
+    },
+
     add_models = function(models){
 
       self$models <- models
+
     },
 
     add_hyperparameters = function(hyperparameters){
 
       self$hyperparameters <- hyperparameters
+
     },
 
     add_workflow = function(workflow){
 
       self$workflow <- workflow
+
     },
 
     add_tuner = function(tuner){
 
       self$tuner <- tuner
+
     },
 
     add_metrics = function(metrics){
 
       self$metrics <- metrics
+
     }
 
   )
@@ -64,12 +89,15 @@ HyperparametersNN <- R6::R6Class("Neural Network Hyperparameters",
           n_neurons_tune = NULL,
           learning_rate_tune = NULL,
           activation_func_tune = NULL,
+          tuning = FALSE,
 
           initialize = function(n_neurons = NULL, learning_rate = NULL, activation_func = NULL){
 
             self$n_neurons = n_neurons
             self$learning_rate = learning_rate
             self$activation_func = activation_func
+
+            self$tuning = tuning
 
             self$check_n_neurons()
             self$check_learning_rate()
@@ -86,6 +114,7 @@ HyperparametersNN <- R6::R6Class("Neural Network Hyperparameters",
               #### DEFAULT VALUES
               self$n_neurons = c(5,20)
               self$n_neurons_tune = tune::tune()
+              self$tuning = TRUE
 
             } else if (length(self$n_neurons) == 1) {
 
@@ -94,6 +123,7 @@ HyperparametersNN <- R6::R6Class("Neural Network Hyperparameters",
             } else {
 
               self$n_neurons_tune = tune::tune()
+              self$tuning = TRUE
 
             }
 
@@ -108,6 +138,7 @@ HyperparametersNN <- R6::R6Class("Neural Network Hyperparameters",
               #### DEFAULT VALUES
               self$learning_rate = c(1e-3, 1e-1)
               self$learning_rate_tune = tune::tune()
+              self$tuning = TRUE
 
             } else if (length(self$learning_rate) == 1) {
 
@@ -116,6 +147,7 @@ HyperparametersNN <- R6::R6Class("Neural Network Hyperparameters",
             } else {
 
               self$learning_rate_tune = tune::tune()
+              self$tuning = TRUE
 
             }
           },
@@ -129,6 +161,7 @@ HyperparametersNN <- R6::R6Class("Neural Network Hyperparameters",
                 #### DEFAULT VALUES
                 self$activation_func = c("tanh", "relu", "sigmoid")
                 self$activation_func_tune = tune::tune()
+                self$tuning = TRUE
 
               } else if (length(self$activation_func) == 1) {
 
@@ -137,6 +170,7 @@ HyperparametersNN <- R6::R6Class("Neural Network Hyperparameters",
               } else {
 
                 self$activation_func_tune = tune::tune()
+                self$tuning = TRUE
 
               }
 

@@ -101,17 +101,7 @@ transformer <- function(df, formula, dep_var, num_vars, cat_vars, norm_num_vars,
 
           }
 
-          set.seed(123)
-
-          train_test_split <- rsample::initial_split(
-            data   = df,
-            prop   = 0.8
-          )
-
-          train_data <- rsample::training(train_test_split)
-          test_data  <- rsample::testing(train_test_split)
-
-          tidy_object <- TidyMLObject$new(dataframe = df, train_data = train_data, test_data = test_data, transformer = rec)
+          tidy_object <- TidyMLObject$new(full_data = df, transformer = rec)
 
           return(tidy_object)
 
