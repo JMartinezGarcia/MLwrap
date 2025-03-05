@@ -103,6 +103,52 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
 
 )
 
+HyperparametersBase <- R6::R6Class("HiperparametrosBase",
+                               public = list(
+                                 tuneable = FALSE,
+                                 hyperparams = NULL,
+
+                                 initialize = function(hyperparams = NULL) {
+                                   # Obtener los valores por defecto (que siempre son rangos)
+                                   default_hyperparams <- self$default_hyperparams()
+
+                                   # Si el usuario pasa hiperparámetros, sobrescribe los especificados
+                                   if (!is.null(hyperparams)) {
+                                     default_hyperparams[names(hyperparams)] <- hyperparams
+                                   }
+
+                                   self$hyperparams <- default_hyperparams
+                                   self$tuneable <- self$check_tuneable(default_hyperparams)
+                                 },
+
+                                 default_hyperparams = function() {
+                                   stop("Debe ser implementado en la subclase")
+                                 },
+
+                                 check_tuneable = function(hyperparams) {
+                                   # Si al menos un hiperparámetro sigue siendo un rango, el modelo es tuneable
+                                   any(sapply(hyperparams, function(x) is.list(x) || length(x) > 1))
+                                 }
+                               )
+)
+
+HyperparamsNN <- R6::R6Class("Neural Network Hyperparameters",
+                   inherit = HyperparametersBase,
+                   public = list(
+                     default_hyperparams = function() {
+                       list(learning_rate = c(1e-3, 1e-1),
+                            n_neurons = c(5, 20),
+                            activation_func = c("relu", "tanh", "sigmoid")
+                       )
+                     }
+                   )
+                )
+
+
+
+
+
+
 HyperparametersNN <- R6::R6Class("Neural Network Hyperparameters",
 
       public = list(
