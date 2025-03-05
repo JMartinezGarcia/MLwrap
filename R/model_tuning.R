@@ -1,24 +1,3 @@
-######
-
-    #### BORRAR!!!!
-create_nn <- function(hyperparams, task, epochs){
-
-  model = parsnip::mlp(
-    hidden_units = hyperparams$n_neurons_tune,
-    epochs = epochs,
-    learn_rate = hyperparams$learning_rate_tune,
-    activation = hyperparams$activation_func_tune
-  ) %>%
-    parsnip::set_engine("brulee") %>%
-    parsnip::set_mode(task) %>%
-    parsnip::translate()
-
-  return(model)
-}
-
-#######
-
-
 create_workflow <- function(tidy_object){
 
     workflow = workflows::workflow() %>%

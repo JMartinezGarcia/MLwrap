@@ -130,7 +130,7 @@ HyperparametersBase <- R6::R6Class("HiperparametrosBase",
                                    any(sapply(hyperparams, function(x) is.list(x) || length(x) > 1))
                                  }
                                )
-)
+                  )
 
 HyperparamsNN <- R6::R6Class("Neural Network Hyperparameters",
                    inherit = HyperparametersBase,
