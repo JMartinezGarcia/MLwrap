@@ -16,7 +16,7 @@ create_nn <- function(hyperparams, task, epochs){
 
 
 
-create_models <- function(tidy_object, model_names, hyperparams = NULL, task = "regression"){
+create_models <- function(tidy_object, model_names, hyperparameters = NULL, task = "regression"){
 
                     ### EXCEPTION HANDLING
                     #if (is.null(hyperparams) ){
@@ -27,9 +27,9 @@ create_models <- function(tidy_object, model_names, hyperparams = NULL, task = "
 
                     if (model_names == "Neural Network"){
 
-                      hyperparams_nn = HyperparamsNN(hyperparams)
+                      hyperparams_nn = HyperparamsNN$new(hyperparameters)
 
-                      tidy_object$add_hyperparameters(hyperarams_nn)
+                      tidy_object$add_hyperparameters(hyperparams_nn)
 
                       model = create_nn(hyperparams = hyperparams_nn, task = task, epochs = 10)
 

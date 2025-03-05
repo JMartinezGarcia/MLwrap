@@ -19,10 +19,10 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
     initialize = function(full_data, transformer){
 
       self$full_data = full_data
-      self$train = train
-      self$validation = validation
-      self$test = test
       self$transformer = transformer
+      self$train = NULL
+      self$validation = NULL
+      self$test = NULL
       self$hyperparameters = NULL
       self$models = NULL
       self$workflow = NULL
