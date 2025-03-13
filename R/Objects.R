@@ -9,12 +9,14 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
     transformer = NULL,
     hyperparameters = NULL,
     models = NULL,
+    models_names = NULL,
     workflow = NULL,
     metrics = NULL,
     tuner = NULL,
     tuner_fit = NULL,
     final_models = NULL,
     task = NULL,
+    formula = NULL,
 
     initialize = function(full_data, transformer){
 
@@ -25,12 +27,19 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
       self$test = NULL
       self$hyperparameters = NULL
       self$models = NULL
+      self$models_names = NULL
       self$workflow = NULL
       self$metrics = NULL
       self$tuner = NULL
       self$tuner_fit = NULL
       self$final_models = NULL
       self$task = NULL
+    },
+
+    add_formula = function(formula){
+
+      self$formula <- formula
+
     },
 
     add_train_data = function(train_data){
@@ -54,6 +63,12 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
     add_models = function(models){
 
       self$models <- models
+
+    },
+
+    add_models_names = function(models_names){
+
+      self$models_names <- models_names
 
     },
 
@@ -87,9 +102,9 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
 
     },
 
-    add_final_models = function(models){
+    add_final_models = function(final_models){
 
-      self$final_models = models
+      self$final_models = final_models
 
     },
 
@@ -103,150 +118,142 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
 
 )
 
-HyperparametersBase <- R6::R6Class("HiperparametrosBase",
+HyperparametersBase <- R6::R6Class("HyperparametersBase",
                                public = list(
-                                 tuneable = FALSE,
-                                 hyperparams = NULL,
 
-                                 initialize = function(hyperparams = NULL) {
-                                   # Obtener los valores por defecto (que siempre son rangos)
-                                   default_hyperparams <- self$default_hyperparams()
+                                 tuning = NULL,
+                                 hyperparams_dials = NULL,
+                                 hyperparams_constant = NULL,
+                                 hyperparams_ranges = NULL,
 
-                                   # Si el usuario pasa hiperparámetros, sobrescribe los especificados
-                                   if (!is.null(hyperparams)) {
-                                     default_hyperparams[names(hyperparams)] <- hyperparams
+                                 initialize = function(hyperparams = NULL){
+
+                                   self$tuning = FALSE
+                                   self$hyperparams_dials = NULL
+                                   self$hyperparams_constant = NULL
+
+                                   hyperparameters <- self$set_hyperparams(hyperparams)
+
+
+
+                                     # List values are converted to dials::value_set, else a single value
+
+
+                                   # Change hyperparams to dials::parameters
+
+                                   #self$hyperparams <- dials::parameters(!!!hyperparameters)
+
+                                   # Convertir a objetos dials::parameters
+
+                                   hyperparams_dials <- Filter(function(x) inherits(x, "param"), hyperparameters)
+
+                                   self$hyperparams_ranges <- hyperparams_dials
+
+                                   hyperparams_constant <- Filter(function(x) !inherits(x, "param"), hyperparameters)
+
+                                   if (length(hyperparams_dials) > 0) {
+                                     self$hyperparams_dials <- do.call(dials::parameters, unname(hyperparams_dials))
+                                     self$tuning <- TRUE
                                    }
 
-                                   self$hyperparams <- default_hyperparams
-                                   self$tuneable <- self$check_tuneable(default_hyperparams)
+                                   self$hyperparams_constant = hyperparams_constant
+
+                                  },
+
+
+                                 set_hyperparams = function(hyperparams){
+                                   stop("Must be implemented in the subclass")
                                  },
 
                                  default_hyperparams = function() {
-                                   stop("Debe ser implementado en la subclase")
-                                 },
-
-                                 check_tuneable = function(hyperparams) {
-                                   # Si al menos un hiperparámetro sigue siendo un rango, el modelo es tuneable
-                                   any(sapply(hyperparams, function(x) is.list(x) || length(x) > 1))
+                                   stop("Must be implemented in the subclass")
                                  }
+
                                )
                   )
 
 HyperparamsNN <- R6::R6Class("Neural Network Hyperparameters",
                    inherit = HyperparametersBase,
                    public = list(
+
+                     hidden_units_tune = TRUE,
+                     learn_rate_tune = TRUE,
+                     activation_tune = TRUE,
+
                      default_hyperparams = function() {
-                       list(learning_rate = c(1e-3, 1e-1),
-                            n_neurons = c(5, 20),
-                            activation_func = c("relu", "tanh", "sigmoid")
+                       list(learn_rate = dials::learn_rate(range = c(-3, -1)),
+                            hidden_units = dials::hidden_units(range = c(5, 20)),
+                            activation = dials::activation(values = c("relu", "tanh", "sigmoid"))
                        )
-                     }
+                     },
+
+                     set_hyperparams = function(hyperparams = NULL) {
+
+                       default_hyperparameters <- self$default_hyperparams()
+
+                       # Actualizar solo los valores proporcionados
+
+                       if (!is.null(hyperparams)) {
+
+                           if ("learn_rate" %in% names(hyperparams)) {
+
+                             if (length(hyperparams$learn_rate) > 1){
+
+                             default_hyperparameters$learn_rate <- dials::learn_rate(range = hyperparams$learn_rate)
+
+                             } else {
+
+                               default_hyperparameters$learn_rate <- hyperparams$learn_rate
+
+                               self$learn_rate_tune = F
+
+                             }
+
+                           }
+
+                           if ("hidden_units" %in% names(hyperparams)) {
+
+                             if (length(hyperparams$hidden_units) > 1){
+
+                               default_hyperparameters$hidden_units <- dials::hidden_units(range = hyperparams$hidden_units)
+
+                             } else {
+
+                               default_hyperparameters$hidden_units <- hyperparams$hidden_units
+
+                               self$hidden_units_tune = F
+                             }
+
+                           }
+
+                           if ("activation" %in% names(hyperparams)) {
+
+                             if (length(hyperparams$activation) > 1){
+
+                               default_hyperparameters$activation <- dials::activation(values = hyperparams$activation)
+
+                             } else {
+
+                               default_hyperparameters$activation <- hyperparams$activation
+
+                               self$activation_tune = F
+
+                             }
+
+                           }
+
+                        default_hyperparameters$epochs <- dials::epochs(range= c(5L, 50L))
+
+                       }
+
+                       return(default_hyperparameters)
+
+                       }
+
                    )
+
                 )
 
-
-
-
-
-
-HyperparametersNN <- R6::R6Class("Neural Network Hyperparameters",
-
-      public = list(
-
-          n_neurons = NULL,
-          learning_rate = NULL,
-          activation_func = NULL,
-          n_neurons_tune = NULL,
-          learning_rate_tune = NULL,
-          activation_func_tune = NULL,
-          tuning = FALSE,
-
-          initialize = function(n_neurons = NULL, learning_rate = NULL, activation_func = NULL){
-
-            self$n_neurons = n_neurons
-            self$learning_rate = learning_rate
-            self$activation_func = activation_func
-
-            self$tuning = tuning
-
-            self$check_n_neurons()
-            self$check_learning_rate()
-            self$check_activation_function()
-
-          },
-
-          #### Check n_neurons
-
-          check_n_neurons = function(){
-
-            if (is.null(self$n_neurons)){
-
-              #### DEFAULT VALUES
-              self$n_neurons = c(5,20)
-              self$n_neurons_tune = tune::tune()
-              self$tuning = TRUE
-
-            } else if (length(self$n_neurons) == 1) {
-
-              self$n_neurons_tune = self$n_neurons
-
-            } else {
-
-              self$n_neurons_tune = tune::tune()
-              self$tuning = TRUE
-
-            }
-
-          },
-
-          #### Check n_layers
-
-          check_learning_rate = function(){
-
-            if (is.null(self$learning_rate)){
-
-              #### DEFAULT VALUES
-              self$learning_rate = c(1e-3, 1e-1)
-              self$learning_rate_tune = tune::tune()
-              self$tuning = TRUE
-
-            } else if (length(self$learning_rate) == 1) {
-
-              self$learning_rate_tune = self$learning_rate
-
-            } else {
-
-              self$learning_rate_tune = tune::tune()
-              self$tuning = TRUE
-
-            }
-          },
-
-            #### Check Activation Function
-
-            check_activation_function = function(){
-
-              if (is.null(self$activation_func)){
-
-                #### DEFAULT VALUES
-                self$activation_func = c("tanh", "relu", "sigmoid")
-                self$activation_func_tune = tune::tune()
-                self$tuning = TRUE
-
-              } else if (length(self$activation_func) == 1) {
-
-                self$activation_func_tune = self$activation_func
-
-              } else {
-
-                self$activation_func_tune = tune::tune()
-                self$tuning = TRUE
-
-              }
-
-            }
-  )
-)
 
 
 

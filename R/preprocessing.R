@@ -7,7 +7,7 @@ create_recipe <- function(formula, data){
 
 standarize_predictors <- function(rec, norm_num_vars){
 
-  if (norm_num_vars == "all"){
+  if (any(norm_num_vars == "all")){
 
     rec <- recipes::step_normalize(rec, recipes::all_numeric_predictors())
 
@@ -23,7 +23,7 @@ standarize_predictors <- function(rec, norm_num_vars){
 
 one_hot_predictors <- function(rec, encode_cat_vars, one_hot = T){
 
-  if(encode_cat_vars == "all"){
+  if (any(encode_cat_vars == "all")){
 
     rec <- recipes::step_dummy(rec, recipes::all_factor_predictors(), one_hot = one_hot)
 
@@ -53,14 +53,14 @@ encode_target <- function(rec, type_task, dep_var){
 
 }
 
-transformer <- function(df, formula, dep_var, num_vars, cat_vars, norm_num_vars,
+transformer <- function(df, formula, dep_var, num_vars = NULL, cat_vars = NULL, norm_num_vars,
                        encode_cat_vars, encode_dep_var){
 
           rec = create_recipe(formula = formula, data = df)
 
           # Check numerical variables are numeric
 
-          if (!is.null(num_var)) {
+          if (!is.null(num_vars)) {
 
             ##### TODO: num_vars or norm_num_vars,
             #### standarize_predictors no usa norm_num_vars
@@ -71,7 +71,7 @@ transformer <- function(df, formula, dep_var, num_vars, cat_vars, norm_num_vars,
 
           # Check categorical variables are factor
 
-          if (!is.null(cat_var)) {
+          if (!is.null(cat_vars)) {
 
               rec <- rec %>% recipes::step_mutate_at(all_of(cat_vars),
                                             fn = as.factor)
@@ -81,7 +81,7 @@ transformer <- function(df, formula, dep_var, num_vars, cat_vars, norm_num_vars,
 
           if (!is.null(norm_num_vars)) {
 
-            rec <- standarize(rec = rec, norm_num_vars = norm_num_vars, num_vars = num_vars)
+            rec <- standarize_predictors(rec = rec, norm_num_vars = norm_num_vars)
 
           }
 
@@ -95,13 +95,15 @@ transformer <- function(df, formula, dep_var, num_vars, cat_vars, norm_num_vars,
 
           # Encode target variable
 
-          if (!is.null(encode_dep_var)){
+          #if (!is.null(encode_dep_var)){
 
-              rec <- encode_target(rec = rec, type_task = encode_dep_var, dep_var = dep_var)
+          #    rec <- encode_target(rec = rec, type_task = encode_dep_var, dep_var = dep_var)
 
-          }
+          #}
 
           tidy_object <- TidyMLObject$new(full_data = df, transformer = rec)
+
+          tidy_object$add_formula(formula)
 
           return(tidy_object)
 
