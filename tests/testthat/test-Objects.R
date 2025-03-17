@@ -1,43 +1,49 @@
 devtools::load_all()
 
-test_that("HyperparamsNN works properly", {
+test_that("HyperparamsNN Default works properly", {
 
   hyper_nn_default = HyperparamsNN$new()
 
-  hyperparams = hyper_nn_default$hyperparams_dials
+  hyp_ranges = hyper_nn_default$hyperparams_ranges
 
-  expect_equal(hyperparams$object[[1]]$range, list(lower = 1e-3, upper = 1e-1))
-  expect_equal(hyperparams$object[[2]]$range, list(lower = 5, upper = 20))
-  expect_equal(hyperparams$object[[3]]$values, c("relu", "tanh", "sigmoid"))
+  expect_equal(hyp_ranges$learn_rate$range, list(lower = -3, upper = -1))
+  expect_equal(hyp_ranges$hidden_units$range, list(lower = 5, upper = 20))
+  expect_equal(hyp_ranges$activation$values, c("relu", "tanh", "sigmoid"))
   expect_equal(hyper_nn_default$tuning, T)
 
-  hyper_nn_notune = HyperparamsNN$new(list(learning_rate = 1e-2,
-                                           n_neurons = 10,
-                                           activation_func = "sigmoid"
+})
+
+test_that("HyperparamsNN constant works properly", {
+
+  hyper_nn_notune = HyperparamsNN$new(list(learn_rate = -2,
+                                           hidden_units = 10,
+                                           activation = "sigmoid"
                                            )
-                                      )
+                                        )
 
   hyperparams = hyper_nn_notune$hyperparams_constant
 
-  expect_equal(hyperparams$learning_rate, 1e-2)
-  expect_equal(hyperparams$n_neurons, 10)
-  expect_equal(hyperparams$activation_func, "sigmoid")
+  expect_equal(hyperparams$learn_rate, -2)
+  expect_equal(hyperparams$hidden_units, 10)
+  expect_equal(hyperparams$activation, "sigmoid")
   expect_equal(hyper_nn_notune$tuning, F)
 
-  hyper_nn_tune = HyperparamsNN$new(list(learning_rate = c(1e-2, 1e-1),
-                                         n_neurons = 15)
+})
+
+test_that("HyperparamsNN mixed works properly", {
+
+  hyper_nn_tune = HyperparamsNN$new(list(learn_rate = c(-2, -1),
+                                         hidden_units = 15)
                                     )
 
-  hyperparams_dials = hyper_nn_tune$hyperparams_dials
-  hyperparams_const = hyper_nn_tune$hyperparams_constant
+  hyp_ranges = hyper_nn_tune$hyperparams_ranges
+  hyp_const = hyper_nn_tune$hyperparams_constant
 
-  expect_equal(hyperparams_dials$object[[1]]$range, list(lower = 1e-2, upper = 1e-1))
-  expect_equal(hyperparams_const$n_neurons, 15)
-  expect_equal(hyperparams_dials$object[[2]]$values, c("relu", "tanh", "sigmoid"))
+  expect_equal(hyp_ranges$learn_rate$range, list(lower = -2, upper = -1))
+  expect_equal(hyp_const$hidden_units, 15)
+  expect_equal(hyp_ranges$activation$values, c("relu", "tanh", "sigmoid"))
   expect_equal(hyper_nn_tune$tuning, T)
 
-  }
-
-)
+})
 
 

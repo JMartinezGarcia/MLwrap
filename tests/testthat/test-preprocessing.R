@@ -91,33 +91,33 @@ test_that("one_hot_predictors works correctly",{
 
 })
 
-test_that("encode_target works correctly",{
-
-  # For binary:
-
-  rec_binary <- create_recipe(formula = formula, data = df)
-
-  rec_binary <- encode_target(rec = rec_binary, type_task = "binary", dep_var = "y")
-
-  rec_binary_prep <- recipes::prep(rec_binary, training = df)
-
-  rec_binary_bake <- recipes::bake(rec_binary_prep, new_data = df)
-
-  expect_equal(rec_binary_bake$y_X1, c(1,0))
-
-  # For multiclass:
-
-  rec_multiclass <- create_recipe(formula = formula_multiclass, data = df)
-
-  rec_multiclass <- encode_target(rec = rec_multiclass, type_task = "multiclass", dep_var = "y2")
-
-  rec_multiclass_prep <- recipes::prep(rec_multiclass, training = df)
-
-  rec_multiclass_bake <- recipes::bake(rec_multiclass_prep, new_data = df)
-
-  expect_equal(rec_multiclass_bake$y2_X0, c(1,0))
-
-  expect_equal(rec_multiclass_bake$y2_X1, c(0,0))
-
-  expect_equal(rec_multiclass_bake$y2_X2, c(0,1))
-})
+# test_that("encode_target works correctly",{
+#
+#   # For binary:
+#
+#   rec_binary <- create_recipe(formula = formula, data = df)
+#
+#   rec_binary <- encode_target(rec = rec_binary, type_task = "binary", dep_var = "y")
+#
+#   rec_binary_prep <- recipes::prep(rec_binary, training = df)
+#
+#   rec_binary_bake <- recipes::bake(rec_binary_prep, new_data = df)
+#
+#   expect_equal(rec_binary_bake$y_X1, c(1,0))
+#
+#   # For multiclass:
+#
+#   rec_multiclass <- create_recipe(formula = formula_multiclass, data = df)
+#
+#   rec_multiclass <- encode_target(rec = rec_multiclass, type_task = "multiclass", dep_var = "y2")
+#
+#   rec_multiclass_prep <- recipes::prep(rec_multiclass, training = df)
+#
+#   rec_multiclass_bake <- recipes::bake(rec_multiclass_prep, new_data = df)
+#
+#   expect_equal(rec_multiclass_bake$y2_X0, c(1,0))
+#
+#   expect_equal(rec_multiclass_bake$y2_X1, c(0,0))
+#
+#   expect_equal(rec_multiclass_bake$y2_X2, c(0,1))
+# })

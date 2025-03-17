@@ -7,6 +7,18 @@ create_workflow <- function(tidy_object){
     return(workflow)
 }
 
+extract_hyperparams <- function(tidy_object){
+
+  extracted_hyperparams <-
+    tidy_object$workflow |>
+    workflows::extract_parameter_set_dials() |>
+    update(!!!tidy_object$hyperparameters$hyperparams_ranges)
+
+  return(extracted_hyperparams)
+
+}
+
+
 hyperparams_grid_nn <- function(hyperparams, tuner, workflow){
 
    if (tuner == "Bayesian Optimization"){
@@ -26,46 +38,13 @@ hyperparams_grid_nn <- function(hyperparams, tuner, workflow){
 
 }
 
-define_metrics <- function(metrics){
 
-  if (metrics == "Root Mean Squared"){
 
-    metric = yardstick:: rmse
-
-  } else if (metrics == "Mean Absolute Value"){
-
-    metric = yardstick::mae
-
-  } else {
-
-    #### ERROR
-
-    metric = yardstick::accuracy
-
-  }
-
-  return(yardstick::metric_set(metric))
-
-}
-
-# Función para mapear nombres a funciones de dials
-get_dials_param <- function(name, param) {
-  if (inherits(param, "quant_param")) {
-    return(rlang::expr(!!sym(name)(range = param$range)))
-  } else if (inherits(param, "qual_param")) {
-    return(rlang::expr(!!sym(name)(values = param$values)))
-  } else {
-    stop("Tipo de parámetro desconocido")
-  }
-}
-
-tune_models <- function(tidy_object, tuner, sampling_method){
+tune_models_bayesian <- function(tidy_object, sampling_method){
 
         set.seed(123)
 
-        if (tuner == "Bayesian Optimization"){
-
-          bayes_control <-
+        bayes_control <-
             tune::control_bayes(
               no_improve    = 5L,
               time_limit    = 20,
@@ -73,7 +52,36 @@ tune_models <- function(tidy_object, tuner, sampling_method){
               verbose_iter  = TRUE,
               save_pred     = TRUE,
               save_workflow = TRUE
+          )
+
+
+          extracted_hyperparams <- extract_hyperparams(tidy_object)
+
+          set_metrics <- yardstick::metric_set(!!!rlang::syms(tidy_object$metrics))
+
+          print("COMMENCING BAYESIAN OPTIMIZATION")
+
+          tuner_object <-
+            tidy_object$workflow |>
+            tune::tune_bayes(
+              resamples = sampling_method,
+              iter      = 10L,
+              control   = bayes_control,
+              initial   = 10,
+              param_info = extracted_hyperparams,
+              metrics = set_metrics
+
             )
+
+          print("FINISHED BAYESIAN OPTIMIZATION")
+
+          return(tuner_object)
+
+        }
+
+tune_models_grid_search_cv <- function(tidy_object, sampling_method){
+
+          ##ad_folds <- rsample::vfold_cv(tidy_object$train, v = 2)
 
           grid_control <-
             tune::control_grid(
@@ -83,88 +91,49 @@ tune_models <- function(tidy_object, tuner, sampling_method){
               parallel_over = NULL
             )
 
-          #param_updates <- purrr::imap(tidy_object$hyperparameters$hyperparams_ranges, get_dials_param)
-
-
-
-          mlp_brulee_params <-
-            tidy_object$workflow |>
-            workflows::extract_parameter_set_dials() |>
-            update(!!!tidy_object$hyperparameters$hyperparams_ranges)    #update(epochs = dials::epochs(range = c(5, 20)))
-
-
-          mlp_brulee_start <-
-            mlp_brulee_params |>
-            dials::grid_regular(levels = 3)
-
-           mlp_brulee_tune_grid <-
-             tidy_object$workflow |>
-             tune::tune_grid(
-               resamples = sampling_method,
-               grid      = mlp_brulee_start,
-               control   = grid_control,
-               #metrics = tidy_object$metrics
-             )
-
-          print("COMMENCING BAYESIAN OPTIMIZATION")
-
-          mlp_brulee_bo <-
-            tidy_object$workflow |>
-            tune::tune_bayes(
-              resamples = sampling_method,
-              iter      = 10L,
-              control   = bayes_control,
-              initial   = mlp_brulee_tune_grid,
-              #metrics = tidy_object$metrics
-            )
-
-          #######################################
-          #tuner_object <- tune::tune_bayes(
-          #
-          #  object = tidy_object$workflow,
-          #  resamples = sampling_method,
-          #  metrics = yardstick::metric_set(tidy_object$metrics),
-          #  control = tune::control_bayes(save_pred = TRUE),
-          #  initial = 25,
-          #  param_info = hyperparams_grid
-          #
-          #)
-          #
-          #tuner_fit <- tuner_object
-          #########################################
-
-
-        } else if (tuner == "Grid Search CV"){
-
-          ##ad_folds <- rsample::vfold_cv(tidy_object$train, v = 2)
-
           tuner_object <- tune::tune_grid(
 
             object = tidy_object$workflow,
             resamples = sampling_method,
             metrics = yardstick::metric_set(tidy_object$metrics),
             control = tune::control_grid(save_pred = TRUE),
-            grid = hyperparams_grid
+            grid = hyperparams_grid,
 
           )
 
+          return(tuner_object)
 
-        } else {
-
-
-          #### ERROR
-
-        }
-
-  return(mlp_brulee_bo)
 
 }
+
+tune_models <- function(tidy_object, tuner, sampling_method){
+
+  if (tuner == "Bayesian Optimization"){
+
+    tuner_object <- tune_models_bayesian(tidy_object, sampling_method)
+
+  } else if (tuner == "Grid Search CV"){
+
+    tuner_object <- tune_models_grid_search_cv(tidy_object, sampling_method)
+
+    }
+
+  else {
+
+    ##### ERRRORRRR
+
+  }
+
+  return(tuner_object)
+
+}
+
 
 model_tuning <- function(tidy_object, tuner, metrics){
 
             tidy_object$add_workflow(create_workflow(tidy_object))
 
-            tidy_object$add_metrics(define_metrics(metrics))
+            tidy_object$add_metrics(metrics)
 
             if (tidy_object$models_names == "Neural Network"){
 
@@ -182,41 +151,33 @@ model_tuning <- function(tidy_object, tuner, metrics){
 
               if (hyperparams$tuning == TRUE){
 
-                #hyperparam_grid = hyperparams_grid_nn(hyperparams, tuner, tidy_object$workflow)
-
-                print("STARTING FIT")
-
-                tuner_fit = tune_models(tidy_object, tuner, val_set, hyperparams$hyperparams_dials)
-
-                autoplot(tuner_fit)
-
-                print("FINISHED FIT")
+                tuner_fit = tune_models(tidy_object, tuner, val_set)
 
                 print(tune::show_best(tuner_fit))
 
                 tidy_object$add_tuner_fit(tuner_fit)
 
                 # ENTRENAMIENTO FINAL
-                # =============================================================================
+                # ============================================================================
 
-                best_hyper <- tune::select_best(tuner_fit, metric = yardstick::metric_set(tidy_object$metrics))
+                best_hyper <- tune::select_best(tuner_fit, metric = tidy_object$metrics)
 
+                final_hyperparams <- c(as.list(best_hyper), tidy_object$hyperparameters$hyperparams_constant)
 
-                final_workflow = workflows::update_model(create_nn(best_hyper, task = task, epochs = 100))
+                final_hyperparams <- HyperparamsNN$new(final_hyperparams)
+
+                final_workflow = tidy_object$workflow %>%
+                  workflows::update_model(create_nn(final_hyperparams, task = tidy_object$task, epochs = 100))
 
                 tidy_object$add_workflow(final_workflow)
 
-                final_model <- workflows::finalize_workflow(
-                  x = tidy_object$workflow,
-                  parameters = best_hyper
-                )
-
-                final_model <- final_model %>%
+                final_model <- final_workflow %>%
                   fit(
-                    data = tidy_object$train
+                    data = rbind(tidy_object$train, tidy_object$validation)
                   )
 
                 tidy_object$add_final_models(final_model)
+
 
               } else{
 
@@ -240,6 +201,10 @@ model_tuning <- function(tidy_object, tuner, metrics){
   test_data  <- rsample::testing(train_test_split)
               ###### IF HYPS are all length 1, else
 
-}
+  }
 
 }
+
+
+
+

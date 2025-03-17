@@ -22,18 +22,7 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
 
       self$full_data = full_data
       self$transformer = transformer
-      self$train = NULL
-      self$validation = NULL
-      self$test = NULL
-      self$hyperparameters = NULL
-      self$models = NULL
-      self$models_names = NULL
-      self$workflow = NULL
-      self$metrics = NULL
-      self$tuner = NULL
-      self$tuner_fit = NULL
-      self$final_models = NULL
-      self$task = NULL
+
     },
 
     add_formula = function(formula){
@@ -92,6 +81,8 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
 
     add_metrics = function(metrics){
 
+      #### CHECK METRICS!!!!
+
       self$metrics <- metrics
 
     },
@@ -141,22 +132,22 @@ HyperparametersBase <- R6::R6Class("HyperparametersBase",
 
                                    # Change hyperparams to dials::parameters
 
-                                   #self$hyperparams <- dials::parameters(!!!hyperparameters)
-
                                    # Convertir a objetos dials::parameters
 
-                                   hyperparams_dials <- Filter(function(x) inherits(x, "param"), hyperparameters)
-
-                                   self$hyperparams_ranges <- hyperparams_dials
+                                   hyperparams_ranges <- Filter(function(x) inherits(x, "param"), hyperparameters)
 
                                    hyperparams_constant <- Filter(function(x) !inherits(x, "param"), hyperparameters)
 
-                                   if (length(hyperparams_dials) > 0) {
-                                     self$hyperparams_dials <- do.call(dials::parameters, unname(hyperparams_dials))
-                                     self$tuning <- TRUE
-                                   }
+                                   self$hyperparams_ranges <- hyperparams_ranges
 
                                    self$hyperparams_constant = hyperparams_constant
+
+                                   if (length(hyperparams_ranges) > 0){self$tuning <- TRUE}
+
+                                   # if (length(hyperparams_dials) > 0) {
+                                   #   self$hyperparams_dials <- do.call(dials::parameters, unname(hyperparams_dials))
+                                   #   self$tuning <- TRUE
+                                   # }
 
                                   },
 
@@ -179,6 +170,7 @@ HyperparamsNN <- R6::R6Class("Neural Network Hyperparameters",
                      hidden_units_tune = TRUE,
                      learn_rate_tune = TRUE,
                      activation_tune = TRUE,
+                     epochs = 10,
 
                      default_hyperparams = function() {
                        list(learn_rate = dials::learn_rate(range = c(-3, -1)),
@@ -241,8 +233,6 @@ HyperparamsNN <- R6::R6Class("Neural Network Hyperparameters",
                              }
 
                            }
-
-                        default_hyperparameters$epochs <- dials::epochs(range= c(5L, 50L))
 
                        }
 

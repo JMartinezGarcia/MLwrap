@@ -3,8 +3,8 @@ devtools::load_all()
 tidy_object <- TidyMLObject$new(0.5, 0.6)
 
 hyper_nn_tune_list = list(
-           learning_rate = c(1e-2, 1e-1),
-           n_neurons = 15
+           learn_rate = c(-2, -1),
+           hidden_units = 15
            )
 
 
@@ -29,12 +29,12 @@ test_that("Check create_models works properly",{
     expect_equal(model_object$models_names, "Neural Network")
     expect_equal(class(model_object$models), c("mlp", "model_spec"))
     expect_equal(model_object$hyperparameters$tuning, T)
-    expect_equal(model_object$hyperparameters$learning_rate_tune, T)
-    expect_equal(model_object$hyperparameters$n_neurons_tune, F)
-    expect_equal(model_object$hyperparameters$activation_func_tune, T)
-    expect_equal(model_object$hyperparameters$hyperparams_constant$n_neurons, 15)
-    expect_equal(model_object$hyperparameters$hyperparams_dials$object[[1]]$range, list("lower" = 0.01, "upper" = 0.1))
-    expect_equal(model_object$hyperparameters$hyperparams_dials$object[[2]]$values, c("relu", "tanh", "sigmoid"))
+    expect_equal(model_object$hyperparameters$learn_rate_tune, T)
+    expect_equal(model_object$hyperparameters$hidden_units_tune, F)
+    expect_equal(model_object$hyperparameters$activation_tune, T)
+    expect_equal(model_object$hyperparameters$hyperparams_constant$hidden_units, 15)
+    expect_equal(model_object$hyperparameters$hyperparams_ranges$learn_rate$range, list("lower" = -2, "upper" = -1))
+    expect_equal(model_object$hyperparameters$hyperparams_ranges$activation$values, c("relu", "tanh", "sigmoid"))
 
 })
 

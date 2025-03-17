@@ -39,14 +39,14 @@ transformer_ob = transformer(df, formula, "y",
                              num_vars = c("x1", "x2"),
                              cat_vars = c("x3", "x4"),
                              norm_num_vars = c("x1", "x2"),
-                             encode_cat_vars = c("x3", "x4"),
-                             encode_dep_var = "binary")
+                             encode_cat_vars = c("x3", "x4")
+                             )
 
 #tidy_object <- TidyMLObject$new(df, transformer_ob)
 
 hyper_nn_tune_list = list(
   learn_rate = c(-2, -1),
-  hidden_units = 15
+  hidden_units = 3
 )
 
 model_object = create_models(tidy_object = transformer_ob,
@@ -54,7 +54,7 @@ model_object = create_models(tidy_object = transformer_ob,
                              hyperparameters = hyper_nn_tune_list,
                              task = "classification")
 
-metric = 'accuracy'
+metrics = c("roc_auc", "accuracy")
 
 
 #test_that("hyperparams_grid_nn works properly", {
@@ -73,7 +73,7 @@ test_that("Bayesian Optimization Neural Network works properly", {
 
     model_object$add_workflow(create_workflow(model_object))
 
-    model_object$add_metrics(define_metrics(metric))
+    model_object$add_metrics(metrics)
 
     validation_split = rsample::initial_validation_split(model_object$full_data, prop = c(0.6, 0.3))
 
@@ -111,24 +111,13 @@ test_that("Bayesian Optimization Neural Network works properly", {
           parallel_over = NULL
         )
 
-      #param_updates <- purrr::imap(tidy_object$hyperparameters$hyperparams_ranges, get_dials_param)
 
 
 
       mlp_brulee_params <-
         model_object$workflow |>
         workflows::extract_parameter_set_dials() |>
-         update(!!!model_object$hyperparameters$hyperparams_ranges)
-        # update(activation = dials::new_quant_param(
-        #          type = "integer",
-        #          range = c(1, 3),
-        #          inclusive = c(TRUE, TRUE),
-        #          label = c(activation = "activation numeric"),
-        #          finalize = function(x, data) {
-        #            mapping <- c("1" = "relu", "2" = "tanh", "3" = "sigmoid")
-        #            mapping[as.character(x)]
-        #          }
-        #        ))     #update(epochs = dials::epochs(range = c(5, 20)))
+         update(!!!hyperparams$hyperparams_ranges)
 
 
       mlp_brulee_start <-
@@ -152,10 +141,31 @@ test_that("Bayesian Optimization Neural Network works properly", {
           resamples = sampling_method,
           iter      = 10L,
           control   = bayes_control,
-          initial   = 50,
-          param_info = mlp_brulee_params
-          #metrics = tidy_object$metrics
+          initial   = 10,
+          param_info = mlp_brulee_params,
+          metrics = model_object$metrics
         )
+
+      tuner_fit = tune_models(model_object, tuner, val_set)
+
+      best_hyper <- as.list(tune::select_best(tuner_fit, metric = model_object$metrics))
+
+
+      final_workflow = model_object$workflow %>%
+        workflows::update_model(create_nn(best_hyper, task = task, epochs = 100))
+
+      tidy_object$add_workflow(final_workflow)
+
+      final_model <- workflows::finalize_workflow(
+        x = tidy_object$workflow,
+        parameters = best_hyper
+      )
+
+      final_model <- final_model %>%
+        fit(
+          data = tidy_object$train
+        )
+
 
     }
     #tuner_fit = tune_models(model_object, "Bayesian Optimization", val_set)
@@ -172,5 +182,81 @@ test_that("Bayesian Optimization Neural Network works properly", {
 
 
 
+define_metrics <- function(metrics) {
+  metric_list <- list("roc_auc()" = yardstick::roc_auc)
+  metric_list <- purrr::imap(metric_list, function(f, nm) {
+    print(f)
+    attr(f, "id") <- nm
+    f
+  })
+  return(metric_list)
+}
 
+# Usamos !!! para descomponer la lista y pasarla a metric_set
+my_metric_set <- yardstick::metric_set(!!!define_metrics(NULL))
+print(my_metric_set)
+
+#################
+
+pepe <- yardstick::roc_auc
+
+# Creamos el wrapper
+pepe_wrapper <- function(data, truth, ..., na_rm = TRUE,
+                         event_level = yardstick::yardstick_event_level(),
+                         case_weights = NULL) {
+  pepe(data, truth, ..., na_rm = na_rm,
+       event_level = event_level, case_weights = case_weights)
+}
+
+# Asignamos el atributo "id" y forzamos la misma clase que la función original
+attr(pepe_wrapper, "id") <- "roc_auc"
+class(pepe_wrapper) <- class(pepe)
+
+# Ahora, metric_set debería aceptar el wrapper
+my_metric_set <- yardstick::metric_set(!!!pepe_wrapper)
+print(my_metric_set)
+
+define_metrics <- function(metrics) {
+  # Inicializamos una lista vacía
+  metrics_list <- list()
+
+  if (metrics == "Root Mean Squared") {
+
+    metric <- list(rmse = yardstick::rmse)
+
+    metrics_list <- append(metrics_list, metric)
+
+  } else if (metrics == "Mean Absolute Value") {
+
+    my_mae <- yardstick::mae
+
+    attr(my_mae, "id") <- "mae"
+
+    metric <- list(mae = my_mae)
+
+    metrics_list <- append(metrics_list, metric)
+
+  } else if (metrics == "ROC AUC") {
+
+    my_roc_auc <- yardstick::roc_auc
+
+    attr(my_roc_auc, "id") <- "roc_auc()"
+
+    metric <- list(roc_auc = my_roc_auc)
+
+    metrics_list <- append(metrics_list, metric)
+
+  } else {
+
+    # Valor por defecto: accuracy
+    metric <- list(accuracy = yardstick::accuracy)
+
+    metrics_list <- append(metrics_list, metric)
+
+  }
+
+  return(list(roc_auc = my_roc_auc))
+  #return(metrics_list)
+
+}
 

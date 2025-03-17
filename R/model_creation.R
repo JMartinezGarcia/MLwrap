@@ -6,7 +6,7 @@ create_nn <- function(hyperparams, task, epochs){
 
   model = parsnip::mlp(
     hidden_units = !!hidden_units,
-    epochs = !!tune::tune(),
+    epochs = !!epochs,
     learn_rate = !!learn_rate,
     activation = !!activation,
   ) %>%
