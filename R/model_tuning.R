@@ -60,7 +60,7 @@ hyperparams_grid_nn <- function(hyperparams, tuner, workflow){
 
 }
 
-tune_models_bayesian <- function(tidy_object, sampling_method, seed = 123){
+tune_models_bayesian <- function(tidy_object, sampling_method, seed = 123, verbose = TRUE){
 
         set.seed(seed)
 
@@ -68,8 +68,8 @@ tune_models_bayesian <- function(tidy_object, sampling_method, seed = 123){
             tune::control_bayes(
               no_improve    = 5L,
               time_limit    = 20,
-              verbose = TRUE,
-              verbose_iter  = TRUE,
+              verbose = verbose,
+              verbose_iter  = verbose,
               save_pred     = TRUE,
               save_workflow = TRUE
           )
@@ -99,7 +99,7 @@ tune_models_bayesian <- function(tidy_object, sampling_method, seed = 123){
 
         }
 
-tune_models_grid_search_cv <- function(tidy_object, sampling_method){
+tune_models_grid_search_cv <- function(tidy_object, sampling_method, verbose = TRUE){
 
           ##ad_folds <- rsample::vfold_cv(tidy_object$train, v = 2)
 
@@ -126,15 +126,15 @@ tune_models_grid_search_cv <- function(tidy_object, sampling_method){
 
 }
 
-tune_models <- function(tidy_object, tuner, sampling_method){
+tune_models <- function(tidy_object, tuner, sampling_method, verbose = TRUE){
 
   if (tuner == "Bayesian Optimization"){
 
-    tuner_object <- tune_models_bayesian(tidy_object, sampling_method)
+    tuner_object <- tune_models_bayesian(tidy_object, sampling_method, verbose = verbose)
 
   } else if (tuner == "Grid Search CV"){
 
-    tuner_object <- tune_models_grid_search_cv(tidy_object, sampling_method)
+    tuner_object <- tune_models_grid_search_cv(tidy_object, sampling_method, verbose = verbose)
 
     }
 
@@ -149,7 +149,7 @@ tune_models <- function(tidy_object, tuner, sampling_method){
 }
 
 
-model_tuning <- function(tidy_object, tuner, metrics){
+model_tuning <- function(tidy_object, tuner, metrics, verbose = TRUE){
 
             tidy_object$add_workflow(create_workflow(tidy_object))
 
@@ -163,7 +163,7 @@ model_tuning <- function(tidy_object, tuner, metrics){
 
               if (tidy_object$hyperparameters$tuning == TRUE){
 
-                tuner_fit = tune_models(tidy_object, tuner, val_set)
+                tuner_fit = tune_models(tidy_object, tuner, val_set, verbose = verbose)
 
                 tidy_object$add_tuner_fit(tuner_fit)
 

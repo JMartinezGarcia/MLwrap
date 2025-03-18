@@ -136,138 +136,19 @@ test_that("tune_models_bayesian works properly", {
 
   val_set <- create_val_set(model_object)
 
-  tune_fit <- tune_models_bayesian(model_object, val_set)
+  tune_fit <- tune_models_bayesian(model_object, val_set, verbose = F)
 
-  # expect_equal(class(tune_fit)[1:2], c("iteration_results", "tune_results"))
-  #
-  # expect_equal(is.null(tune_fit$.predictions), F)
-  #
-  # expect_equal(is.null(tune_fit$.metrics), F)
-  #
-  # expect_equal(tune_fit$.iter, c(0,1,2,3,4,5))
+  expect_equal(class(tune_fit)[1:2], c("iteration_results", "tune_results"))
+
+  expect_equal(is.null(tune_fit$.predictions), F)
+
+  expect_equal(is.null(tune_fit$.metrics), F)
+
+  expect_equal(tune_fit$.iter, c(0,1,2,3,4,5))
 
 })
 
 
-#test_that("hyperparams_grid_nn works properly", {
-
-#  hyperparams = model_object$hyperparameters$hyperparams
-
-#  workflow = create_workflow(model_object)
-
-#  hyperparam_grid = hyperparams_grid_nn(hyperparams, tuner = "Bayesian Optimization", workflow = workflow)
-
-#  expect_equal(hyperparam_grid, 1)
-
-#})
-
-# test_that("Bayesian Optimization Neural Network works properly", {
-#
-#     model_object$add_workflow(create_workflow(model_object))
-#
-#     model_object$add_metrics(metrics)
-#
-#     validation_split = rsample::initial_validation_split(model_object$full_data, prop = c(0.6, 0.3))
-#
-#     model_object$add_train_data(rsample::training(validation_split))
-#     model_object$add_validation_data(rsample::validation(validation_split))
-#     model_object$add_test_data(rsample::testing(validation_split))
-#
-#     val_set <- rsample::validation_set(validation_split)
-#
-#     sampling_method = val_set
-#
-#     hyperparams = model_object$hyperparameters
-#
-#     tuner = "Bayesian Optimization"
-#
-#     set.seed(123)
-#
-#     if (tuner == "Bayesian Optimization"){
-#
-#       bayes_control <-
-#         tune::control_bayes(
-#           no_improve    = 5L,
-#           time_limit    = 20,
-#           verbose = TRUE,
-#           verbose_iter  = TRUE,
-#           save_pred     = TRUE,
-#           save_workflow = TRUE
-#         )
-#
-#       grid_control <-
-#         tune::control_grid(
-#           allow_par     = TRUE,
-#           save_pred     = TRUE,
-#           save_workflow = TRUE,
-#           parallel_over = NULL
-#         )
-#
-#
-#
-#
-#       mlp_brulee_params <-
-#         model_object$workflow |>
-#         workflows::extract_parameter_set_dials() |>
-#          update(!!!hyperparams$hyperparams_ranges)
-#
-#
-#       mlp_brulee_start <-
-#         mlp_brulee_params |>
-#         dials::grid_regular(levels = 3)
-#
-#       # mlp_brulee_tune_grid <-
-#       #   model_object$workflow |>
-#       #   tune::tune_grid(
-#       #     resamples = sampling_method,
-#       #     grid      = mlp_brulee_start,
-#       #     control   = grid_control,
-#       #     #metrics = tidy_object$metrics
-#       #   )
-#
-#       print("COMMENCING BAYESIAN OPTIMIZATION")
-#
-#       mlp_brulee_bo <-
-#         model_object$workflow |>
-#         tune::tune_bayes(
-#           resamples = sampling_method,
-#           iter      = 10L,
-#           control   = bayes_control,
-#           initial   = 10,
-#           param_info = mlp_brulee_params,
-#           metrics = model_object$metrics
-#         )
-#
-#       tuner_fit = tune_models(model_object, tuner, val_set)
-#
-#       best_hyper <- as.list(tune::select_best(tuner_fit, metric = model_object$metrics))
-#
-#
-#       final_workflow = model_object$workflow %>%
-#         workflows::update_model(create_nn(best_hyper, task = task, epochs = 100))
-#
-#       tidy_object$add_workflow(final_workflow)
-#
-#       final_model <- workflows::finalize_workflow(
-#         x = tidy_object$workflow,
-#         parameters = best_hyper
-#       )
-#
-#       final_model <- final_model %>%
-#         fit(
-#           data = tidy_object$train
-#         )
-#
-#
-#     }
-#     #tuner_fit = tune_models(model_object, "Bayesian Optimization", val_set)
-#
-#
-#
-#     expect_equal(model_tuned, 4)
-#
-#
-# })
 
 
 
