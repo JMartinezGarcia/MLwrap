@@ -7,6 +7,28 @@ create_workflow <- function(tidy_object){
     return(workflow)
 }
 
+create_val_set <- function(tidy_object, prop_train = 0.6, prop_val = 0.2){
+
+  validation_split = rsample::initial_validation_split(tidy_object$full_data, prop = c(prop_train, prop_val))
+
+  tidy_object$add_train_data(rsample::training(validation_split))
+  tidy_object$add_validation_data(rsample::validation(validation_split))
+  tidy_object$add_test_data(rsample::testing(validation_split))
+
+  val_set <- rsample::validation_set(validation_split)
+
+  return(val_set)
+
+}
+
+create_metric_set <- function(metrics){
+
+  set_metrics <- yardstick::metric_set(!!!rlang::syms(metrics))
+
+  return(set_metrics)
+
+}
+
 extract_hyperparams <- function(tidy_object){
 
   extracted_hyperparams <-
@@ -38,11 +60,9 @@ hyperparams_grid_nn <- function(hyperparams, tuner, workflow){
 
 }
 
+tune_models_bayesian <- function(tidy_object, sampling_method, seed = 123){
 
-
-tune_models_bayesian <- function(tidy_object, sampling_method){
-
-        set.seed(123)
+        set.seed(seed)
 
         bayes_control <-
             tune::control_bayes(
@@ -139,21 +159,11 @@ model_tuning <- function(tidy_object, tuner, metrics){
 
               set.seed(123)
 
-              validation_split = rsample::initial_validation_split(tidy_object$full_data, prop = c(0.6, 0.3))
+              val_set <- create_val_set(tidy_object)
 
-              tidy_object$add_train_data(rsample::training(validation_split))
-              tidy_object$add_validation_data(rsample::validation(validation_split))
-              tidy_object$add_test_data(rsample::testing(validation_split))
-
-              val_set <- rsample::validation_set(validation_split)
-
-              hyperparams = tidy_object$hyperparameters
-
-              if (hyperparams$tuning == TRUE){
+              if (tidy_object$hyperparameters$tuning == TRUE){
 
                 tuner_fit = tune_models(tidy_object, tuner, val_set)
-
-                print(tune::show_best(tuner_fit))
 
                 tidy_object$add_tuner_fit(tuner_fit)
 
