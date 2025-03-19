@@ -71,7 +71,9 @@ test_that("create_val_set works properly", {
                                hyperparameters = hyper_nn_tune_list,
                                task = "classification")
 
-  val_set <- create_val_set(model_object)
+  val_set_and_split <- create_val_set(model_object)
+  val_set = val_set_and_split$val_set
+  val_split = val_set_and_split$val_split
 
   expect_equal(class(val_set)[1], "validation_set")
 
@@ -80,6 +82,8 @@ test_that("create_val_set works properly", {
   expect_equal(is.null(model_object$validation), F)
 
   expect_equal(is.null(model_object$test), F)
+
+  expect_equal(class(val_split), c("initial_validation_split", "three_way_split" ))
 
 })
 

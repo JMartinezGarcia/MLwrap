@@ -17,7 +17,7 @@ create_val_set <- function(tidy_object, prop_train = 0.6, prop_val = 0.2){
 
   val_set <- rsample::validation_set(validation_split)
 
-  return(val_set)
+  return(list(val_set = val_set, val_split= validation_split))
 
 }
 
@@ -159,7 +159,9 @@ model_tuning <- function(tidy_object, tuner, metrics, verbose = TRUE){
 
               set.seed(123)
 
-              val_set <- create_val_set(tidy_object)
+              val_set_and_split <- create_val_set(tidy_object)
+              val_set = val_set_and_split$val_set
+              val_split = val_set_and_split$val_split
 
               if (tidy_object$hyperparameters$tuning == TRUE){
 
@@ -182,9 +184,12 @@ model_tuning <- function(tidy_object, tuner, metrics, verbose = TRUE){
                 tidy_object$add_workflow(final_workflow)
 
                 final_model <- final_workflow %>%
-                  fit(
-                    data = rbind(tidy_object$train, tidy_object$validation)
-                  )
+                  tune::last_fit(split = val_split, add_validation_set = T, metrics = tidy_object$metrics)  #tune::finalize_workflow() %>% tune::last_fit(split = val_set, add_validation_set = T)
+
+                # final_model <- final_workflow %>%
+                #   fit(
+                #     data = rbind(tidy_object$train, tidy_object$validation)
+                #   )
 
                 tidy_object$add_final_models(final_model)
 
