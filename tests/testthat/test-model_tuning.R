@@ -35,8 +35,8 @@ df$x4 <- factor(df$x4, levels = c(0, 1, 2))
 df$y <- as.factor(df$y)  # Para clasificación
 
 
-transformer_ob = transformer(df, formula, "y",
-                             num_vars = c("x1", "x2"),
+transformer_ob = transformer(df, formula,
+                             num_vars = c("x1", "x2", "x1_squared", "x2_log"),
                              cat_vars = c("x3", "x4"),
                              norm_num_vars = "all",
                              encode_cat_vars = "all"
@@ -49,7 +49,7 @@ hyper_nn_tune_list = list(
   hidden_units = 3
 )
 
-metrics = c("roc_auc", "accuracy")
+metrics = c("roc_auc")
 
 test_that("create_workflow works properly", {
 
@@ -77,11 +77,11 @@ test_that("create_val_set works properly", {
 
   expect_equal(class(val_set)[1], "validation_set")
 
-  expect_equal(is.null(model_object$train), F)
+  expect_equal(is.null(model_object$train_data), F)
 
-  expect_equal(is.null(model_object$validation), F)
+  expect_equal(is.null(model_object$validation_data), F)
 
-  expect_equal(is.null(model_object$test), F)
+  expect_equal(is.null(model_object$test_data), F)
 
   expect_equal(class(val_split), c("initial_validation_split", "three_way_split" ))
 
@@ -96,7 +96,7 @@ test_that("create_metric_set works properly", {
 
   metrics = c("roc_auc", "accuracy")
 
-  model_object$add_metrics(metrics)
+  model_object$modify("metrics", metrics)
 
   metric_set <- create_metric_set(model_object$metrics)
 
@@ -113,9 +113,9 @@ test_that("extract_hyperparams works properly", {
 
   metrics = c("roc_auc", "accuracy")
 
-  model_object$add_workflow(create_workflow(model_object))
+  model_object$modify("workflow", create_workflow(model_object))
 
-  model_object$add_metrics(metrics)
+  model_object$modify("metrics", metrics)
 
   extracted_hyperparams <- extract_hyperparams(model_object)
 
@@ -132,13 +132,17 @@ test_that("tune_models_bayesian works properly", {
                                hyperparameters = hyper_nn_tune_list,
                                task = "classification")
 
-  model_object$add_workflow(create_workflow(model_object))
+  model_object$modify("workflow", create_workflow(model_object))
 
-  model_object$add_metrics(metrics)
+  model_object$modify("metrics", metrics)
 
   set.seed(123)
 
-  val_set <- create_val_set(model_object)
+  val_set_and_split <- create_val_set(model_object)
+
+  val_set = val_set_and_split$val_set
+
+  val_split = val_set_and_split$val_split
 
   tune_fit <- tune_models_bayesian(model_object, val_set, verbose = F)
 

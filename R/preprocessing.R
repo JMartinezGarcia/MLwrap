@@ -39,10 +39,16 @@ one_hot_predictors <- function(rec, encode_cat_vars, one_hot = T){
 
 
 
-transformer <- function(df, formula, dep_var, num_vars = NULL, cat_vars = NULL, norm_num_vars,
-                       encode_cat_vars){
+transformer <- function(df, formula, num_vars = NULL, cat_vars = NULL, norm_num_vars = "all", encode_cat_vars = "all"){
+
+          formula = as.formula(formula)
+
+          y = all.vars(formula)[1]
+
+          df[[y]] = as.factor(df[[y]])
 
           rec = create_recipe(formula = formula, data = df)
+
 
           # Check numerical variables are numeric
 
@@ -78,7 +84,7 @@ transformer <- function(df, formula, dep_var, num_vars = NULL, cat_vars = NULL, 
 
           tidy_object <- TidyMLObject$new(full_data = df, transformer = rec)
 
-          tidy_object$add_formula(formula)
+          tidy_object$modify("formula", formula)
 
           return(tidy_object)
 

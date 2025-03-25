@@ -1,81 +1,206 @@
 TidyMLObject <- R6::R6Class("TidyMLObject",
 
-  public = list(
+  active = list(
 
-    full_data = NULL,
-    train = NULL,
-    validation = NULL,
-    test = NULL,
-    transformer = NULL,
-    hyperparameters = NULL,
-    models = NULL,
-    models_names = NULL,
-    workflow = NULL,
-    metrics = NULL,
-    tuner = NULL,
-    tuner_fit = NULL,
-    final_models = NULL,
-    task = NULL,
-    formula = NULL,
-
-    initialize = function(full_data, transformer){
-
-      self$full_data = full_data
-      self$transformer = transformer
-
+    full_data = function(value) {
+      if (missing(value)) {
+        private$.full_data
+      } else {
+        stop("`$full_data` is read only", call. = FALSE)
+      }
     },
+
+    train_data = function(value) {
+      if (missing(value)) {
+        private$.train_data
+      } else {
+        stop("`$train_data` is read only", call. = FALSE)
+      }
+    },
+
+    test_data = function(value) {
+      if (missing(value)) {
+        private$.test_data
+      } else {
+        stop("`$test_data` is read only", call. = FALSE)
+      }
+    },
+
+    validation_data = function(value) {
+      if (missing(value)) {
+        private$.full_data
+      } else {
+        stop("`$validation_data` is read only", call. = FALSE)
+      }
+    },
+
+    transformer = function(value) {
+      if (missing(value)) {
+        private$.transformer
+      } else {
+        stop("`$transformer` is read only", call. = FALSE)
+      }
+    },
+
+    task = function(value) {
+      if (missing(value)) {
+        private$.task
+      } else {
+        stop("`$task` is read only", call. = FALSE)
+      }
+    },
+
+    hyperparameters = function(value) {
+      if (missing(value)) {
+        private$.hyperparameters
+      } else {
+        stop("`$hyperparameters` is read only", call. = FALSE)
+      }
+    },
+
+    models = function(value) {
+      if (missing(value)) {
+        private$.models
+      } else {
+        stop("`$models` is read only", call. = FALSE)
+      }
+    },
+
+    models_names = function(value) {
+      if (missing(value)) {
+        private$.models_names
+      } else {
+        stop("`$models_names` is read only", call. = FALSE)
+      }
+    },
+
+    workflow= function(value) {
+      if (missing(value)) {
+        private$.workflow
+      } else {
+        stop("`$workflow` is read only", call. = FALSE)
+      }
+    },
+
+    metrics = function(value) {
+      if (missing(value)) {
+        private$.metrics
+      } else {
+        stop("`$metrics` is read only", call. = FALSE)
+      }
+    },
+
+    tuner = function(value) {
+      if (missing(value)) {
+        private$.tuner
+      } else {
+        stop("`$tuner` is read only", call. = FALSE)
+      }
+    },
+
+    tuner_fit = function(value) {
+      if (missing(value)) {
+        private$.tuner_fit
+      } else {
+        stop("`$tuner_fit` is read only", call. = FALSE)
+      }
+    },
+
+    final_models = function(value) {
+      if (missing(value)) {
+        private$.final_models
+      } else {
+        stop("`$final_models` is read only", call. = FALSE)
+      }
+    },
+
+    formula = function(value) {
+      if (missing(value)) {
+        private$.formula
+      } else {
+        stop("`$formula` is read only", call. = FALSE)
+      }
+    },
+
+    fit_summaery = function(value) {
+      if (missing(value)) {
+        private$.fit_summary
+      } else {
+        stop("`$fit_summary` is read only", call. = FALSE)
+      }
+    }
+  ),
+
+  private = list(
+
+    .full_data = NULL,
+    .train_data = NULL,
+    .validation_data = NULL,
+    .test_data = NULL,
+    .transformer = NULL,
+    .hyperparameters = NULL,
+    .models = NULL,
+    .models_names = NULL,
+    .workflow = NULL,
+    .metrics = NULL,
+    .tuner = NULL,
+    .tuner_fit = NULL,
+    .final_models = NULL,
+    .task = NULL,
+    .formula = NULL,
+    .fit_summary = NULL,
 
     add_formula = function(formula){
 
-      self$formula <- formula
+      private$.formula <- formula
 
     },
 
     add_train_data = function(train_data){
 
-      self$train <- train_data
+      private$.train_data <- train_data
 
     },
 
     add_validation_data = function(validation_data){
 
-      self$validation <- validation_data
+      private$.validation_data <- validation_data
 
     },
 
     add_test_data = function(test_data){
 
-      self$test <- test_data
+      private$.test_data <- test_data
 
     },
 
     add_models = function(models){
 
-      self$models <- models
+      private$.models <- models
 
     },
 
     add_models_names = function(models_names){
 
-      self$models_names <- models_names
+      private$.models_names <- models_names
 
     },
 
     add_hyperparameters = function(hyperparameters){
 
-      self$hyperparameters <- hyperparameters
+      private$.hyperparameters <- hyperparameters
 
     },
 
     add_workflow = function(workflow){
 
-      self$workflow <- workflow
+      private$.workflow <- workflow
 
     },
 
     add_tuner = function(tuner){
 
-      self$tuner <- tuner
+      private$.tuner <- tuner
 
     },
 
@@ -83,31 +208,65 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
 
       #### CHECK METRICS!!!!
 
-      self$metrics <- metrics
+      private$.metrics <- metrics
 
     },
 
     add_tuner_fit = function(tuner_fit){
 
-      self$tuner_fit <- tuner_fit
+      private$.tuner_fit <- tuner_fit
 
     },
 
     add_final_models = function(final_models){
 
-      self$final_models = final_models
+      private$.final_models = final_models
 
     },
 
     add_task = function(task){
 
-      self$task = task
+      private$.task = task
+
+    },
+
+    add_fit_summary = function(fit_summary){
+
+      private$.fit_summary = fit_summary
 
     }
+  ),
 
+  public = list(
+
+    initialize = function(full_data, transformer){
+
+      private$.full_data <- full_data
+      private$.transformer <- transformer
+
+    },
+
+    modify = function(type, value) {
+
+      private_names <- names(private)
+
+      # Filtrar solo los atributos privados que comienzan con "."
+      auxiliary_funcs <- grep("^\\.", private_names, value = TRUE)
+      auxiliary_funcs <- sub("^\\.", "", auxiliary_funcs)
+
+      if (!(type %in% auxiliary_funcs)){
+        stop("Tipo no válido. Usa uno de los siguientes: ", paste(auxiliary_funcs), collapse = ", ")
+      }
+
+      method_name <- paste0("add_", type)  # "add_train", "add_test", "add_hyperparameters"
+      private_method <- get(method_name, envir = private)  # Obtener la función privada
+
+      private_method(value)
+    }
   )
-
 )
+
+
 
 HyperparametersBase <- R6::R6Class("HyperparametersBase",
                                public = list(

@@ -11,9 +11,9 @@ create_val_set <- function(tidy_object, prop_train = 0.6, prop_val = 0.2){
 
   validation_split = rsample::initial_validation_split(tidy_object$full_data, prop = c(prop_train, prop_val))
 
-  tidy_object$add_train_data(rsample::training(validation_split))
-  tidy_object$add_validation_data(rsample::validation(validation_split))
-  tidy_object$add_test_data(rsample::testing(validation_split))
+  tidy_object$modify("train_data", rsample::training(validation_split))
+  tidy_object$modify("validation_data", rsample::validation(validation_split))
+  tidy_object$modify("test_data", rsample::testing(validation_split))
 
   val_set <- rsample::validation_set(validation_split)
 
@@ -77,7 +77,7 @@ tune_models_bayesian <- function(tidy_object, sampling_method, seed = 123, verbo
 
           extracted_hyperparams <- extract_hyperparams(tidy_object)
 
-          set_metrics <- yardstick::metric_set(!!!rlang::syms(tidy_object$metrics))
+          set_metrics <- create_metric_set(tidy_object$metrics)
 
           print("COMMENCING BAYESIAN OPTIMIZATION")
 
@@ -151,9 +151,9 @@ tune_models <- function(tidy_object, tuner, sampling_method, verbose = TRUE){
 
 model_tuning <- function(tidy_object, tuner, metrics, verbose = TRUE){
 
-            tidy_object$add_workflow(create_workflow(tidy_object))
+            tidy_object$modify("workflow", create_workflow(tidy_object))
 
-            tidy_object$add_metrics(metrics)
+            tidy_object$modify("metrics", metrics)
 
             if (tidy_object$models_names == "Neural Network"){
 
@@ -167,7 +167,7 @@ model_tuning <- function(tidy_object, tuner, metrics, verbose = TRUE){
 
                 tuner_fit = tune_models(tidy_object, tuner, val_set, verbose = verbose)
 
-                tidy_object$add_tuner_fit(tuner_fit)
+                tidy_object$modify("tuner_fit", tuner_fit)
 
                 # ENTRENAMIENTO FINAL
                 # ============================================================================
@@ -181,17 +181,19 @@ model_tuning <- function(tidy_object, tuner, metrics, verbose = TRUE){
                 final_workflow = tidy_object$workflow %>%
                   workflows::update_model(create_nn(final_hyperparams, task = tidy_object$task, epochs = 100))
 
-                tidy_object$add_workflow(final_workflow)
+                tidy_object$modify("workflow", final_workflow)
+
+                metrics = create_metric_set(tidy_object$metrics)
 
                 final_model <- final_workflow %>%
-                  tune::last_fit(split = val_split, add_validation_set = T, metrics = tidy_object$metrics)  #tune::finalize_workflow() %>% tune::last_fit(split = val_set, add_validation_set = T)
+                  tune::last_fit(split = val_split, add_validation_set = T, metrics = metrics)
 
                 # final_model <- final_workflow %>%
                 #   fit(
                 #     data = rbind(tidy_object$train, tidy_object$validation)
                 #   )
 
-                tidy_object$add_final_models(final_model)
+                tidy_object$modify("final_models", final_model)
 
 
               } else{
@@ -216,7 +218,9 @@ model_tuning <- function(tidy_object, tuner, metrics, verbose = TRUE){
   test_data  <- rsample::testing(train_test_split)
               ###### IF HYPS are all length 1, else
 
-  }
+            }
+
+            return(tidy_object)
 
 }
 

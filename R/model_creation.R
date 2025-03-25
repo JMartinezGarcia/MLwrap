@@ -26,23 +26,23 @@ create_models <- function(tidy_object, model_names, hyperparameters = NULL, task
 
                     #tidy_object$add_hyperparameters(hyperparams)
 
-                    tidy_object$add_task(task)
+                    tidy_object$modify("task", task)
 
                     if (model_names == "Neural Network"){
 
                       hyperparams_nn = HyperparamsNN$new(hyperparameters)
 
-                      tidy_object$add_hyperparameters(hyperparams_nn)
+                      tidy_object$modify("hyperparameters", hyperparams_nn)
 
                       model = create_nn(hyperparams = hyperparams_nn, task = task, epochs = 10)
 
-                      tidy_object$add_models_names(model_names)
+                      tidy_object$modify("models_names", model_names)
 
-                      tidy_object$add_models(model)
+                      tidy_object$modify("models", model)
 
                     } else if (model_names == "XGBOOST"){
 
-                      tidy_objet$add_models(model_names)
+                      tidy_object$modify("models_names", model_names)
 
                     } else if (model_names == "SVM"){
 
