@@ -38,7 +38,7 @@ tidy_object = transformer(df,
                           )
 ```
 
-The function returns an object with the preprocessing information stored in it. We will need this object for the subsequent steps.
+The function returns an object with the preprocessing information stored in it. We will need this object for the subsequent steps. e
 
 ## Model Definition 
 
