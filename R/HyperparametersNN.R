@@ -1,0 +1,80 @@
+HyperparamsNN <- R6::R6Class("Neural Network Hyperparameters",
+                             inherit = HyperparametersBase,
+                             public = list(
+
+                               hidden_units_tune = TRUE,
+                               learn_rate_tune = TRUE,
+                               activation_tune = TRUE,
+                               epochs = 10,
+
+                               default_hyperparams = function() {
+                                 list(learn_rate = dials::learn_rate(range = c(-3, -1)),
+                                      hidden_units = dials::hidden_units(range = c(5, 20)),
+                                      activation = dials::activation(values = c("relu", "tanh", "sigmoid"))
+                                 )
+                               },
+
+                               set_hyperparams = function(hyperparams = NULL) {
+
+                                 default_hyperparameters <- self$default_hyperparams()
+
+                                 # Actualizar solo los valores proporcionados
+
+                                 if (!is.null(hyperparams)) {
+
+                                   if ("learn_rate" %in% names(hyperparams)) {
+
+                                     if (length(hyperparams$learn_rate) > 1){
+
+                                       default_hyperparameters$learn_rate <- dials::learn_rate(range = hyperparams$learn_rate)
+
+                                     } else {
+
+                                       default_hyperparameters$learn_rate <- hyperparams$learn_rate
+
+                                       self$learn_rate_tune = F
+
+                                     }
+
+                                   }
+
+                                   if ("hidden_units" %in% names(hyperparams)) {
+
+                                     if (length(hyperparams$hidden_units) > 1){
+
+                                       default_hyperparameters$hidden_units <- dials::hidden_units(range = hyperparams$hidden_units)
+
+                                     } else {
+
+                                       default_hyperparameters$hidden_units <- hyperparams$hidden_units
+
+                                       self$hidden_units_tune = F
+                                     }
+
+                                   }
+
+                                   if ("activation" %in% names(hyperparams)) {
+
+                                     if (length(hyperparams$activation) > 1){
+
+                                       default_hyperparameters$activation <- dials::activation(values = hyperparams$activation)
+
+                                     } else {
+
+                                       default_hyperparameters$activation <- hyperparams$activation
+
+                                       self$activation_tune = F
+
+                                     }
+
+                                   }
+
+                                 }
+
+                                 return(default_hyperparameters)
+
+                               }
+
+                             )
+
+)

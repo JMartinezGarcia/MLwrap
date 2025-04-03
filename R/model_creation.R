@@ -1,24 +1,3 @@
-create_nn <- function(hyperparams, task, epochs){
-
-  hidden_units <- if (hyperparams$hidden_units_tune) tune::tune() else as.integer(hyperparams$hyperparams_constant$hidden_units)
-  learn_rate <- if (hyperparams$learn_rate_tune) tune::tune() else hyperparams$hyperparams_constant$learn_rate
-  activation <- if (hyperparams$activation_tune) tune::tune() else hyperparams$hyperparams_constant$activation
-
-  model = parsnip::mlp(
-    hidden_units = !!hidden_units,
-    epochs = !!epochs,
-    learn_rate = !!learn_rate,
-    activation = !!activation,
-  ) %>%
-    parsnip::set_engine("brulee") %>%
-    parsnip::set_mode(task)
-
-  return(model)
-}
-
-
-
-
 create_models <- function(tidy_object, model_names, hyperparameters = NULL, task = "regression"){
 
                     ### EXCEPTION HANDLING
@@ -36,18 +15,43 @@ create_models <- function(tidy_object, model_names, hyperparameters = NULL, task
 
                       model = create_nn(hyperparams = hyperparams_nn, task = task, epochs = 10)
 
+                    } else if (model_names == "XGBOOST"){
+
+
+
+                    } else if (model_names == "Random Forest"){
+
+
+                      hyperparams_rf = HyperparamsRF$new(hyperparameters)
+
+                      tidy_object$modify("hyperparameters", hyperparams_rf)
+
+                      model = create_rf(hyperparams = hyperparams_rf, task = task)
+
                       tidy_object$modify("models_names", model_names)
 
                       tidy_object$modify("models", model)
 
-                    } else if (model_names == "XGBOOST"){
-
-                      tidy_object$modify("models_names", model_names)
 
                     } else if (model_names == "SVM"){
 
+                      type = hyperparameters$type
+
+                      hyperparams_svm = HyperparamsSVM$new(hyperparameters)
+
+                      tidy_object$modify("hyperparameters", hyperparams_svm)
+
+                      if (type == "rbf"){
+
+                      model = create_svm_rbf(hyperparams = hyperparams_svm, task = task)
+
+                      }
 
                     }
+
+                    tidy_object$modify("models_names", model_names)
+
+                    tidy_object$modify("models", model)
 
                     return(tidy_object)
 }

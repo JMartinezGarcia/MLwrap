@@ -1,7 +1,10 @@
 devtools::load_all()
 
-formula = "y ~ x1 + x2 + x3 + x4 + x1_squared + x2_log"
-formula = as.formula(formula)
+formula_reg = "y2 ~ x1 + x2 + x3 + x4"
+formula_reg = as.formula(formula_reg)
+
+formula_bin = "y ~ x1 + x2 + x3 + x4"
+formula_bin = as.formula(formula_bin)
 
 set.seed(42)  # Para reproducibilidad
 
@@ -28,6 +31,7 @@ df$x2[outlier_indices] <- df$x2[outlier_indices] * 2  # Hacer lo mismo para x2
 
 # Crear 'y' basado en reglas más complicadas
 df$y <- with(df, ifelse((x1 + x2 > 12) | (x3 == 1 & x4 != 2) | (x1_squared < 25 & x2_log > 1), 1, 0))
+df$y2 <- 3 * df$x1_squared + 0.8 * df$x2 + 1.3 * df$x2_log * df$x3
 
 # Convertir las variables categóricas
 df$x3 <- factor(df$x3)
@@ -35,8 +39,15 @@ df$x4 <- factor(df$x4, levels = c(0, 1, 2))
 df$y <- as.factor(df$y)  # Para clasificación
 
 
-transformer_ob = transformer(df, formula,
-                             num_vars = c("x1", "x2", "x1_squared", "x2_log"),
+transformer_ob_reg = transformer(df, formula_reg,
+                                 num_vars = c("x1", "x2"),
+                                 cat_vars = c("x3", "x4"),
+                                 norm_num_vars = "all",
+                                 encode_cat_vars = "all"
+)
+
+transformer_ob_bin = transformer(df, formula_bin,
+                             num_vars = c("x1", "x2"),
                              cat_vars = c("x3", "x4"),
                              norm_num_vars = "all",
                              encode_cat_vars = "all"
@@ -46,14 +57,19 @@ transformer_ob = transformer(df, formula,
 
 hyper_nn_tune_list = list(
   learn_rate = c(-2, -1),
-  hidden_units = 3
+  hidden_units = c(3,10)
+)
+
+hyper_rf_tune_list = list(
+  mtry = c(2,6),
+  trees = 100
 )
 
 metrics = c("roc_auc")
 
 test_that("create_workflow works properly", {
 
-  model_object = create_models(tidy_object = transformer_ob,
+  model_object = create_models(tidy_object = transformer_ob_bin,
                                model_names = "Neural Network",
                                hyperparameters = hyper_nn_tune_list,
                                task = "classification")
@@ -66,7 +82,7 @@ test_that("create_workflow works properly", {
 
 test_that("create_val_set works properly", {
 
-  model_object = create_models(tidy_object = transformer_ob,
+  model_object = create_models(tidy_object = transformer_ob_bin,
                                model_names = "Neural Network",
                                hyperparameters = hyper_nn_tune_list,
                                task = "classification")
@@ -89,7 +105,7 @@ test_that("create_val_set works properly", {
 
 test_that("create_metric_set works properly", {
 
-  model_object = create_models(tidy_object = transformer_ob,
+  model_object = create_models(tidy_object = transformer_ob_bin,
                                model_names = "Neural Network",
                                hyperparameters = hyper_nn_tune_list,
                                task = "classification")
@@ -106,7 +122,7 @@ test_that("create_metric_set works properly", {
 
 test_that("extract_hyperparams works properly", {
 
-  model_object = create_models(tidy_object = transformer_ob,
+  model_object = create_models(tidy_object = transformer_ob_bin,
                                model_names = "Neural Network",
                                hyperparameters = hyper_nn_tune_list,
                                task = "classification")
@@ -119,15 +135,17 @@ test_that("extract_hyperparams works properly", {
 
   extracted_hyperparams <- extract_hyperparams(model_object)
 
-  expect_equal(extracted_hyperparams$object[[1]]$values, c("relu", "tanh", "sigmoid"))
+  expect_equal(extracted_hyperparams$object[[1]]$range, list(lower = 3, upper = 10))
 
-  expect_equal(extracted_hyperparams$object[[2]]$range, list(lower = -2, upper = -1))
+  expect_equal(extracted_hyperparams$object[[2]]$values, c("relu", "tanh", "sigmoid"))
+
+  expect_equal(extracted_hyperparams$object[[3]]$range, list(lower = -2, upper = -1))
 
 })
 
-test_that("tune_models_bayesian works properly", {
+test_that("tune_models_bayesian works properly classification", {
 
-  model_object = create_models(tidy_object = transformer_ob,
+  model_object = create_models(tidy_object = transformer_ob_bin,
                                model_names = "Neural Network",
                                hyperparameters = hyper_nn_tune_list,
                                task = "classification")
@@ -153,6 +171,38 @@ test_that("tune_models_bayesian works properly", {
   expect_equal(is.null(tune_fit$.metrics), F)
 
   expect_equal(tune_fit$.iter, c(0,1,2,3,4,5))
+
+})
+
+test_that("tune_models_bayesian works properly regression", {
+
+  model_object = create_models(tidy_object = transformer_ob_reg,
+                               model_names = "Neural Network",
+                               hyperparameters = hyper_nn_tune_list,
+                               task = "regression")
+  metrics = c("rmse")
+
+  model_object$modify("workflow", create_workflow(model_object))
+
+  model_object$modify("metrics", metrics)
+
+  set.seed(123)
+
+  val_set_and_split <- create_val_set(model_object)
+
+  val_set = val_set_and_split$val_set
+
+  val_split = val_set_and_split$val_split
+
+  tune_fit <- tune_models_bayesian(model_object, val_set, verbose = F)
+
+  expect_equal(class(tune_fit)[1:2], c("iteration_results", "tune_results"))
+
+  expect_equal(is.null(tune_fit$.predictions), F)
+
+  expect_equal(is.null(tune_fit$.metrics), F)
+
+  expect_equal(tune_fit$.iter, c(0,1,2,3,4,5, 6, 7, 8))
 
 })
 

@@ -4,7 +4,6 @@ metrics_info <- list(
   #   Regression
   #################
 
-  mse = c("numeric", "minimize"),
   rmse = c("numeric", "minimize"),
   mae = c("numeric", "minimize"),
   mpe = c("numeric", "minimize"),

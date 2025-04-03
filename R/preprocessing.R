@@ -43,10 +43,6 @@ transformer <- function(df, formula, num_vars = NULL, cat_vars = NULL, norm_num_
 
           formula = as.formula(formula)
 
-          y = all.vars(formula)[1]
-
-          df[[y]] = as.factor(df[[y]])
-
           rec = create_recipe(formula = formula, data = df)
 
 

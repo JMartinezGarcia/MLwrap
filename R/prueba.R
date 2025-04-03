@@ -82,19 +82,52 @@
 # #             Otra Forma de Hacerlo      #
 # #################################################
 #
-# formula = "Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width"
-#
+formula = "Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width"
+formula2 = "Sepal.Length ~ Species + Sepal.Width + Petal.Length + Petal.Width"
+
 # model_fit <- dat_big %>%
 #
 #                   transformer(formula = formula) %>%
 #
 #                   create_models(model_names = "Neural Network",
-#                                 hyperparameters = list(hidden_units = 2, activation = c("relu", "sigmoid")),
+#                                 hyperparameters = list(
+#
+#                                   hidden_units = 2,
+#                                   activation = c("relu", "sigmoid")
+#
+#                                   ),
 #                                 task = "classification") %>%
 #
 #                   model_tuning(tuner = "Bayesian Optimization",
-#                                metrics = "roc_auc")
+#                                metrics = "roc_auc")  %>%
 #
+#                    get_results(summary = T, roc_curve = T)
+
+
+# model_fit <- dat_big %>%
+#
+#                   transformer(formula = formula2) %>%
+#
+#                   create_models(model_names = "Neural Network",
+#                                 hyperparameters = list(hidden_units = 5, activation = c("relu", "sigmoid")),
+#                                 task = "regression") %>%
+#
+#                   model_tuning(tuner = "Bayesian Optimization",
+#                                metrics = "rmse")
+#
+# model_fit <- dat_big %>%
+#
+#   transformer(formula = formula2) %>%
+#
+#   create_models(model_names = "Random Forest",
+#                 hyperparameters = list(mtry  = c(2,3), trees = 100),
+#                 task = "regression") %>%
+#
+#   model_tuning(tuner = "Grid Search CV",
+#                metrics = "rmse") %>%
+#
+#   get_results(summary = T)
+
 # plot_roc_curve_binary(model_fit)
 #
 # box_plot_binary(model_fit)
@@ -104,3 +137,5 @@
 # summary_binary(model_fit)
 #
 # permutation_feature_importance(model_fit)
+
+
