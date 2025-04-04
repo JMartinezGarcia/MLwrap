@@ -4,6 +4,8 @@ model_tuning <- function(tidy_object, tuner, metrics, verbose = TRUE){
 
             tidy_object$modify("metrics", metrics)
 
+            tidy_object$modify("tuner", tuner)
+
             set_metrics <- create_metric_set(tidy_object$metrics)
 
             set.seed(123)
@@ -14,11 +16,15 @@ model_tuning <- function(tidy_object, tuner, metrics, verbose = TRUE){
 
             if (tidy_object$hyperparameters$tuning == TRUE){
 
+                print("Commencing Tuning...")
+
                 tuner_fit = tune_models(tidy_object,
                                         tuner,
                                         sampling_method,
                                         metrics = set_metrics,
                                         verbose = verbose)
+
+                print("Tuning Finalized")
 
                 tidy_object$modify("tuner_fit", tuner_fit)
 

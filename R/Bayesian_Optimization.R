@@ -10,12 +10,10 @@ tune_models_bayesian <- function(tidy_object, sampling_method, metrics, seed = 1
       verbose_iter  = verbose,
       save_pred     = TRUE,
       save_workflow = TRUE
+
     )
 
-
   extracted_hyperparams <- extract_hyperparams(tidy_object)
-
-  print("COMMENCING BAYESIAN OPTIMIZATION")
 
   tuner_object <-
     tidy_object$workflow %>%
@@ -27,8 +25,6 @@ tune_models_bayesian <- function(tidy_object, sampling_method, metrics, seed = 1
       param_info = extracted_hyperparams,
       metrics = metrics
     )
-
-  print("FINISHED BAYESIAN OPTIMIZATION")
 
   return(tuner_object)
 

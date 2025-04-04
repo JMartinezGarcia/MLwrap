@@ -71,7 +71,23 @@ hyperparams_grid <- function(hyperparams, levels = 5){
 plot_tuning_results <- function(tidy_object){
 
   tidy_object$tuner_fit %>%
-    autoplot() %>%
+    tune::autoplot() %>%
     print()
+
+  tidy_object$tuner_fit %>%
+    tune::show_best(metric = tidy_object$metrics) %>%
+    print()
+
+  if (tidy_object$tuner == "Bayesian Optimization"){
+
+  tidy_object$tuner_fit %>%
+      tune::autoplot(type = "performance") %>%
+      print()
+
+  tidy_object$tuner_fit %>%
+    tune::autoplot(., search_res, type = "parameters") +
+    ggplot2::labs(x = "Iterations", y = NULL)
+
+  }
 
 }

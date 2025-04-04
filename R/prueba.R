@@ -120,7 +120,7 @@
 #   transformer(formula = formula2) %>%
 #
 #   create_models(model_names = "Random Forest",
-#                 hyperparameters = list(mtry  = c(2,3), trees = 100),
+#                 hyperparameters = list(mtry  = c(2,3), trees = c(100, 120)),
 #                 task = "regression") %>%
 #
 #   model_tuning(tuner = "Grid Search CV",

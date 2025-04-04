@@ -1,13 +1,11 @@
 formula_bin <- "species ~ ."
 formula_reg <- "bill_length_mm ~ ."
 
-
 df <- palmerpenguins::penguins %>%
   na.omit() %>%
   select(-year) %>%
   filter(species == "Adelie" | species == "Gentoo") %>%
   mutate(species = droplevels(species))
-
 
 transformer_ob_reg = transformer(df, formula_reg,
                                  norm_num_vars = "all",
@@ -20,13 +18,17 @@ transformer_ob_bin = transformer(df, formula_bin,
 )
 
 hyper_nn_tune_list = list(
+
   learn_rate = c(-2, -1),
   hidden_units = c(3,10)
+
 )
 
 hyper_rf_tune_list = list(
+
   mtry = c(2,6),
   trees = 100
+
 )
 
 model_object_bin = create_models(tidy_object = transformer_ob_bin,
