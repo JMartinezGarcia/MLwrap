@@ -82,8 +82,8 @@
 # #             Otra Forma de Hacerlo      #
 # #################################################
 #
-formula = "Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width"
-formula2 = "Sepal.Length ~ Species + Sepal.Width + Petal.Length + Petal.Width"
+# formula = "Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width"
+# formula2 = "Sepal.Length ~ Species + Sepal.Width + Petal.Length + Petal.Width"
 
 # model_fit <- dat_big %>%
 #
@@ -92,7 +92,7 @@ formula2 = "Sepal.Length ~ Species + Sepal.Width + Petal.Length + Petal.Width"
 #                   create_models(model_names = "Neural Network",
 #                                 hyperparameters = list(
 #
-#                                   hidden_units = 2,
+#                                   hidden_units = c(2, 5),
 #                                   activation = c("relu", "sigmoid")
 #
 #                                   ),

@@ -57,6 +57,26 @@ model_tuning <- function(tidy_object, tuner, metrics, verbose = TRUE){
 
 }
 
+tune_models <- function(tidy_object, tuner, sampling_method, metrics, verbose = TRUE){
 
+  if (tuner == "Bayesian Optimization"){
+
+    tuner_object <- tune_models_bayesian(tidy_object, sampling_method, metrics = metrics,  verbose = verbose)
+
+  } else if (tuner == "Grid Search CV"){
+
+    tuner_object <- tune_models_grid_search_cv(tidy_object, sampling_method, metrics = metrics, verbose = verbose)
+
+  }
+
+  else {
+
+    ##### ERRRORRRR
+
+  }
+
+  return(tuner_object)
+
+}
 
 

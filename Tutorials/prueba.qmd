@@ -40,7 +40,7 @@ tidy_object = transformer(df,
 
 The function returns an object with the preprocessing information stored in it. We will need this object for the subsequent steps. e
 
-## Model Definition 
+## Model Definition
 
 In this step will define the model we will use as well as specify the hyperparameters for the model. We will use the **create_models** function. We will pass:
 
