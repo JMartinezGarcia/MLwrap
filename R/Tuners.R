@@ -75,7 +75,7 @@ plot_tuning_results <- function(tidy_object){
     print()
 
   tidy_object$tuner_fit %>%
-    tune::show_best(metric = tidy_object$metrics) %>%
+    tune::show_best(metric = tidy_object$metrics[1]) %>%
     print()
 
   if (tidy_object$tuner == "Bayesian Optimization"){

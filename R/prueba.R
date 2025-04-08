@@ -82,26 +82,27 @@
 # #             Otra Forma de Hacerlo      #
 # #################################################
 #
+
 # formula = "Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width"
 # formula2 = "Sepal.Length ~ Species + Sepal.Width + Petal.Length + Petal.Width"
+#
+model_fit <- dat_big %>%
 
-# model_fit <- dat_big %>%
-#
-#                   transformer(formula = formula) %>%
-#
-#                   create_models(model_names = "Neural Network",
-#                                 hyperparameters = list(
-#
-#                                   hidden_units = c(2, 5),
-#                                   activation = c("relu", "sigmoid")
-#
-#                                   ),
-#                                 task = "classification") %>%
-#
-#                   model_tuning(tuner = "Bayesian Optimization",
-#                                metrics = "roc_auc")  %>%
-#
-#                    get_results(summary = T, roc_curve = T)
+                  transformer(formula = formula) %>%
+
+                  create_models(model_names = "SVM",
+                                hyperparameters = list(
+
+                                  degree= c(2, 4),
+                                  type = "poly"
+
+                                  ),
+                                task = "classification") %>%
+
+                  model_tuning(tuner = "Bayesian Optimization",
+                               metrics = "roc_auc")  %>%
+
+                   get_results(summary = T, roc_curve = T)
 
 
 # model_fit <- dat_big %>%
@@ -113,20 +114,11 @@
 #                                 task = "regression") %>%
 #
 #                   model_tuning(tuner = "Bayesian Optimization",
-#                                metrics = "rmse")
+#                                metrics = "rmse") %>%
 #
-# model_fit <- dat_big %>%
-#
-#   transformer(formula = formula2) %>%
-#
-#   create_models(model_names = "Random Forest",
-#                 hyperparameters = list(mtry  = c(2,3), trees = c(100, 120)),
-#                 task = "regression") %>%
-#
-#   model_tuning(tuner = "Grid Search CV",
-#                metrics = "rmse") %>%
-#
-#   get_results(summary = T)
+  #
+  #
+  # get_results(summary = T)
 
 # plot_roc_curve_binary(model_fit)
 #

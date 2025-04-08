@@ -115,11 +115,38 @@ get_results <- function(tidy_object,
 
 }
 
+modify_datasets <- function(tidy_object){
+
+  rec <- recipes::prep(tidy_object$transformer,
+                       training = tidy_object$train_data,
+                       strings_as_factors = T)
+
+  new_train <- recipes::bake(rec, new_data = tidy_object$train_data)
+  new_test <- recipes::bake(rec, new_data = tidy_object$test_data)
+
+  tidy_object$modify("train_data", new_train)
+  tidy_object$modify("test_data", new_test)
+
+  if (!is.null(tidy_object$validation_data)){
+
+    new_validation <- recipes::bake(rec, new_data = tidy_object$validation_data)
+    tidy_object$modify("validation_data", new_validation)
+
+  }
+
+  print(new_train)
+
+  return(tidy_object)
+
+}
+
 ######################################################
 #         get_predictions                           #
 ######################################################
 
 get_predictions <- function(tidy_object, new_data = "test"){
+
+  #tidy_object <- modify_datasets(tidy_object)
 
   if (tidy_object$task == "regression"){
 
@@ -158,37 +185,4 @@ summary_results <- function(tidy_object, new_data = "test"){
 #       Interpretable ML
 ###########################
 
-permutation_feature_importance <- function(tidy_object, new_data = "test"){
-
-  pfun <- function(object, newdata){
-
-   pred = predict(object, new_data = newdata, type = "prob")
-
-   return(pred[[2]])
-
-}
-
-  model_parsnip <- tidy_object$final_models %>%
-                      tune::extract_workflow() %>%
-                      tune::extract_fit_parsnip()
-
-
-  dat = tidy_object$transformer %>%
-    recipes::prep(training = tidy_object$train) %>%
-    recipes::bake(new_data = tidy_object[[new_data]])
-
-  vis <- vip::vi(model_parsnip,
-                 method = "permute",
-                 nsim = 10,
-                 metric = "roc_auc",
-                 train = dat,
-                 target = "Species",
-                 pred_wrapper = pfun,
-                 event_level = "second")
-
-  vip::vip(vis, include_type = TRUE, all_permutations = TRUE,
-           geom = "boxplot", aesthetics = list(color = "lightblue", width = 0.3))
-
-
-}
 

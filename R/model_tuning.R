@@ -1,4 +1,4 @@
-model_tuning <- function(tidy_object, tuner, metrics, verbose = TRUE){
+model_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose = TRUE){
 
             tidy_object$modify("workflow", create_workflow(tidy_object))
 
@@ -28,10 +28,16 @@ model_tuning <- function(tidy_object, tuner, metrics, verbose = TRUE){
 
                 tidy_object$modify("tuner_fit", tuner_fit)
 
+                if (plot_results == T){
+
+                  plot_tuning_results(tidy_object)
+
+                }
+
                 # ENTRENAMIENTO FINAL
                 # ============================================================================
 
-                best_hyper <- tune::select_best(tuner_fit, metric = tidy_object$metrics)
+                best_hyper <- tune::select_best(tuner_fit, metric = tidy_object$metrics[1])
 
                 final_hyperparams <- c(as.list(best_hyper),
                                        tidy_object$hyperparameters$hyperparams_constant

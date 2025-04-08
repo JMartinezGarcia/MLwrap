@@ -43,7 +43,15 @@ create_models <- function(tidy_object, model_names, hyperparameters = NULL, task
 
                       if (type == "rbf"){
 
-                      model = create_svm_rbf(hyperparams = hyperparams_svm, task = task)
+                        model = create_svm_rbf(hyperparams = hyperparams_svm, task = task)
+
+                      } else if (type == "poly"){
+
+                        model = create_svm_poly(hyperparams = hyperparams_svm, task = task)
+
+                      } else if (type == "linear"){
+
+                        model = create_svm_linear(hyperparams = hyperparams_svm, task = task)
 
                       }
 

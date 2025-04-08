@@ -29,7 +29,7 @@ HyperparamsSVM <- R6::R6Class("Neural Network Hyperparameters",
 
                                  } else if (hyperparams$type == "poly"){
 
-                                   selfdegree_tune = TRUE
+                                   self$degree_tune = TRUE
                                    self$scale_factor_tune = TRUE
 
 

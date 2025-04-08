@@ -9,7 +9,7 @@ editor: visual
 We will first import the dataset from palmerpenguins library
 
 ```{r}
-load_all()
+devtools::load_all()
 
 df <- palmerpenguins::penguins %>%
   na.omit() %>%
