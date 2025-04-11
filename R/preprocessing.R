@@ -38,7 +38,7 @@ one_hot_predictors <- function(rec, encode_cat_vars, one_hot = T){
 }
 
 
-
+#' @export
 transformer <- function(df, formula, num_vars = NULL, cat_vars = NULL, norm_num_vars = "all", encode_cat_vars = "all"){
 
           formula = as.formula(formula)

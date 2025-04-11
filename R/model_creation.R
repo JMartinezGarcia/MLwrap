@@ -1,3 +1,5 @@
+
+#' @export
 create_models <- function(tidy_object, model_names, hyperparameters = NULL, task = "regression"){
 
                     ### EXCEPTION HANDLING
