@@ -10,12 +10,13 @@ We will first import the dataset from palmerpenguins library
 
 ```{r}
 devtools::load_all()
+library(dplyr)
 
 df <- palmerpenguins::penguins %>%
   na.omit() %>%
-  select(-year) %>%
-  filter(species == "Adelie" | species == "Gentoo") %>%
-  mutate(species = droplevels(species))
+  dplyr::select(-year) %>%
+  dplyr::filter(species == "Adelie" | species == "Gentoo") %>%
+  dplyr::mutate(species = droplevels(species))
 ```
 
 We have omitted the ***year*** column and selected only two species (*Adelie* and *Gentoo*) for binary classification.

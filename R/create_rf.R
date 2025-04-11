@@ -13,4 +13,5 @@ create_rf <- function(hyperparams, task){
     parsnip::set_mode(task)
 
   return(model)
+
 }

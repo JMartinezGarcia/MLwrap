@@ -43,7 +43,9 @@ transformer <- function(df, formula, num_vars = NULL, cat_vars = NULL, norm_num_
 
           formula = as.formula(formula)
 
-          df = df[all.vars(formula)]
+          if (all.vars(formula)[2] != "."){
+            df = df[all.vars(formula)]
+          }
 
           rec = create_recipe(formula = formula, data = df)
 

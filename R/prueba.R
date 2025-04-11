@@ -86,23 +86,25 @@
 # formula = "Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width"
 # formula2 = "Sepal.Length ~ Species + Sepal.Width + Petal.Length + Petal.Width"
 #
-model_fit <- dat_big %>%
-
-                  transformer(formula = formula) %>%
-
-                  create_models(model_names = "SVM",
-                                hyperparameters = list(
-
-                                  degree= c(2, 4),
-                                  type = "poly"
-
-                                  ),
-                                task = "classification") %>%
-
-                  model_tuning(tuner = "Bayesian Optimization",
-                               metrics = "roc_auc")  %>%
-
-                   get_results(summary = T, roc_curve = T)
+# model_fit <- dat_big %>%
+#
+#                   transformer(formula = formula) %>%
+#
+#                   create_models(model_names = "SVM",
+#                                 hyperparameters = list(
+#
+#                                   degree= c(2, 4),
+#                                   type = "poly"
+#
+#                                   ),
+#                                 task = "classification") %>%
+#
+#                   model_tuning(tuner = "Bayesian Optimization",
+#                                metrics = "roc_auc")  %>%
+#
+#                    get_results(summary = T, roc_curve = T) %>%
+#
+#                    sensitivity_analysis(shap_plot = T)
 
 
 # model_fit <- dat_big %>%

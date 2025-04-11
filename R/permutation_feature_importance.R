@@ -1,4 +1,19 @@
-                                        ###########################
+pfi_plot <- function(tidy_object, new_data = "test", metric = NULL){
+
+  if (tidy_object$task == "regression"){
+
+    pfi_reg(tidy_object, new_data = new_data, metric = metric)
+
+  } else if (tidy_object$task == "classification"){
+
+    pfi_bin(tidy_object, new_data = new_data, metric = metric)
+
+  }
+
+}
+
+
+                                       ###########################
                                         #     Regression          #
                                         ###########################
 
@@ -32,8 +47,10 @@ pfi_reg <- function(tidy_object, new_data = "test", metric = NULL){
                  target = y,
                  pred_wrapper = pfun) #, event_level = "second")
 
-  vip::vip(vis, include_type = TRUE, all_permutations = TRUE,
+  p <- vip::vip(vis, include_type = TRUE, all_permutations = TRUE,
            geom = "boxplot", aesthetics = list(color = "lightblue", width = 0.3))
+
+  print(p)
 
 }
 
@@ -102,8 +119,10 @@ pfi_bin <- function(tidy_object, new_data = "test", metric = NULL){
                  pred_wrapper = pfun,
                  event_level = "second")
 
-  vip::vip(vis, include_type = TRUE, all_permutations = TRUE,
+  p <- vip::vip(vis, include_type = TRUE, all_permutations = TRUE,
            geom = "boxplot", aesthetics = list(color = "lightblue", width = 0.3))
+
+  print(p)
 
 }
 
