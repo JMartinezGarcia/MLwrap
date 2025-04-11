@@ -15,9 +15,6 @@ create_models <- function(tidy_object, model_names, hyperparameters = NULL, task
 
                       tidy_object$modify("hyperparameters", hyperparams_nn)
 
-                      print(tidy_object$hyperparameters)
-                      print(hyperparameters)
-
                       model = create_nn(hyperparams = hyperparams_nn, task = task, epochs = 25)
 
                     } else if (model_names == "XGBOOST"){
