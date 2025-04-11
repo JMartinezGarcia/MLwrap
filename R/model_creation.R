@@ -15,6 +15,9 @@ create_models <- function(tidy_object, model_names, hyperparameters = NULL, task
 
                       tidy_object$modify("hyperparameters", hyperparams_nn)
 
+                      print(tidy_object$hyperparameters)
+                      print(hyperparameters)
+
                       model = create_nn(hyperparams = hyperparams_nn, task = task, epochs = 25)
 
                     } else if (model_names == "XGBOOST"){
@@ -30,9 +33,6 @@ create_models <- function(tidy_object, model_names, hyperparameters = NULL, task
 
                       model = create_rf(hyperparams = hyperparams_rf, task = task)
 
-                      tidy_object$modify("models_names", model_names)
-
-                      tidy_object$modify("models", model)
 
 
                     } else if (model_names == "SVM"){
