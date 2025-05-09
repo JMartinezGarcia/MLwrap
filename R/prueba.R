@@ -36,7 +36,7 @@
 # # Crear interacciones entre variables
 # dat_big <- dat_big %>%
 #   mutate(Sepal.Petal.Ratio = Sepal.Length / Petal.Length)
-#
+
 # # Generar datos fuera de la distribución normal
 # dat_big <- dat_big %>%
 #   mutate(Outlier.Var = ifelse(runif(n()) < 0.05, rnorm(n(), mean = 50, sd = 10), Sepal.Length))
@@ -50,9 +50,9 @@
 #
 # dat_big <- na.omit(dat_big)
 
-#colnames(dat_big) <- gsub("\\.", "_", colnames(dat_big))
+# colnames(dat_big) <- gsub("\\.", "_", colnames(dat_big))
 
-#dat_big$Species <- as.factor(dat_big$Species)
+# dat_big$Species <- as.factor(dat_big$Species)
 
 
 # dat_big2 <- dat_big %>%
@@ -71,7 +71,7 @@
 #
 # formula = "Species ~ ."
 #
-# tidy_object = transformer(dat_big, formula, task = "classification")
+# tidy_object = preprocessing(dat_big, formula, task = "classification")
 #
 # tidy_object = create_models(tidy_object, "Neural Network",
 #                             hyperparameters = list(hidden_units = 3, activation = c("relu", "tanh")))

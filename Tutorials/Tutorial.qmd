@@ -17,7 +17,7 @@ TidyML is a minimal library focused on providing all the essential tools for the
 
 5.  Sensitivity Analysis / Interpretable ML
 
-![](images/Captura de Pantalla 2025-05-08 a las 10.30.04.png)
+![](images/Captura%20de%20Pantalla%202025-05-08%20a%20las%2010.30.04.png)
 
 TidyML can be downloaded from github using the ***devtools::install_github()*** function.
 
@@ -70,7 +70,7 @@ Internally, due to the sequential nature of the workflow, each step stores new i
 
 -   *sensitivity_analysis*: Sensitivity analysis results
 
-![](images/Captura de Pantalla 2025-05-08 a las 10.30.14.png)
+![](images/Captura%20de%20Pantalla%202025-05-08%20a%20las%2010.30.14.png)
 
 # **Binary Classification Example**
 

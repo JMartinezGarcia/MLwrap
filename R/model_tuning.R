@@ -68,6 +68,8 @@ fine_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose =
 
             }
 
+            set.seed(123)
+
             final_model <- tidy_object$workflow %>%
 
               tune::finalize_workflow(final_hyperparams) %>%
