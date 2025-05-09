@@ -80,6 +80,8 @@ fine_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose =
 
             if (tidy_object$models_names == "Neural Network"){
 
+              print(final_model)
+
               print("############# Loss Curve")
 
               p <- autoplot(tune::extract_fit_parsnip(final_model)) +
