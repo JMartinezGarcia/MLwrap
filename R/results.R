@@ -1,7 +1,7 @@
 ######################################################
 #         get_results                                #
 ######################################################
-
+#' @export
 show_results <- function(tidy_object,
                         summary = FALSE, roc_curve = FALSE, pr_curve = FALSE,
                         gain_curve = FALSE, lift_curve = FALSE,

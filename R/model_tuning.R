@@ -1,3 +1,4 @@
+#' @export
 fine_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose = FALSE){
 
             tidy_object$modify("workflow", create_workflow(tidy_object))

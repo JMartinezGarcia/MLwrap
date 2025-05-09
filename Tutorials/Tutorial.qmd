@@ -19,16 +19,56 @@ TidyML is a minimal library focused on providing all the essential tools for the
 
 ![](images/Captura de Pantalla 2025-05-08 a las 10.30.04.png)
 
-Internally, due to the sequential nature of the workflow, each step stores new information of the analysis on an object called "tidy_object". At any time during the process, the internal information of the analysis can be retrieved from the tidy_object using the "\$" operator. The implemented fields are:
+TidyML can be downloaded from github using the ***devtools::install_github()*** function.
 
 ```{r}
-devtools::load_all()
+
+#install.packages("devtools")
+#devtools::install_github("JMartinezGarcia/TidyML")
+
 library(dplyr)
-
-tidy_object = TidyMLObject$new(0, 0, 0, 0,0)
-
-names(tidy_object)
+library(TidyML)
 ```
+
+Internally, due to the sequential nature of the workflow, each step stores new information of the analysis on an object called "tidy_object". At any time during the process, the internal information of the analysis can be retrieved from the tidy_object using the "\$" operator. The implemented fields are:
+
+-   *formula*: Modelling formula
+
+-   *task*: task of analysis ("regression" or "classification")
+
+-   *full_data*: Full data matrix
+
+-   *train_data*: Training data matrix
+
+-   *validation_data*: Validation data matrix (with Grid Search CV there is no validation data)
+
+-   *test_data*: Testing data matrix
+
+-   *outcome_levels*: Levels of target feature if task is classification
+
+-   *transformer*: Preprocessor object (recipe from recipe library)
+
+-   *models_names*: Name of model
+
+-   *models*: Model before fitting (from parsnip library)
+
+-   *hyperparameters*: Hyperparameters for tuning
+
+-   *metrics*: Metric used for tuning
+
+-   *tuner*: Name of tuner
+
+-   *tuner_fit*: Results from tuner search
+
+-   *workflow*: Whole workflow (from workflow library)
+
+-   *final_models*: Final trained model (from parsnip library)
+
+-   *fit_summary*: Performance summary results
+
+-   *predictions*: Predictions of the model
+
+-   *sensitivity_analysis*: Sensitivity analysis results
 
 ![](images/Captura de Pantalla 2025-05-08 a las 10.30.14.png)
 

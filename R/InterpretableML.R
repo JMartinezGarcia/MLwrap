@@ -1,7 +1,7 @@
 ###########################
 #       Interpretable ML
 ###########################
-
+#' @export
 sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
 
   task = tidy_object$task
