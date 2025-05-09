@@ -47,7 +47,7 @@ get_predictions_binary <- function(tidy_object, new_data = "test"){
     #             SUMMARY                  #
     ########################################
 
-summary_binary <- function(tidy_object, new_data = "test"){
+summary_binary <- function(predictions, new_data = "test"){
 
   metric_funcs <- list(
 
@@ -62,14 +62,12 @@ summary_binary <- function(tidy_object, new_data = "test"){
     MCC = function(data) mcc(data, y, .pred_class),
     J_index = function(data) j_index(data, y, .pred_class),
     Detection_Prevalence = function(data) detection_prevalence(data, y, .pred_class, event_level = "second"),
-    AUC_ROC = function(data) roc_auc(data, y, data[[predicted]], event_level = "second"),
-    AUC_PR = function(data) pr_auc(data, y, data[[predicted]], event_level = "second"),
-    Gain_Capture = function(data) gain_capture(data, y, data[[predicted]], event_level = "second"),
-    Brier_Score = function(data) brier_class(data, y, data[[predicted]], event_level = "second")
+    AUC_ROC = function(data) yardstick::roc_auc(data, y, predicted, event_level = "second"),
+    AUC_PR = function(data) yardstick::pr_auc(data, y, predicted, event_level = "second"),
+    Gain_Capture = function(data) yardstick::gain_capture(data, y, predicted, event_level = "second"),
+    Brier_Score = function(data) yardstick::brier_class(data, y, predicted, event_level = "second")
 
   )
-
-  predictions <- get_predictions_binary(tidy_object, new_data = new_data)
 
   positive_class = levels(predictions$y)[2]
 
@@ -204,7 +202,7 @@ plot_calibration_curve_binary <- function(predictions, new_data = "test"){
 }
 
 
-plot_conf_mat_binary <- function(predictions, new_data = "test"){
+plot_conf_mat <- function(predictions, new_data = "test"){
 
   confusion_matrix = yardstick::conf_mat(predictions, truth = y, estimate = .pred_class)
 

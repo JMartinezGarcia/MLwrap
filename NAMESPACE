@@ -2,5 +2,6 @@
 
 export("%>%")
 export(create_models)
+export(create_recipe)
 export(transformer)
 importFrom(magrittr,"%>%")

@@ -1,29 +1,41 @@
-formula = "y ~ x1 + x2 + x3 + x4"
-formula = as.formula(formula)
+test_that("subset_data works properly", {
 
-formula_multiclass = "y2 ~ x1 + x2 + x3 + x4"
-formula_multiclass = as.formula(formula_multiclass)
+  formula = "y ~ x1 + x2 + x3 + x4"
+  formula = as.formula(formula)
 
-df <- data.frame(
-  y = as.factor(c(1,0)),
-  y2 = factor(c(0,2), levels = c(0,1,2)),
-  x1 = c(2,3),
-  x2 = c(4,6),
-  x3 = as.factor(c(0,1)),
-  x4 = factor(c(0,2), levels = c(0,1,2))
-)
+  df <- data.frame(
+    y = as.factor(c(1,0)),
+    y2 = factor(c(0,2), levels = c(0,1,2)),
+    x1 = c(2,3),
+    x2 = c(4,6),
+    x3 = as.factor(c(0,1)),
+    x4 = factor(c(0,2), levels = c(0,1,2))
+  )
 
-test_that("create_recipe produces recipe object", {
+  sub_df = subset_data(formula = formula, data = df)
 
-  rec = create_recipe(formula = formula, data = df)
+  full_df = subset_data(formula = as.formula("y ~ ."), data = df)
 
-  expect_equal(class(rec), 'recipe')
+  expect_equal(ncol(sub_df), 5)
+  expect_equal(ncol(full_df), 6)
 
 })
 
 test_that("standarize works correctly",{
 
-  rec = create_recipe(formula = formula, data = df)
+  formula = "y ~ x1 + x2 + x3 + x4"
+  formula = as.formula(formula)
+
+  df <- data.frame(
+    y = as.factor(c(1,0)),
+    y2 = factor(c(0,2), levels = c(0,1,2)),
+    x1 = c(2,3),
+    x2 = c(4,6),
+    x3 = as.factor(c(0,1)),
+    x4 = factor(c(0,2), levels = c(0,1,2))
+  )
+
+  rec = recipes::recipe(formula = formula, data = df)
 
   # For "all":
 
@@ -53,7 +65,19 @@ test_that("standarize works correctly",{
 
 test_that("one_hot_predictors works correctly",{
 
-  rec <- create_recipe(formula = formula, data = df)
+  formula = "y ~ x1 + x2 + x3 + x4"
+  formula = as.formula(formula)
+
+  df <- data.frame(
+    y = as.factor(c(1,0)),
+    y2 = factor(c(0,2), levels = c(0,1,2)),
+    x1 = c(2,3),
+    x2 = c(4,6),
+    x3 = as.factor(c(0,1)),
+    x4 = factor(c(0,2), levels = c(0,1,2))
+  )
+
+  rec = recipes::recipe(formula = formula, data = df)
 
   # With "all":
 
@@ -91,33 +115,4 @@ test_that("one_hot_predictors works correctly",{
 
 })
 
-# test_that("encode_target works correctly",{
-#
-#   # For binary:
-#
-#   rec_binary <- create_recipe(formula = formula, data = df)
-#
-#   rec_binary <- encode_target(rec = rec_binary, type_task = "binary", dep_var = "y")
-#
-#   rec_binary_prep <- recipes::prep(rec_binary, training = df)
-#
-#   rec_binary_bake <- recipes::bake(rec_binary_prep, new_data = df)
-#
-#   expect_equal(rec_binary_bake$y_X1, c(1,0))
-#
-#   # For multiclass:
-#
-#   rec_multiclass <- create_recipe(formula = formula_multiclass, data = df)
-#
-#   rec_multiclass <- encode_target(rec = rec_multiclass, type_task = "multiclass", dep_var = "y2")
-#
-#   rec_multiclass_prep <- recipes::prep(rec_multiclass, training = df)
-#
-#   rec_multiclass_bake <- recipes::bake(rec_multiclass_prep, new_data = df)
-#
-#   expect_equal(rec_multiclass_bake$y2_X0, c(1,0))
-#
-#   expect_equal(rec_multiclass_bake$y2_X1, c(0,0))
-#
-#   expect_equal(rec_multiclass_bake$y2_X2, c(0,1))
-# })
+

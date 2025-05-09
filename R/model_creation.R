@@ -1,13 +1,8 @@
 
 #' @export
-create_models <- function(tidy_object, model_names, hyperparameters = NULL, task = "regression"){
+build_model <- function(tidy_object, model_names, hyperparameters = NULL){
 
-                    ### EXCEPTION HANDLING
-                    #if (is.null(hyperparams) ){
-
-                    #tidy_object$add_hyperparameters(hyperparams)
-
-                    tidy_object$modify("task", task)
+                    task = tidy_object$task
 
                     if (model_names == "Neural Network"){
 
@@ -19,7 +14,11 @@ create_models <- function(tidy_object, model_names, hyperparameters = NULL, task
 
                     } else if (model_names == "XGBOOST"){
 
+                      hyperparams_xgboost = HyperparamsXGBoost$new(hyperparameters)
 
+                      tidy_object$modify("hyperparameters", hyperparams_xgboost)
+
+                      model = create_xgboost(hyperparams = hyperparams_xgboost, task = task)
 
                     } else if (model_names == "Random Forest"){
 
@@ -29,7 +28,6 @@ create_models <- function(tidy_object, model_names, hyperparameters = NULL, task
                       tidy_object$modify("hyperparameters", hyperparams_rf)
 
                       model = create_rf(hyperparams = hyperparams_rf, task = task)
-
 
 
                     } else if (model_names == "SVM"){
@@ -53,6 +51,13 @@ create_models <- function(tidy_object, model_names, hyperparameters = NULL, task
                         model = create_svm_linear(hyperparams = hyperparams_svm, task = task)
 
                       }
+
+                    } else {
+
+                      stop("
+                      Unrecognized Model. Select from: 'Neural Network', 'XGBOOST', 'Random Forest',
+                      'SVM'.
+                           ")
 
                     }
 

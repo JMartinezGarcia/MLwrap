@@ -1,12 +1,12 @@
-shap_plot <- function(tidy_object, new_data = "test"){
+shap_calc <- function(model, train, test, y, task){
 
-  if (tidy_object$task == "regression"){
+  if (task == "regression"){
 
-    shap_reg(tidy_object, new_data = new_data)
+    shap_reg(model, train, test, y)
 
-  } else if (tidy_object$task == "classification"){
+  } else if (task == "classification"){
 
-    shap_bin(tidy_object, new_data = new_data)
+    shap_bin(model, train, test, y)
 
   }
 
@@ -18,22 +18,29 @@ shap_plot <- function(tidy_object, new_data = "test"){
 #     Regression          #
 ###########################
 
-shap_reg <- function(tidy_object, new_data = "test"){
+shap_reg <- function(model, train, test, y){
 
-  y = all.vars(tidy_object$formula)[1]
+  y_vals = train[[y]]
 
-  model_parsnip <- tidy_object$final_models %>%
-    tune::extract_fit_parsnip()
+  train <- train[which(names(train) != y)]
+  test <- test[which(names(test) != y)]
 
-  dat = tidy_object$transformer %>%
-    recipes::prep(training = tidy_object$train_data) %>%
-    recipes::bake(new_data = tidy_object[[paste0(new_data, "new_data")]])
+  shap_vals = shapr::explain(model, phi0 = mean(y_vals),
+                  approach = "empirical",
+                  x_train = train,
+                  x_explain = test,
+                  predict_model = pred_reg,
+                  verbose = NULL)
 
-  shaps = shap_global(dat, y, model_parsnip)
+  shap_vals = shap_vals$shapley_values_est %>% select(names(train))
 
-  plot_shap_global(shaps$shap_vals)
+  return(shap_vals)
 
-  plot_shap_bee(shaps$shap_vals, dat, y)
+  # shaps = shap_global(dat, y, model_parsnip)
+  #
+  # plot_shap_global(shaps$shap_vals)
+  #
+  # plot_shap_bee(shaps$shap_vals, dat, y)
 
 }
 
@@ -41,7 +48,33 @@ shap_reg <- function(tidy_object, new_data = "test"){
 #     Binary Classification      #
 ##################################
 
-shap_bin <- function(tidy_object, new_data = "test"){
+shap_bin <- function(model, train, test, y){
+
+  y_vals = train[[y]]
+
+  phi0 = mean(y_vals == levels(y_vals)[2])
+
+  train <- train[which(names(train) != y)]
+  test <- test[which(names(test) != y)]
+
+  shap_vals = shapr::explain(model, phi0 = phi0,
+                             approach = "empirical",
+                             x_train = train,
+                             x_explain = test,
+                             predict_model = pred_bin,
+                             verbose = NULL)
+
+  shap_vals = shap_vals$shapley_values_est %>% select(names(train))
+
+  return(shap_vals)
+
+}
+
+######################################
+#     Multiclass Classification      #
+######################################
+
+shap_mul <- function(tidy_object, new_data = "test"){
 
   y = all.vars(tidy_object$formula)[1]
 
@@ -64,22 +97,16 @@ shap_bin <- function(tidy_object, new_data = "test"){
 #     Utilities          #
 ###########################
 
-pfun_bin <- function(object, newdata){
-
-  pred = predict(object, new_data = newdata, type = "prob")
-
-  return(pred[[2]])
-
-}
-
-shap_global <- function(dat, y, model, pfun = NULL){
+shap_global <- function(dat, y, model, pfun = NULL, class = NULL){
 
   X <- dat[which(names(dat) != y)]
   Y <- dat[[y]]
 
-  if (!is.null(pfun)){
+  if (!is.null(class)){
 
-    predictor <- iml::Predictor$new(model, data = X, y = Y, predict.function = pfun_bin)
+    class = paste0(".pred_", class)
+
+    predictor <- iml::Predictor$new(model, data = X, y = Y, type = "prob", class = class)
 
   } else {
 
@@ -98,15 +125,15 @@ shap_global <- function(dat, y, model, pfun = NULL){
   }
 
   shap_vals_list <- lapply(1:nrow(X), function(i) as.list(calc_shap(i, "phi", predictor, X)))
-  shap_vals_df <- rbindlist(shap_vals_list)
+  shap_vals_df <- do.call(rbind, shap_vals_list)
 
   shap_std_list <- lapply(1:nrow(X), function(i) as.list(calc_shap(i, "phi.var", predictor, X)))
-  shap_std_df <- rbindlist(shap_std_list)
+  shap_std_df <- do.call(rbind, shap_std_list)
 
   results_shap = list(
 
-    shap_vals = shap_vals_df,
-    shap_std = shap_std_df
+    shap_vals = as.data.frame(shap_vals_df),
+    shap_std = as.data.frame(shap_std_df)
 
   )
 
@@ -116,15 +143,22 @@ shap_global <- function(dat, y, model, pfun = NULL){
 
 plot_shap_global <- function(shap_vals){
 
-  summary_df <- shap_vals %>%
-    pivot_longer(cols = dplyr::everything(), names_to = "variable", values_to = "value") %>%
-    dplyr::group_by(variable) %>%
-    dplyr::summarise(
-      mean = mean(abs(value)),
-      std = sd(abs(value))
-    )
+  # summary_df <- shap_vals %>%
+  #   tidyr::pivot_longer(cols = dplyr::everything(), names_to = "variable", values_to = "value") %>%
+  #   dplyr::group_by(variable) %>%
+  #   dplyr::summarise(
+  #     mean = mean(abs(value)),
+  #     std = sd(abs(value))
+  #   )
 
-  p <- ggplot2::ggplot(summary_df, aes(x=mean, y=variable)) +
+  summary_df <- rbind(
+    mean = sapply(shap_vals, function(x) mean(abs(unlist(x)))),
+    sd   = sapply(shap_vals, function(x) sd(abs(unlist(x))))
+  ) %>%
+    as.data.frame() %>%
+  tidyr::pivot_longer(cols = dplyr::everything(), names_to = "variable", values_to = "value")
+
+  p <- ggplot2::ggplot(summary_df, aes(x=mean, y = variable)) +
     ggplot2::geom_bar(stat = "identity", fill = "steelblue", alpha = 0.7) +
     ggplot2::geom_errorbar(aes(xmin = mean - std, xmax = mean + std), width = 0.2) +
     ggplot2::labs(x = "Mean ± SD", y = "Variable") +
@@ -138,10 +172,10 @@ plot_shap_bee <- function(shap_vals, dat, y){
   X <- dat[which(names(dat) != y)]
 
   summary_df <- shap_vals %>%
-    pivot_longer(cols = dplyr::everything(), names_to = "variable", values_to = "value")
+    tidyr::pivot_longer(cols = dplyr::everything(), names_to = "variable", values_to = "value")
 
   X <- X %>%
-    pivot_longer(cols = dplyr::everything(), names_to = "variable", values_to = "val_color")
+    tidyr::pivot_longer(cols = dplyr::everything(), names_to = "variable", values_to = "val_color")
 
  summary_df["val_color"] = X["val_color"]
 

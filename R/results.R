@@ -2,7 +2,7 @@
 #         get_results                                #
 ######################################################
 
-get_results <- function(tidy_object,
+show_results <- function(tidy_object,
                         summary = FALSE, roc_curve = FALSE, pr_curve = FALSE,
                         gain_curve = FALSE, lift_curve = FALSE,
                         dist_by_class = FALSE, reliability_plot = FALSE, confusion_matrix = FALSE,
@@ -11,60 +11,147 @@ get_results <- function(tidy_object,
 
   predictions = get_predictions(tidy_object, "all")
 
+  tidy_object$modify("predictions", predictions)
+
   pred_test = predictions %>% filter(data_set == "test")
 
-  summary_results = summary_results(tidy_object)
+  summary_results = summary_results(tidy_object, pred_test)
 
   tidy_object$modify("fit_summary",summary_results)
 
+  print("############# Showing Results")
+
   if (summary == T){
 
-    print(summary_results)
+    # summary_results %>%
+    #   dplyr::mutate(across(where(is.numeric), ~ signif(., 3))) %>%
+    # ggpubr::ggtexttable(rows = NULL) %>%
+    #   print()
+
+    summary_results %>%
+      dplyr::mutate(across(where(is.numeric), ~ signif(., 3))) %>%
+      t() %>%
+      as.data.frame() %>%
+      tibble::rownames_to_column("Metric") %>%
+      dplyr::rename(Value = 2) %>%
+      ggpubr::ggtexttable(rows = NULL) %>%
+      print()
 
   }
 
   if (roc_curve == T){
 
-    predictions %>%
-      plot_roc_curve_binary(new_data = "all") %>%
-      autoplot() %>%
-      print()
+    if (tidy_object$outcome_levels == 2){
+
+        p <- predictions %>%
+        plot_roc_curve_binary(new_data = "all") %>%
+        autoplot() +
+        ggplot2::labs(title = "ROC Curve")
+
+        print(p)
+
+
+    } else {
+
+      p <-  predictions %>%
+            plot_roc_curve_multiclass(new_data = "all") %>%
+            autoplot() +
+            ggplot2::labs(title = "ROC Curve")
+
+      print(p)
+
+    }
 
   }
 
   if (pr_curve == T){
 
-    predictions %>%
-      plot_pr_curve_binary(new_data = "all") %>%
-      autoplot() %>%
-      print()
+    if (tidy_object$outcome_levels == 2){
+
+    p <- predictions %>%
+         plot_pr_curve_binary(new_data = "all") %>%
+         autoplot() +
+         ggplot2::labs(title = "Precision Recall Curve")
+
+    print(p)
+
+    } else {
+
+      p <- predictions %>%
+           plot_pr_curve_multlicass(new_data = "all") %>%
+           autoplot() +
+           ggplot2::labs(title = "Precision Recall Curve")
+
+      print(p)
+
+    }
 
   }
 
   if (gain_curve == T){
 
-    predictions %>%
-      plot_gain_curve_binary() %>%
-      autoplot() %>%
-      print()
+    if (tidy_object$outcome_levels == 2){
+
+     p <- predictions %>%
+          plot_gain_curve_binary() %>%
+          autoplot() +
+          ggplot2::labs(title = "Gain Curve")
+
+    print(p)
+
+    } else {
+
+    p <-predictions %>%
+        plot_gain_curve_multiclass() %>%
+        autoplot() +
+        ggplot2::labs(title = "Gain Curve")
+
+    print(p)
+
+    }
 
   }
 
   if (lift_curve == T){
 
-    predictions %>%
-      plot_lift_curve_binary(new_data = "all") %>%
-      autoplot() %>%
-      print()
+    if (tidy_object$outcome_levels == 2){
+
+      p <- predictions %>%
+           plot_lift_curve_binary(new_data = "all") %>%
+           autoplot() +
+           ggplot2::labs(title = "Lift Curve")
+
+      print(p)
+
+    } else{
+
+
+      p <- predictions %>%
+           plot_lift_curve_multiclass(new_data = "all") %>%
+           autoplot() +
+           ggplot2::labs(title = "Lift Curve")
+
+      print(p)
+
+    }
 
   }
 
   if (dist_by_class == T){
 
-    pred_test %>%
-      plot_dist_probs_binary() %>%
-      print()
+    if (tidy_object$outcome_levels == 2){
 
+      pred_test %>%
+        plot_dist_probs_binary() %>%
+        print()
+
+    } else {
+
+      pred_test %>%
+        plot_dist_probs_multiclass() %>%
+        print()
+
+    }
   }
 
   if (reliability_plot == T){
@@ -77,10 +164,12 @@ get_results <- function(tidy_object,
   if (confusion_matrix == T){
 
 
-    pred_test %>%
-      plot_conf_mat_binary(new_data = new_data) %>%
-      autoplot(type = "heatmap") %>%
-      print()
+     p <- pred_test %>%
+      plot_conf_mat(new_data = new_data) %>%
+      autoplot(type = "heatmap") +
+      ggplot2::labs(title = "Confusion Matrix")
+
+      print(p)
 
   }
 
@@ -146,8 +235,6 @@ modify_datasets <- function(tidy_object){
 
 get_predictions <- function(tidy_object, new_data = "test"){
 
-  #tidy_object <- modify_datasets(tidy_object)
-
   if (tidy_object$task == "regression"){
 
     predictions = get_predictions_regression(tidy_object, new_data = new_data)
@@ -155,6 +242,16 @@ get_predictions <- function(tidy_object, new_data = "test"){
   } else if (tidy_object$task == "classification"){
 
     predictions = get_predictions_binary(tidy_object, new_data = new_data)
+
+    if (tidy_object$outcome_levels == 2){
+
+      predictions = get_predictions_binary(tidy_object, new_data = new_data)
+
+    } else {
+
+      predictions = get_predictions_multiclass(tidy_object, new_data = new_data)
+
+    }
 
   }
 
@@ -167,15 +264,23 @@ get_predictions <- function(tidy_object, new_data = "test"){
 #         SUMMARY                                    #
 ######################################################
 
-summary_results <- function(tidy_object, new_data = "test"){
+summary_results <- function(tidy_object, predictions, new_data = "test"){
 
   if (tidy_object$task == "regression"){
 
-    return(summary_regression(tidy_object, new_data))
+    return(summary_regression(predictions, new_data))
 
   } else if (tidy_object$task == "classification"){
 
-    return(summary_binary(tidy_object, new_data))
+    if (tidy_object$outcome_levels == 2){
+
+      return(summary_binary(predictions, new_data))
+
+    } else {
+
+      return(summary_multiclass_per_class(predictions, new_data))
+
+    }
 
   }
 

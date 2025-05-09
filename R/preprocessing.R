@@ -1,8 +1,10 @@
-create_recipe <- function(formula, data){
+subset_data <- function(formula, data){
 
-  rec = recipes::recipe(formula = formula, data = data)
+  if (all.vars(formula)[2] != "."){
+    data = data[all.vars(formula)]
+  }
 
-  return(rec)
+  return(data)
 }
 
 standarize_predictors <- function(rec, norm_num_vars){
@@ -39,15 +41,31 @@ one_hot_predictors <- function(rec, encode_cat_vars, one_hot = T){
 
 
 #' @export
-transformer <- function(df, formula, num_vars = NULL, cat_vars = NULL, norm_num_vars = "all", encode_cat_vars = "all"){
+preprocessing <- function(df, formula, task = "regression", num_vars = NULL, cat_vars = NULL, norm_num_vars = "all", encode_cat_vars = "all"){
 
           formula = as.formula(formula)
 
-          if (all.vars(formula)[2] != "."){
-            df = df[all.vars(formula)]
+          model.frame(formula, data = df)
+
+          # Subset data from formula
+
+          df <- subset_data(formula = formula, data = df)
+
+          outcome_levels = NULL
+
+          if (task == "classification"){
+
+            y = all.vars(formula)[1]
+
+            df[[y]] = as.factor(df[[y]])
+
+            outcome_levels = length(levels(df[[y]]))
+
           }
 
-          rec = create_recipe(formula = formula, data = df)
+          # Create recipe
+
+          rec = recipes::recipe(formula = formula, data = df)
 
 
           # Check numerical variables are numeric
@@ -82,9 +100,10 @@ transformer <- function(df, formula, num_vars = NULL, cat_vars = NULL, norm_num_
 
           }
 
-          tidy_object <- TidyMLObject$new(full_data = df, transformer = rec)
+          # Create TidyMLObject with data and recipe
 
-          tidy_object$modify("formula", formula)
+          tidy_object <- TidyMLObject$new(full_data = df, transformer = rec, task = task,
+                                          formula = formula, outcome_levels = outcome_levels)
 
           return(tidy_object)
 

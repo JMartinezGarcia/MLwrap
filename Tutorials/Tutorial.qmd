@@ -1,0 +1,290 @@
+---
+title: "Tutorial TidyML"
+format: pdf
+---
+
+# **Introduction**
+
+TidyML is a minimal library focused on providing all the essential tools for the workflow of a machine learning modelling process. It divides the whole process into 5 sequential steps:
+
+1.  Preprocessing
+
+2.  Model Building
+
+3.  Fine Tuning
+
+4.  Computing Performance Metrics
+
+5.  Sensitivity Analysis / Interpretable ML
+
+![](images/Captura de Pantalla 2025-05-08 a las 10.30.04.png)
+
+Internally, due to the sequential nature of the workflow, each step stores new information of the analysis on an object called "tidy_object". At any time during the process, the internal information of the analysis can be retrieved from the tidy_object using the "\$" operator. The implemented fields are:
+
+```{r}
+devtools::load_all()
+library(dplyr)
+
+tidy_object = TidyMLObject$new(0, 0, 0, 0,0)
+
+names(tidy_object)
+```
+
+![](images/Captura de Pantalla 2025-05-08 a las 10.30.14.png)
+
+# **Binary Classification Example**
+
+We will start by creating a small binary classification dataset using the palmerpenguins data.
+
+## **Create Dataset**
+
+```{r}
+
+df <- palmerpenguins::penguins %>%
+  na.omit() %>%
+  dplyr::select(-year) %>%
+  dplyr::filter(species == "Adelie" | species == "Gentoo") %>%
+  dplyr::mutate(species = droplevels(species))
+```
+
+## Preprocessing Step
+
+We will first preprocess the data set using the ***preprocessing()*** function. We will pass the dataset along with the formula for our problem. The preprocessing step requires to specify which columns are going to be preprocessed:
+
+-   Numerical columns will be normalized by z-score
+
+-   Categorical columns will be one-hot encoded
+
+As well as the task to be performed: "regression" or "classification".
+
+In our case, we will preprocess all numerical columns and all categorical columns using the **all** keyword (by default):
+
+```{r}
+formula = "species ~ ."
+
+tidy_object = preprocessing(df,
+                          formula = formula,
+                          norm_num_vars = "all",
+                          encode_cat_vars = "all",
+                          task = "classification"
+                          )
+```
+
+## Model Definition
+
+The function ***build_model()*** allows to create a ML model. Each model has it's own set of hyperparameters which we can choose to fine_tune by passing a range of values or to set to a specific value. By default each hyperparameter will be tuned within a given range. The The ML models implemented are:
+
+1.  **Neural Network**:
+
+    1.  *hidden_units* : number of hidden_units
+
+    2.  *activation* : activation functions ("relu", "sigmoid", "tanh")
+
+    3.  *learn_rate* : learning rate
+
+2.  **Support Vector Machine ("SVM")**:
+
+    1.  *cost* : regularization penalty
+
+    2.  *margin* : margin of classifier
+
+    3.  *type* : type of kernel ("linear", "rbf", "polynomial")
+
+    4.  *rbf_sigma* (rbf kernel only) : rbf kernel sigma
+
+    5.  *degree* (polynomial kernel only) : polynomial kernel degree
+
+    6.  *scale_factor* (polynomial kernel only) : polynomial kernel scale factor
+
+3.  **Random Forest**:
+
+    1.  *mtry* : Size of feature sampling
+
+    2.  *trees* : Number of trees
+
+    3.  *min_n* : Minimum number of samples for splitting
+
+4.  **XGBoost**:
+
+    1.  *mtry* : Size of feature sampling
+
+    2.  *trees* : Number of trees
+
+    3.  *min_n* : Minimum number of samples for splitting
+
+    4.  *tree_depth* : Maximum tree depth
+
+    5.  *learn_rate* : Learning rate
+
+    6.  *loss_reduction* : Loss reduction
+
+```{r}
+tidy_object <- build_model(tidy_object,
+                             model_names = "Random Forest",
+                             hyperparameters = 
+                               list(
+                                    mtry = c(2,3),
+                                    trees = 15
+                                    )
+                             )
+```
+
+## Hyperparameter Tuning
+
+Once the model has been defined, we can fine tune the hyperparameters using the ***fine_tune()*** function. There are 2 different hyperparameter tuning strategies:
+
+1.  *Bayesian Optimization*
+
+2.  *Grid Search CV*
+
+Additionally, we will specify the metric used to select the best performing hyperparameters:
+
+| Regression |    Classification    |
+|:----------:|:--------------------:|
+|    rmse    |       accuracy       |
+|    mae     |     bal_accuracy     |
+|    mpe     |      precision       |
+|    mape    |        recall        |
+|    ccc     |     specificity      |
+|   smape    |     sensitivity      |
+|    rpiq    |         kap          |
+|    rsq     |        f_meas        |
+|            |         mcc          |
+|            | detection_prevalence |
+|            |       j_index        |
+|            |       roc_auc        |
+|            |        pr_auc        |
+|            |     gain_capture     |
+|            |     brier_class      |
+|            |       roc_aunp       |
+
+We can visualize the tuning results by setting the *plot_results* parameter to TRUE:
+
+```{r}
+tidy_object <- fine_tuning(tidy_object,
+                            tuner = "Grid Search CV", 
+                            metrics = "roc_auc",
+                            plot_results = T
+                            )
+```
+
+## Results
+
+Once we have found the best hyperparameter configuration we can compute the performance metrics of our model based on the test data using the ***show_results()*** function. There are different options for the results depending on whether we are doing a regression task or a classification task:
+
+-   **Regression**:
+
+    -   *summary*
+
+    -   *scatter_residuals*
+
+    -   *scatter_predictions*
+
+    -   *residuals_dist*
+
+-   **Classification**:
+
+    -   *summary*
+
+    -   *roc_curve*
+
+    -   *pr_curve*
+
+    -   *gain_curve*
+
+    -   *lift_curve*
+
+    -   *dist_by_class*
+
+    -   *reliability_plot*
+
+    -   *confusion_matrix*
+
+```{r}
+
+tidy_object <- show_results(tidy_object,
+                       summary = TRUE,
+                       roc_curve = TRUE,
+                       confusion_matrix = TRUE,
+                       reliability_plot = TRUE,
+                       dist_by_class = TRUE)
+```
+
+## Sensitivity Analysis
+
+We can also perform sensitivity analysis for our fitted model using the ***sensitivity_analysis()*** function. There are currently different methods implemented, some of these methods only work for particular models:
+
+1.  Permutation Feature Importance ("PFI")
+
+2.  SHAP
+
+3.  Integrated Gradients (Neural Network only)
+
+4.  Olden method (Neural Network only)
+
+5.  **TO DO**: SOBOL? Shapley Effects?:
+
+```{r}
+
+tidy_object <- sensitivity_analysis(tidy_object, type = "SHAP")
+```
+
+# Regression Example
+
+## Create Dataset
+
+We will again use the palmerpenguins dataset but choose a different formula for a regression task:
+
+```{r}
+
+df <- palmerpenguins::penguins %>%
+  na.omit() %>%
+  dplyr::select(-year) 
+```
+
+## The Pipe (%\>%) Operator
+
+Due to the sequential nature of the processing, we can concatenate all the modelling steps using the %\>% (pipe) operator without expliciting passing the tidy_object each time:
+
+```{r}
+
+formula = "bill_length_mm ~ ."
+
+tidy_object =  preprocessing(
+                              df,
+                              formula = formula,
+                              norm_num_vars = "all",
+                              encode_cat_vars = "all",
+                              task = "regression"
+                          ) %>%
+  
+               build_model(
+                              model_names = "Neural Network",
+                              hyperparameters = 
+                                list(
+                                    hidden_units = c(3,10),
+                                    activation = c("relu", "tanh")
+                                    )
+                          ) %>%
+  
+              fine_tuning(
+                              tuner = "Bayesian Optimization", 
+                              metrics = "rmse",
+                              plot_results = T
+                         ) %>%
+  
+              show_results(
+                              summary = TRUE,
+                              scatter_residuals = TRUE,
+                              scatter_predictions = TRUE
+                          ) %>%
+  
+              sensitivity_analysis(
+                              type = "Integrated Gradients"
+                          ) %>%
+    
+              sensitivity_analysis(
+                              type = "Olden"
+              )
+  
+```

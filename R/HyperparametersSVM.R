@@ -18,6 +18,58 @@ HyperparamsSVM <- R6::R6Class("Neural Network Hyperparameters",
 
                                },
 
+                               check_hyperparams = function(hyperparams){
+
+                                 valid_hparams_linear <- c("cost", "margin", "type")
+                                 valid_hparams_rbf <- c("cost", "margin", "rbf_sigma", "type")
+                                 valid_hparams_poly <- c("cost", "margin", "degree", "scale_factor", "type")
+
+                                 if (!is.null(hyperparams)){
+
+                                   if (is.null(hyperparams$type)){stop("Kernel must be specified with hyperparameter 'type' with values:
+                                                                        'linear', 'rbf', 'poly'
+                                                                       ")}
+
+                                   if (hyperparams$type == "linear"){
+
+                                      if (all(names(hyperparams) %in% valid_hparams_linear)){
+
+                                      }
+
+                                      else {
+
+                                     stop(paste0("Incorrect hyperparameter list for Linear Kernel. Valid hyperparameters are: ",
+                                                 paste(valid_hparams_linear, collapse = ", ")))
+
+                                      }
+                                    } else if (hyperparams$type == "rbf"){
+
+                                      if (all(names(hyperparams) %in% valid_hparams_rbf)){
+
+                                      }
+
+                                      else {
+
+                                        stop(paste0("Incorrect hyperparameter list for RBF Kernel. Valid hyperparameters are: ",
+                                                    paste(valid_hparams_rbf, collapse = ", ")))
+
+                                      }
+                                    } else if (hyperparams$type == "poly"){
+
+                                      if (all(names(hyperparams) %in% valid_hparams_poly)){
+
+                                      }
+
+                                      else {
+
+                                        stop(paste0("Incorrect hyperparameter list for Polynomial Kernel. Valid hyperparameters are: ",
+                                                    paste(valid_hparams_poly, collapse = ", ")))
+
+                                      }
+                                    }
+                                  }
+                               },
+
                                set_hyperparams = function(hyperparams = NULL){
 
                                  def_hyperparams = self$default_hyperparams()

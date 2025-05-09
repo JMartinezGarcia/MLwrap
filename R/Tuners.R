@@ -7,7 +7,9 @@ create_workflow <- function(tidy_object){
   return(workflow)
 }
 
-split_data <- function(tidy_object, prop_train = 0.6, prop_val = 0.2, model_name = "Other"){
+split_data <- function(tidy_object, prop_train = 0.6, prop_val = 0.2){
+
+  model_name = tidy_object$models_names
 
   if (model_name == "Neural Network"){
 
@@ -40,6 +42,7 @@ split_data <- function(tidy_object, prop_train = 0.6, prop_val = 0.2, model_name
 
 }
 
+
 create_metric_set <- function(metrics){
 
   set_metrics <- yardstick::metric_set(!!!rlang::syms(metrics))
@@ -70,24 +73,33 @@ hyperparams_grid <- function(hyperparams, levels = 5){
 
 plot_tuning_results <- function(tidy_object){
 
-  tidy_object$tuner_fit %>%
-    tune::autoplot() %>%
-    print()
-
-  tidy_object$tuner_fit %>%
-    tune::show_best(metric = tidy_object$metrics[1]) %>%
-    print()
+  print("############# Hyperparameter Tuning Results")
 
   if (tidy_object$tuner == "Bayesian Optimization"){
 
-  tidy_object$tuner_fit %>%
-      tune::autoplot(type = "performance") %>%
-      print()
+    p <- tidy_object$tuner_fit %>%
+      tune::autoplot(type = "performance") +
+      ggplot2::labs(title = "Bayesian Optimization Iteration Loss")
+      print(p)
 
-  tidy_object$tuner_fit %>%
-    tune::autoplot(., search_res, type = "parameters") +
-    ggplot2::labs(x = "Iterations", y = NULL)
+    p <- tidy_object$tuner_fit %>%
+      tune::autoplot(., search_res, type = "parameters") +
+      ggplot2::labs(x = "Iterations", y = NULL, title = "Bayesian Optimization Iteration Results")
+      print(p)
+
 
   }
+
+  p <- tidy_object$tuner_fit %>%
+       tune::autoplot() +
+       ggplot2::labs(title = paste0(tidy_object$tuner, " Search Results"))
+
+       print(p)
+
+  print("############# Best Hyperparameters Found:")
+
+  tidy_object$tuner_fit %>%
+    tune::show_best(metric = tidy_object$metrics[1], n = 1) %>%
+    print()
 
 }

@@ -22,6 +22,23 @@ no_tune_list = list(
 
 )
 
+test_that("NN Default Hyperparams works", {
+
+  hyperparams_nn = HyperparamsNN$new()
+
+  expect_equal(hyperparams_nn$tuning, T)
+
+  expect_equal(hyperparams_nn$hyperparams_ranges$hidden_units$range, list(lower = 5, upper = 20))
+  expect_equal(hyperparams_nn$hyperparams_ranges$learn_rate$range, list(lower = -3, upper = -1))
+  expect_equal(hyperparams_nn$hyperparams_ranges$activation$value, c("relu", "tanh", "sigmoid"))
+
+  expect_equal(hyperparams_nn$hidden_units_tune, T)
+  expect_equal(hyperparams_nn$learn_rate_tune, T)
+  expect_equal(hyperparams_nn$activation_tune, T)
+
+
+})
+
 test_that("NN Hyperparams works with all_tune", {
 
   hyperparams_nn = HyperparamsNN$new(all_tune_list)
@@ -68,5 +85,19 @@ test_that("NN Hyperparams works with no_tune", {
   expect_equal(hyperparams_nn$hidden_units_tune, F)
   expect_equal(hyperparams_nn$learn_rate_tune, F)
   expect_equal(hyperparams_nn$activation_tune, F)
+
+})
+
+test_that("Check NN Incompatible Hyperparameters Errors", {
+
+  hyp_list = list(
+
+    hidden_units = 4,
+    layers = 3
+
+  )
+
+  expect_error(HyperparamsNN$new(hyp_list))
+
 
 })

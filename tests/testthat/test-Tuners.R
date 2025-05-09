@@ -7,12 +7,12 @@ df <- palmerpenguins::penguins %>%
   filter(species == "Adelie" | species == "Gentoo") %>%
   mutate(species = droplevels(species))
 
-transformer_ob_reg = transformer(df, formula_reg,
+transformer_ob_reg = transformer(df, formula_reg, task = "regression",
                                  norm_num_vars = "all",
                                  encode_cat_vars = "all"
 )
 
-transformer_ob_bin = transformer(df, formula_bin,
+transformer_ob_bin = transformer(df, formula_bin, task = "classification",
                                  norm_num_vars = "all",
                                  encode_cat_vars = "all"
 )
@@ -24,22 +24,18 @@ hyper_nn_tune_list = list(
 
 )
 
-hyper_rf_tune_list = list(
-
+hyper_rf_tune_list <- list(
   mtry = c(2,6),
   trees = 100
-
 )
 
 model_object_bin = create_models(tidy_object = transformer_ob_bin,
                                  model_names = "Neural Network",
-                                 hyperparameters = hyper_nn_tune_list,
-                                 task = "classification")
+                                 hyperparameters = hyper_nn_tune_list)
 
 model_object_reg = create_models(tidy_object = transformer_ob_reg,
                                  model_names = "Random Forest",
-                                 hyperparameters = hyper_rf_tune_list,
-                                 task = "regression")
+                                 hyperparameters = hyper_rf_tune_list)
 
 ### create_workflow
 
@@ -107,7 +103,18 @@ test_that("Test extract_hyperparams works properly", {
   expect_equal(length(extracted_hyp_reg$object), 2)
 
 })
+
 ##### hyperparams_grid
+
+test_that("Test hyperparams_grid works properly", {
+
+  hyp_rf = HyperparamsRF$new(hyper_rf_tune_list)
+  grid = hyperparams_grid(hyp_rf, levels = 5)
+
+  expect_equal(names(grid), c("mtry", "min_n"))
+  expect_equal(nrow(grid), 25)
+
+})
 
 ###### tune_models_bayesian
 

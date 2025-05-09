@@ -20,6 +20,25 @@ HyperparamsRF <- R6::R6Class("Random Forest Hyperparameters",
 
                                 },
 
+                                check_hyperparams = function(hyperparams){
+
+                                  valid_hparams <- c("mtry", "trees", "min_n")
+
+                                  if (!is.null(hyperparams)){
+
+                                    if (all(names(hyperparams) %in% valid_hparams)){
+
+                                    }
+
+                                    else {
+
+                                      stop(paste0("Incorrect hyperparameter list. Valid hyperparameters are:",
+                                                  paste(valid_hparams, collapse = ",")))
+
+                                    }
+                                  }
+                                },
+
                                 set_hyperparams = function(hyperparams = NULL){
 
                                   def_hyperparams = self$default_hyperparams()

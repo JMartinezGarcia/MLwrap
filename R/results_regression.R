@@ -46,7 +46,7 @@ get_predictions_regression <- function(tidy_object, new_data = "test"){
     #             SUMMARY                  #
     ########################################
 
-summary_regression <- function(tidy_object, new_data = "test"){
+summary_regression <- function(predictions, new_data = "test"){
 
   metric_funcs <- list(
 
@@ -60,8 +60,6 @@ summary_regression <- function(tidy_object, new_data = "test"){
     RSQ = function(data) rsq(data, y, .pred)
 
   )
-
-  predictions <- get_predictions_regression(tidy_object, new_data = new_data)
 
   results <- lapply(metric_funcs, function(f) f(predictions)$.estimate)
 

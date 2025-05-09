@@ -1,11 +1,20 @@
-devtools::load_all()
-
-tidy_object <- TidyMLObject$new(0.5, 0.6)
+tidy_object <- TidyMLObject$new(0.5, 0.6, task = "classification", formula = "y ~ .")
 
 hyper_nn_tune_list = list(
            learn_rate = c(-2, -1),
            hidden_units = 15
            )
+
+hyper_rf_tune_list = list(
+          mtry = c(3,5),
+          trees = 100
+)
+
+hyper_svm_tune_list = list(
+          type = "rbf",
+          cost = -2,
+          rbf_sigma = c(-3,-1)
+)
 
 
 test_that("Check create_nn works properly",{
@@ -15,15 +24,57 @@ test_that("Check create_nn works properly",{
 
     expect_equal(nn_model$mode, "regression")
     expect_equal(class(nn_model), c("mlp", "model_spec"))
+    expect_equal(names(nn_model$args), c("hidden_units", "penalty", "dropout", "epochs", "activation", "learn_rate"))
 
 })
 
-test_that("Check create_models works properly",{
+test_that("Check create_rf works properly", {
+
+  hyper_rf_tune = HyperparamsRF$new(hyper_rf_tune_list)
+  rf_model = create_rf(hyper_rf_tune, "classification")
+
+  expect_equal(rf_model$mode, "classification")
+  expect_equal(class(rf_model), c("rand_forest", "model_spec"))
+  expect_equal(names(rf_model$args), c("mtry", "trees", "min_n"))
+
+})
+
+test_that("Check create_svm works properly", {
+
+  hyper_svm_linear_list = list(cost = c(-2,-1), type = "linear")
+  hyper_svm_rbf_list = list(rbf_sigma = c(-2,-1), type = "rbf")
+  hyper_svm_poly_list = list(degree = 3, cost = c(-2, -1), type = "poly")
+
+  hyper_svm_linear = HyperparamsSVM$new(hyper_svm_linear_list)
+  hyper_svm_rbf = HyperparamsSVM$new(hyper_svm_rbf_list)
+  hyper_svm_poly = HyperparamsSVM$new(hyper_svm_poly_list)
+
+  svm_linear = create_svm_linear(hyper_svm_linear, "regression")
+  svm_rbf = create_svm_rbf(hyper_svm_rbf, "classification")
+  svm_poly = create_svm_poly(hyper_svm_poly, "regression")
+
+  expect_equal(svm_linear$mode, "regression")
+  expect_equal(svm_rbf$mode, "classification")
+  expect_equal(svm_poly$mode, "regression")
+
+  expect_equal(class(svm_linear), c("svm_linear", "model_spec"))
+  expect_equal(class(svm_rbf), c("svm_rbf", "model_spec"))
+  expect_equal(class(svm_poly), c("svm_poly", "model_spec"))
+
+  expect_equal(names(svm_linear$args), c("cost", "margin"))
+  expect_equal(names(svm_rbf$args), c("cost", "rbf_sigma", "margin"))
+  expect_equal(names(svm_poly$args), c("cost", "degree", "scale_factor", "margin"))
+
+
+
+
+})
+
+test_that("Check create_models NN works properly",{
 
     model_object = create_models(tidy_object = tidy_object,
                              model_names = "Neural Network",
-                             hyperparameters = hyper_nn_tune_list,
-                             task = "classification")
+                             hyperparameters = hyper_nn_tune_list)
 
     expect_equal(model_object$task, "classification")
     expect_equal(model_object$models_names, "Neural Network")
@@ -35,6 +86,44 @@ test_that("Check create_models works properly",{
     expect_equal(model_object$hyperparameters$hyperparams_constant$hidden_units, 15)
     expect_equal(model_object$hyperparameters$hyperparams_ranges$learn_rate$range, list("lower" = -2, "upper" = -1))
     expect_equal(model_object$hyperparameters$hyperparams_ranges$activation$values, c("relu", "tanh", "sigmoid"))
+
+})
+
+test_that("Check create_models RF works properly",{
+
+  model_object = create_models(tidy_object = tidy_object,
+                               model_names = "Random Forest",
+                               hyperparameters = hyper_rf_tune_list)
+
+  expect_equal(model_object$task, "classification")
+  expect_equal(model_object$models_names, "Random Forest")
+  expect_equal(class(model_object$models), c("rand_forest", "model_spec"))
+  expect_equal(model_object$hyperparameters$tuning, T)
+  expect_equal(model_object$hyperparameters$mtry_tune, T)
+  expect_equal(model_object$hyperparameters$trees_tune, F)
+  expect_equal(model_object$hyperparameters$min_n_tune, T)
+  expect_equal(model_object$hyperparameters$hyperparams_constant$trees, 100)
+  expect_equal(model_object$hyperparameters$hyperparams_ranges$mtry$range, list("lower" = 3, "upper" = 5))
+  expect_equal(model_object$hyperparameters$hyperparams_ranges$min_n$range, list(lower = 2, upper = 25))
+
+})
+
+test_that("Check create_models SVM works properly",{
+
+  model_object = create_models(tidy_object = tidy_object,
+                               model_names = "SVM",
+                               hyperparameters = hyper_svm_tune_list)
+
+  expect_equal(model_object$task, "classification")
+  expect_equal(model_object$models_names, "SVM")
+  expect_equal(class(model_object$models), c("svm_rbf", "model_spec"))
+  expect_equal(model_object$hyperparameters$tuning, T)
+  expect_equal(model_object$hyperparameters$rbf_sigma_tune, T)
+  expect_equal(model_object$hyperparameters$cost_tune, F)
+  expect_equal(model_object$hyperparameters$margin_tune, T)
+  expect_equal(model_object$hyperparameters$hyperparams_constant$cost, -2)
+  expect_equal(model_object$hyperparameters$hyperparams_ranges$rbf_sigma$range, list("lower" = -3, "upper" = -1))
+  expect_equal(model_object$hyperparameters$hyperparams_ranges$margin$range, list(lower = 0, upper = 0.2))
 
 })
 

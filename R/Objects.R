@@ -128,7 +128,32 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
       } else {
         stop("`$fit_summary` is read only", call. = FALSE)
       }
+    },
+
+    predictions = function(value){
+      if (missing(value)) {
+        private$.predictions
+      } else {
+        stop("`$predictions` is read only", call. = FALSE)
+      }
+    },
+
+    outcome_levels = function(value) {
+      if (missing(value)) {
+        private$.outcome_levels
+      } else {
+        stop("`$outcome_levels` is read only", call. = FALSE)
+      }
+    },
+
+    sensitivity_analysis = function(value) {
+      if (missing(value)) {
+        private$.sensitivity_analysis
+      } else {
+        stop("`$sensitivity_analysis` is read only", call. = FALSE)
+      }
     }
+
   ),
 
   private = list(
@@ -149,6 +174,9 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
     .task = NULL,
     .formula = NULL,
     .fit_summary = NULL,
+    .predictions = NULL,
+    .outcome_levels = NULL,
+    .sensitivity_analysis = NULL,
 
     add_formula = function(formula){
 
@@ -234,15 +262,36 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
 
       private$.fit_summary = fit_summary
 
+    },
+
+    add_predictions = function(predictions){
+
+      private$.predictions = predictions
+
+    },
+
+    add_outcome_levels = function(outcome_levels){
+
+      private$.outcome_levels = outcome_levels
+
+    },
+
+    add_sensitivity_analysis = function(sensitivity_analysis){
+
+      private$.sensitivity_analysis = sensitivity_analysis
+
     }
   ),
 
   public = list(
 
-    initialize = function(full_data, transformer){
+    initialize = function(full_data, transformer, task ,formula, outcome_levels){
 
       private$.full_data <- full_data
       private$.transformer <- transformer
+      private$.task <- task
+      private$.formula <- formula
+      private$.outcome_levels <- outcome_levels
 
     },
 
@@ -280,6 +329,8 @@ HyperparametersBase <- R6::R6Class("HyperparametersBase",
                                    self$tuning = FALSE
                                    self$hyperparams_constant = NULL
 
+                                   self$check_hyperparams(hyperparams)
+
                                    hyperparameters <- self$set_hyperparams(hyperparams)
 
 
@@ -309,6 +360,10 @@ HyperparametersBase <- R6::R6Class("HyperparametersBase",
                                  },
 
                                  default_hyperparams = function() {
+                                   stop("Must be implemented in the subclass")
+                                 },
+
+                                 check_hyperparams = function(hyperparams){
                                    stop("Must be implemented in the subclass")
                                  }
 

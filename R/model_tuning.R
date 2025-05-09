@@ -1,6 +1,14 @@
-model_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose = TRUE){
+fine_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose = FALSE){
 
             tidy_object$modify("workflow", create_workflow(tidy_object))
+
+            if (!all(metrics %in% names(metrics_info))) {
+              invalid_metrics <- metrics[!(metrics %in% names(metrics_info))]
+              stop(paste0(
+                "Unrecognized metric(s):\n ", paste(invalid_metrics, collapse = ", "),
+                ". \n\nChoose from:\n ", paste(names(metrics_info), collapse = ", ")
+              ))
+            }
 
             tidy_object$modify("metrics", metrics)
 
@@ -10,8 +18,10 @@ model_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose 
 
             set.seed(123)
 
-            split_final_data <- split_data(tidy_object, model = tidy_object$models_names)
+            split_final_data <- split_data(tidy_object)
+
             sampling_method = split_final_data$sampling_method
+
             final_data = split_final_data$final_split
 
             if (tidy_object$hyperparameters$tuning == TRUE){
@@ -34,7 +44,7 @@ model_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose 
 
                 }
 
-                # ENTRENAMIENTO FINAL
+                # FINAL TRAINING
                 # ============================================================================
 
                 best_hyper <- tune::select_best(tuner_fit, metric = tidy_object$metrics[1])
@@ -65,6 +75,17 @@ model_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose 
 
             tidy_object$modify("final_models", final_model)
 
+            if (tidy_object$models_names == "Neural Network"){
+
+              print("############# Loss Curve")
+
+              p <- autoplot(tune::extract_fit_parsnip(final_model)) +
+                   ggplot2::labs(title = "Neural Network Loss Curve")
+
+              print(p)
+
+            }
+
             return(tidy_object)
 
 }
@@ -84,6 +105,8 @@ tune_models <- function(tidy_object, tuner, sampling_method, metrics, verbose = 
   else {
 
     ##### ERRRORRRR
+
+    stop("Unrecognized Tuner. Select from: 'Bayesian Optimization', 'Grid Search CV'.")
 
   }
 

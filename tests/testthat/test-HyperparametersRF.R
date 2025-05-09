@@ -24,6 +24,22 @@ some_tune_list = list(
 
 )
 
+test_that("Check Random Forest Defualt Hyperparams works", {
+
+  hyperparam_rf = HyperparamsRF$new()
+
+  expect_equal(hyperparam_rf$tuning, T)
+  expect_equal(hyperparam_rf$hyperparams_ranges$mtry$range, list(lower = 3, upper = 8))
+  expect_equal(hyperparam_rf$hyperparams_ranges$trees$range, list(lower = 100, upper = 300))
+  expect_equal(hyperparam_rf$hyperparams_ranges$min_n$range, list(lower = 2, upper = 25))
+
+  expect_equal(hyperparam_rf$mtry_tune, T)
+  expect_equal(hyperparam_rf$trees_tune, T)
+  expect_equal(hyperparam_rf$min_n_tune, T)
+
+
+})
+
 test_that("Check Random Forest Hyperparams all_tune", {
 
 
@@ -77,5 +93,18 @@ test_that("Check Random Forest Hyperparams min_n_tune", {
   expect_equal(hyperparam_rf$trees_tune, F)
   expect_equal(hyperparam_rf$min_n_tune, F)
 
+
+})
+
+test_that("Check Random Forest Incompatible Hyperparams Error", {
+
+  hyp_list = list(
+
+    metry = 5,
+    trees = 100
+
+  )
+
+  expect_error(HyperparamsRF$new(hyp_list))
 
 })

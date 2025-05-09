@@ -28,34 +28,62 @@ metrics_info <- list(
   mcc = c("class", "maximize"),
   j_index = c("class", "maximize"),
   detection_prevalence = c("class", "maximize"),
+
   roc_auc = c("prob", "maximize"),
   pr_auc = c("prob", "maximize"),
   gain_capture = c("prob", "maximize"),
-  brier_class = c("prob", "minimize")
-
+  brier_class = c("prob", "minimize"),
+  roc_aunp = c("prob", "maximize")
 )
 
 # Función para crear las funciones de métricas
 create_metric_function <- function(metric_name, metric_info) {
 
+  func_name <- sub("_mul$", "", metric_name)
   metric_type = metric_info[1]
   metric_direction = metric_info[2]
 
-  # Crear la expresión de la función yardstick personalizada
-  expr_text <- glue::glue("
-    {metric_name} <- function(data, truth, estimate, estimator = NULL, na_rm = TRUE,...) {{
-      yardstick::metric_summarizer(
-        \"{metric_name}\",
-        yardstick::{metric_name}_vec,
-        data = data,
-        truth = !!enquo(truth),
-        estimate = !!enquo(estimate),
-        estimator = estimator,
-        na_rm = na_rm,
-        ...
-      )
-    }}
-  ")
+
+  #Crear la expresión de la función yardstick personalizada
+
+  if (metric_type == "prob"){
+
+   expr_text <- glue::glue("
+
+     {metric_name} <- function(data, truth, estimator = NULL, na_rm = TRUE,...) {{
+
+
+     yardstick::{metric_type}_metric_summarizer(
+         \"{metric_name}\",
+         yardstick::{func_name}_vec,
+         data = data,
+         truth = !!enquo(truth),
+         estimator = estimator,
+         na_rm = na_rm,
+         ...
+       )
+
+     }}
+    ")
+
+    } else {
+
+    expr_text <- glue::glue("
+
+    {metric_name} <- function(data, truth, estimate, na_rm = TRUE,...) {{
+       yardstick::{metric_type}_metric_summarizer(
+         \"{metric_name}\",
+         yardstick::{func_name}_vec,
+         data = data,
+         truth = !!enquo(truth),
+         estimate = !!enquo(estimate),
+         na_rm = na_rm,
+         ...
+       )
+
+     }}
+   ")
+    }
 
   pkg_env <- getNamespace("TidyML")
 
@@ -71,9 +99,9 @@ convert_to_metric <- function(metrics_info) {
 
     pkg_env <- getNamespace("TidyML")
 
-    lapply(names(metrics_info), function(m) {
-    metric_name <- m
-    metric_info <- metrics_info[[m]]
+    lapply(names(metrics_info), function(metric) {
+    metric_name <- metric
+    metric_info <- metrics_info[[metric]]
     metric_type <- metric_info[1]
     metric_direction <- metric_info[2]
 

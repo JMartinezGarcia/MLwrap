@@ -14,6 +14,26 @@ HyperparamsNN <- R6::R6Class("Neural Network Hyperparameters",
                                  )
                                },
 
+                               check_hyperparams = function(hyperparams){
+
+                                 valid_hparams <- c("learn_rate", "hidden_units", "activation")
+
+                                 if (!is.null(hyperparams)){
+
+                                   if (all(names(hyperparams) %in% valid_hparams)){
+
+                                   }
+
+                                   else {
+
+                                     stop(paste0("Incorrect hyperparameter list. Valid hyperparameters are:",
+
+                                                 paste(valid_hparams, collapse = ",")))
+
+                                        }
+                                 }
+                               },
+
                                set_hyperparams = function(hyperparams = NULL) {
 
                                  default_hyperparameters <- self$default_hyperparams()
