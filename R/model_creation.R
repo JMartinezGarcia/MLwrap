@@ -1,18 +1,29 @@
 
+#' Create ML Model
+#'
+#' @param tidy_object Tidy_Object created from preprocessing function.
+#' @param model_names Name of the ML Model. A string of the model name: "Neural Network",
+#'     "Random Forest", "SVM" or "XGBOOST".
+#' @param hyperparameters Hyperparameters of the ML model. List containing the name of the hyperparameter
+#'  and its value or range of values.
+#' @returns Updated tidy_object
 #' @export
-build_model <- function(tidy_object, model_names, hyperparameters = NULL){
+
+build_model <- function(tidy_object, model_name, hyperparameters = NULL){
+
+                    check_args_build_model(tidy_object = tidy_object, model_name = model_name)
 
                     task = tidy_object$task
 
-                    if (model_names == "Neural Network"){
+                    if (model_name == "Neural Network"){
 
                       hyperparams_nn = HyperparamsNN$new(hyperparameters)
 
                       tidy_object$modify("hyperparameters", hyperparams_nn)
 
-                      model = create_nn(hyperparams = hyperparams_nn, task = task, epochs = 50)
+                      model = create_nn(hyperparams = hyperparams_nn, task = task, epochs = 25)
 
-                    } else if (model_names == "XGBOOST"){
+                    } else if (model_name == "XGBOOST"){
 
                       hyperparams_xgboost = HyperparamsXGBoost$new(hyperparameters)
 
@@ -20,7 +31,7 @@ build_model <- function(tidy_object, model_names, hyperparameters = NULL){
 
                       model = create_xgboost(hyperparams = hyperparams_xgboost, task = task)
 
-                    } else if (model_names == "Random Forest"){
+                    } else if (model_name == "Random Forest"){
 
 
                       hyperparams_rf = HyperparamsRF$new(hyperparameters)
@@ -30,7 +41,7 @@ build_model <- function(tidy_object, model_names, hyperparameters = NULL){
                       model = create_rf(hyperparams = hyperparams_rf, task = task)
 
 
-                    } else if (model_names == "SVM"){
+                    } else if (model_name == "SVM"){
 
                       type = hyperparameters$type
 
@@ -61,9 +72,11 @@ build_model <- function(tidy_object, model_names, hyperparameters = NULL){
 
                     }
 
-                    tidy_object$modify("models_names", model_names)
+                    tidy_object$modify("model_name", model_name)
 
-                    tidy_object$modify("models", model)
+                    tidy_object$modify("model", model)
+
+                    tidy_object$modify("stage", "build_model")
 
                     return(tidy_object)
 }

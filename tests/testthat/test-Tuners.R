@@ -1,5 +1,5 @@
-formula_bin <- "species ~ ."
-formula_reg <- "bill_length_mm ~ ."
+formula_bin <- "psych_well ~ age + gender + depression"
+formula_reg <- "psych_well_bin ~ age + gender + depression"
 
 df <- palmerpenguins::penguins %>%
   na.omit() %>%
@@ -7,15 +7,11 @@ df <- palmerpenguins::penguins %>%
   filter(species == "Adelie" | species == "Gentoo") %>%
   mutate(species = droplevels(species))
 
-transformer_ob_reg = transformer(df, formula_reg, task = "regression",
-                                 norm_num_vars = "all",
-                                 encode_cat_vars = "all"
-)
+tidy_object_reg = preprocessing(df = sim_data, formula_reg, task = "regression")
 
-transformer_ob_bin = transformer(df, formula_bin, task = "classification",
-                                 norm_num_vars = "all",
-                                 encode_cat_vars = "all"
-)
+
+tidy_object_bin = preprocessing(df = sim_data, formula_bin, task = "classification")
+
 
 hyper_nn_tune_list = list(
 
@@ -29,11 +25,11 @@ hyper_rf_tune_list <- list(
   trees = 100
 )
 
-model_object_bin = create_models(tidy_object = transformer_ob_bin,
+model_object_bin = build_model(tidy_object = tidy_object_bin,
                                  model_names = "Neural Network",
                                  hyperparameters = hyper_nn_tune_list)
 
-model_object_reg = create_models(tidy_object = transformer_ob_reg,
+model_object_reg = build_model(tidy_object = tidy_object_reg,
                                  model_names = "Random Forest",
                                  hyperparameters = hyper_rf_tune_list)
 
@@ -53,8 +49,8 @@ test_that("Check create_workflow works properly", {
 
 test_that("Check split_data works properly", {
 
-  split_data_bin <- split_data(model_object_bin, model = model_object_bin$models_names)
-  split_data_reg <- split_data(model_object_reg, model = model_object_reg$models_names)
+  split_data_bin <- split_data(model_object_bin)
+  split_data_reg <- split_data(model_object_reg)
 
   expect_equal(class(split_data_bin$sampling_method$splits[[1]]), c("val_split", "rsplit"))
   expect_equal(split_data_bin$final_split, rbind(model_object_bin$train_data, model_object_bin$validation_data))
@@ -115,11 +111,3 @@ test_that("Test hyperparams_grid works properly", {
   expect_equal(nrow(grid), 25)
 
 })
-
-###### tune_models_bayesian
-
-
-###### tune_models_grid_search_cv
-
-
-##### tune_models

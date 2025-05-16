@@ -1,10 +1,12 @@
 Package: TidyML
-Title: What the Package Does (One Line, Title Case)
+Title: Machine Learning Modelling For Everyone
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person("Javier", "Martínez García", , "javier.nezcia@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0009-0007-7861-5274"))
+Description: TidyML is a minimal library focused on providing all the essential tools for the workflow of a
+        machine learning modelling process. The whole process is divided into 5 steps: 
+        preprocessing -> build_model -> fine_tuning -> show_results -> sensitivity_analysis
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
@@ -21,7 +23,6 @@ Imports:
     rsample,
     tune,
     workflows,
-    workflowsets,
     yardstick,
     R6, 
     magrittr,
@@ -32,7 +33,8 @@ Imports:
     ggpubr,
     innsight,
     torch,
-    shapr
+    shapr,
+    DiagrammeR
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

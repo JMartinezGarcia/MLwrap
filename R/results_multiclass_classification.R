@@ -4,7 +4,7 @@
 
 get_predictions_multiclass <- function(tidy_object, new_data = "test"){
 
-  model_workflow <- tidy_object$final_models
+  model_workflow <- tidy_object$final_model
 
   y = all.vars(tidy_object$formula)[1]
 
@@ -42,8 +42,6 @@ get_predictions_multiclass <- function(tidy_object, new_data = "test"){
   return (predictions)
 
 }
-
-
 
 ########################################
 #             SUMMARY                  #
@@ -229,10 +227,11 @@ plot_dist_probs_multiclass <- function(predictions, new_data = "all"){
     dplyr::mutate(Class = str_replace(Class, "^.pred_", "output_"))
 
   ggplot2::ggplot(df_long, aes(x = Probability, fill = y, color = y)) +
-    geom_density(alpha = 0.5, bw = 0.1) +
-    facet_wrap(~Class) +  # Facet por clase verdadera
-    labs(title = "Probability Density for each Class",
+    ggplot2::geom_density(alpha = 0.5, bw = 0.1) +
+    ggplot2::facet_wrap(~Class) +  # Facet por clase verdadera
+    ggplot2::labs(title = "Probability Density for each Class",
          x = "Output", y = "Density") +
-    theme_minimal()
+    ggplot2::theme_minimal()
 
 }
+

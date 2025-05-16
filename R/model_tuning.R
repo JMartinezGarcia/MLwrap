@@ -1,5 +1,17 @@
+#' Fine Tune ML Model
+#'
+#' @param tidy_object Tidy_Object created from build_model function.
+#' @param tuner Name of the Hyperparameter Tuner. A string of the tuner name: "Bayesian Optimization" or
+#'     "Grid Search CV".
+#' @param metrics Metric used for Model Selection. A string of the name of metric (see metrics).
+#' @param plot_results Whether to plot the tuning results. Boolean TRUE or FALSE (default).
+#' @param verbose Whether to show tuning process. Boolean TRUE or FALSE (default).
+#' @returns Updated tidy_object
 #' @export
 fine_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose = FALSE){
+
+            check_args_fine_tuning(tidy_object = tidy_object, tuner = tuner, metrics = metrics,
+                                   plot_results = plot_results, verbose = verbose)
 
             tidy_object$modify("workflow", create_workflow(tidy_object))
 
@@ -62,9 +74,16 @@ fine_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose =
 
             }
 
-            if (tidy_object$models_names == "Neural Network"){
+            if (tidy_object$model_name == "Neural Network"){
 
-              final_hyperparams <- c(final_hyperparams, epochs = 100)
+              new_hyperparams_nn = HyperparamsNN$new(final_hyperparams[!names(final_hyperparams) %in% ".config"])
+
+              new_mlp_model = create_nn(hyperparams = new_hyperparams_nn, task = tidy_object$task, epochs = 100)
+
+              new_workflow <- tidy_object$workflow %>%
+                workflows::update_model(new_mlp_model)
+
+              tidy_object$modify("workflow", new_workflow)
 
             }
 
@@ -72,24 +91,30 @@ fine_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose =
 
             final_model <- tidy_object$workflow %>%
 
-              tune::finalize_workflow(final_hyperparams) %>%
+              tune::finalize_workflow(final_hyperparams)  %>%
 
               fit(final_data)
 
-            tidy_object$modify("final_models", final_model)
+            tidy_object$modify("final_model", final_model)
 
-            if (tidy_object$models_names == "Neural Network"){
+            if (tidy_object$model_name == "Neural Network"){
 
-              print(final_model)
+                model_parsnip <- tune::extract_fit_parsnip(final_model)
 
-              print("############# Loss Curve")
+                print("############# Loss Curve")
 
-              p <- autoplot(tune::extract_fit_parsnip(final_model)) +
-                   ggplot2::labs(title = "Neural Network Loss Curve")
+                p <- autoplot(model_parsnip) +
+                     ggplot2::labs(title = "Neural Network Loss Curve")
 
-              print(p)
+                print(p)
+
+                p <- graph_nn(model_parsnip)
+
+                print(p)
 
             }
+
+            tidy_object$modify("stage", "fit_model")
 
             return(tidy_object)
 

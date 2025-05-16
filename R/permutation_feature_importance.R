@@ -17,234 +17,134 @@ pfi_plot <- function(tidy_object, new_data = "test", metric = NULL){
                                         #     Regression          #
                                         ###########################
 
-pfi_calc <- function(model, train, test, y, task){
+pfi_calc <- function(model, train, test, y, task, metric, outcome_levels){
 
   if (task == "regression"){
 
-    pfi_reg(model, train, test, y)
+    pfi_results <- pfi_reg(model, test, y, metric)
 
   } else {
 
-    pfi_bin(model, train, test, y)
+    if (outcome_levels == 2){
+
+      pfi_results <- pfi_bin(model, test, y, metric)
+
+    }
+
+    else{
+
+      pfi_results <- pfi_multiclass(model, test, y, metric)
+
+    }
 
   }
 
+  return(pfi_results)
+
 }
 
-pfi_reg <- function(model, test, y, metric, pred_func){
+pfi_reg <- function(model, new_data, y, metric){
 
   vis <- vip::vi(model,
                  method = "permute",
                  nsim = 25,
                  metric = metric,
-                 train = test,
+                 train = new_data,
                  target = y,
-                 pred_wrapper = pred_func)
+                 pred_wrapper = pred_reg)
 
-  plot <- vip::vip(vis, include_type = TRUE, all_permutations = TRUE,
-                geom = "boxplot", aesthetics = list(color = "lightblue", width = 0.3)) +
-
-          ggplot2::geom_text(aes(label = paste0(round(Importance, 2), " ± ", round(StDev, 2))),
-                                                    vjust =  -1.5,
-                                                    hjust = 0.5)
-
-  return(plot)
+  return(vis)
 
 
 }
 
-pfi_reg <- function(tidy_object, new_data = "test", metric = NULL){
-
-  if (is.null(metric)){metric = tidy_object$metrics[1]}
-
-  y = all.vars(tidy_object$formula)[1]
-
-  pfun <- function(object, newdata){
-
-    pred = predict(object, new_data = newdata)
-
-    return(pred$.pred)
-
-  }
-
-  model_parsnip <- tidy_object$final_models %>%
-                        tune::extract_fit_parsnip()
-
-
-  dat = tidy_object$transformer %>%
-    recipes::prep(training = tidy_object$train_data) %>%
-    recipes::bake(new_data = tidy_object[[paste0(new_data, "new_data")]])
-
-  vis <- vip::vi(model_parsnip,
-                 method = "permute",
-                 nsim = 10,
-                 metric = metric,
-                 train = dat,
-                 target = y,
-                 pred_wrapper = pfun) #, event_level = "second")
-
-  p <- vip::vip(vis, include_type = TRUE, all_permutations = TRUE,
-           geom = "boxplot", aesthetics = list(color = "lightblue", width = 0.3))
-
-  print(p)
-
-}
 
                                 #####################################
                                 #     Binary Classification         #
                                 #####################################
 
-pfi_bin <- function(tidy_object, new_data = "test", metric = NULL){
-
-  if (is.null(metric)){metric = tidy_object$metrics[1]}
-
-  y = all.vars(tidy_object$formula)[1]
+pfi_bin <- function(model, new_data, y, metric){
 
   if (metrics_info[[metric]][1] == "prob"){
 
-    positive_class = levels(as.factor(tidy_object[["test_data"]][[y]]))[2]
-
-    predicted = paste0(".pred_", positive_class)
-
-    type = "prob"
+    pred_func = pred_bin
 
   } else {
 
-    predicted = ".pred_class"
-
-    type = "class"
-
+    pred_func = pred_bin_class
 
   }
 
-  pred_func_wrapper <- function(type = type){
-
-    function(object, new_data){
-
-    predict(object, new_data,  type = type)
-
-    }
-
-  }
-
-  pred_func <- pred_func_wrapper(type = type)
-
-  force(predicted)
-
-  pfun <- function(object, newdata){
-
-      pred = pred_func(object = object, new_data = newdata)
-
-      return(pred[[predicted]])
-
-    }
-
-  model_parsnip <- tidy_object$final_models %>%
-    tune::extract_fit_parsnip()
-
-  dat = tidy_object$transformer %>%
-    recipes::prep(training = tidy_object$train_data) %>%
-    recipes::bake(new_data = tidy_object[[paste0(new_data, "new_data")]])
-
-  vis <- vip::vi(model_parsnip,
+  vis <- vip::vi(model,
                  method = "permute",
-                 nsim = 10,
+                 nsim = 25,
                  metric = metric,
-                 train = dat,
+                 train = new_data,
                  target = y,
-                 pred_wrapper = pfun,
+                 pred_wrapper = pred_func,
                  event_level = "second")
 
-  p <- vip::vip(vis, include_type = TRUE, all_permutations = TRUE,
-           geom = "boxplot", aesthetics = list(color = "lightblue", width = 0.3))
-
-  print(p)
+  return(vis)
 
 }
 
+pfi_multiclass <- function(model, new_data, y, metric){
+
+
+
+  y_classes = levels(new_data[[y]])
+
+  new_test <- new_data[, !(names(new_data) %in% y)]
+
+  results = list()
+
+  for (target_class in y_classes){
+
+    new_y <- factor(ifelse(new_data[[y]] == target_class, 1, 0), levels = c(0,1))
+
+    if (metrics_info[[metric]][1] == "prob"){
+
+      predicted = paste0(".pred_", target_class)
+
+      pred_func <- function(object, newdata){
+
+        return(predict(object, new_data = newdata, type = "prob")[[predicted]])
+
+      }
+
+    }
+
+    else{
+
+      pred_func <- function(object, newdata){
+
+        pred = predict(object, new_data = newdata, type = "class")$.pred_class
+
+        bin_pred = factor(ifelse(pred == target_class, 1, 0), levels = c(0,1))
+
+        return(bin_pred)
+      }
+    }
+
+    vis <- vip::vi(model,
+                                                method = "permute",
+                                                nsim = 25,
+                                                metric = metric,
+                                                train = new_test,
+                                                target = new_y,
+                                                pred_wrapper = pred_func,
+                                                event_level = "second")
+
+    results[[target_class]] <- vis
+  }
+
+  return(results)
+
+}
 #########################################
 #     Multiclass Classification         #
 #########################################
 
-pfi_multiclass <- function(tidy_object, new_data = "test", metric = NULL){
 
-  if (is.null(metric)){metric = yardstick::roc_auc}#tidy_object$metrics[1]}
-
-  metric2 = "roc_auc"
-
-  y = all.vars(tidy_object$formula)[1]
-
-  y_classes = levels(tidy_object$full_data[[y]])
-
-  if (metrics_info[[metric2]][1] == "prob"){
-
-    predicted = unlist(lapply(y_classes, function(target_class) paste0(".pred_", target_class)))
-
-    type = "prob"
-
-  } else {
-
-    predicted = ".pred_class"
-
-    type = "class"
-
-  }
-
-  pred_func_wrapper <- function(type = type){
-
-    function(object, new_data){
-
-      pred = predict(object, new_data,  type = type)
-
-      if (type == "class"){
-
-        return(pred[[predicted]])
-
-      } else {
-
-        return(pred)
-
-        }
-
-    }
-
-  }
-
-  pred_func <- pred_func_wrapper(type = type)
-
-  force(predicted)
-
-  pfun <- function(object, newdata){
-
-    pred = pred_func(object = object, new_data = newdata)
-
-    print(pred)
-
-    return(pred)
-
-  }
-
-  model_parsnip <- tidy_object$final_models %>%
-    tune::extract_fit_parsnip()
-
-  dat = tidy_object$transformer %>%
-    recipes::prep(training = tidy_object$train_data) %>%
-    recipes::bake(new_data = tidy_object[[paste0(new_data, "new_data")]])
-
-  vis <- vip::vi(model_parsnip,
-                 method = "permute",
-                 nsim = 10,
-                 metric = function(truth, estimate){yardstick::roc_auc_vec(truth, estimate)},
-                 train = dat,
-                 target = y,
-                 pred_wrapper = pfun,
-                 smaller_is_better = F)
-
-  p <- vip::vip(vis, include_type = TRUE, all_permutations = TRUE,
-                geom = "boxplot", aesthetics = list(color = "lightblue", width = 0.3))
-
-  print(p)
-
-}
 
 

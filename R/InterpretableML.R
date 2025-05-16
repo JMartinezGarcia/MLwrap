@@ -1,8 +1,19 @@
 ###########################
 #       Interpretable ML
 ###########################
+
+#' Perform Sensitivity Analysis and Interpretable ML methods
+#'
+#' @param tidy_object Tidy_Object created from fine_tuning function.
+#' @param type Type of method used. A string of the method name: "PFI" (Permutation Feature Importance),
+#'     "SHAP" (SHapley Additive exPlanations), "Integrated Gradients" (Neural Network only) or
+#'     "Olden" (Neural Network only).
+#' @param  metric Metric used for "PFI" method (Permutation Feature Importance).
+#'  A string of the name of metric (see metrics).
 #' @export
 sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
+
+  check_args_sensitivity_analysis(tidy_object = tidy_object, type = type, metric = metric)
 
   task = tidy_object$task
 
@@ -14,7 +25,7 @@ sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
   bake_train = recipes::bake(rec, new_data = tidy_object$train_data)
   bake_test = recipes::bake(rec, new_data = tidy_object$test_data)
 
-  model_parsnip <- tidy_object$final_models %>%
+  model_parsnip <- tidy_object$final_model %>%
     tune::extract_fit_parsnip()
 
   if (is.null(tidy_object$sensitivity_analysis)){
@@ -31,19 +42,74 @@ sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
 
   if (type == "PFI"){
 
-    pfi_plot(tidy_object, new_data = new_data, metric = metric)
+    if (is.null(metric)){
+
+      if (task == "regression"){
+
+        metric = "rmse"
+
+      } else{
+
+        metric = "roc_auc"
+
+      }
+    }
+
+    results <- pfi_calc(model = model_parsnip, train = bake_train, test = bake_test, y = y,
+                        task = task, metric = metric, outcome_levels = tidy_object$outcome_levels)
+
+    sensitivity_analysis_list[["PFI"]] <- results
+
+    if (tidy_object$outcome_levels > 2){
+
+    y_classes <- levels(bake_train[[y]])
+
+    for (target_class in y_classes){
+
+      plot_barplot(results[[target_class]], func = NULL, title = paste0("Permutation Feature Importance for class ",
+                                                                target_class),
+                           x_label = "Importance")
+      }
+
+    } else{
+
+      plot_barplot(results, func = NULL, title = "Permutation Feature Importance", x_label = "Importance")
+
+    }
 
   }
 
   else if (type == "SHAP"){
 
-    results <- shap_calc(model = model_parsnip, train = bake_train, test = bake_test, y = y, task = task)
+    results <- shap_calc(model = model_parsnip, train = bake_train, test = bake_test, y = y,
+                         task = task, outcome_levels = tidy_object$outcome_levels)
 
     sensitivity_analysis_list[["SHAP"]] <- results
 
     test <- bake_test[which(names(bake_test) != y)]
 
 
+    if (tidy_object$outcome_levels > 2){
+
+      y_classes = levels(bake_train[[y]])
+
+      for (target_class in y_classes){
+
+        plot_barplot(results[[target_class]], func = function(x) mean(abs(x)),
+                     func_se = function(x) sd(abs(x)),
+                     x_label = "Mean |SHAP|",
+                     title = paste0("Mean |SHAP| value for class ", target_class)
+                     )
+
+        plot_boxplot(results[[target_class]], y_label = "SHAP value",
+                     title = paste0("SHAP Value Distribution for class ", target_class))
+
+        plot_beeswarm(results[[target_class]], X_orig = test, x_label = "SHAP value",
+                      title = paste0("SHAP Swarm Plot for class ", target_class))
+
+      }
+
+    } else{
 
     plot_barplot(results, func = function(x) mean(abs(x)),
                  func_se = function(x) sd(abs(x)),
@@ -54,41 +120,80 @@ sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
 
     plot_beeswarm(results, X_orig = test, x_label = "SHAP value", title = "SHAP Swarm Plot")
 
+    }
+
   }
 
   else if (type == "Integrated Gradients"){
 
-    results <- IntGrad_calc(model = model_parsnip, train = bake_train, test = bake_test, y, task)
+    results <- IntGrad_calc(model = model_parsnip, train = bake_train, test = bake_test, y = y,
+                            task = task, outcome_levels = tidy_object$outcome_levels)
 
     sensitivity_analysis_list[["IntegratedGradients"]] <- results
 
     test <- bake_test[which(names(bake_test) != y)]
 
-    plot_barplot(results, func = function(x) mean(abs(x)),
-                 func_se = function(x) sd(abs(x)),
-                 x_label = "Mean |Integrated Gradient|",
-                 title = "Mean |Integrated Gradient| value")
+    if (tidy_object$outcome_levels > 2){
 
-    plot_boxplot(results, y_label = "Integrated Gradient value", title = "Integrated Gradient Distribution")
+      y_classes = levels(bake_train[[y]])
 
-    plot_beeswarm(results, X_orig = test, x_label = "Integrated Gradient value",
-                  title = "Integrated Gradient Swarm Plot")
+      for (target_class in y_classes){
+
+        plot_barplot(results[[target_class]], func = function(x) mean(abs(x)),
+                     func_se = function(x) sd(abs(x)),
+                     x_label = "Mean |Integrated Gradient|",
+                     title = paste0("Mean |Integrated Gradient| value for class ", target_class)
+        )
+
+        plot_boxplot(results[[target_class]], y_label = "Integrated Gradient value",
+                     title = paste0("Integrated Gradient Value Distribution for class ", target_class))
+
+        plot_beeswarm(results[[target_class]], X_orig = test, x_label = "SHAP value",
+                      title = paste0("Integrated Gradient Swarm Plot for class ", target_class))
+
+      }
+
+    } else{
+
+      plot_barplot(results, func = function(x) mean(abs(x)),
+                   func_se = function(x) sd(abs(x)),
+                   x_label = "Mean |Integrated Gradient|",
+                   title = "Mean |Integrated Gradient| value")
+
+      plot_boxplot(results, y_label = "Integrated Gradient value", title = "Integrated Gradient Distribution")
+
+      plot_beeswarm(results, X_orig = test, x_label = "Integrated Gradient value",
+                    title = "Integrated Gradient Swarm Plot")
+
+    }
 
   }
 
   else if (type == "Olden"){
 
-    results = olden_calc(model = model_parsnip, task)
+    y_classes = levels(bake_train[[y]])
+
+    results = olden_calc(model = model_parsnip, task,
+                         outcome_levels = tidy_object$outcome_levels, y_classes = y_classes)
 
     sensitivity_analysis_list[["Olden"]] <- results
 
-    olden_barplot(results, feature_names)
+    if (tidy_object$outcome_levels > 2){
+
+      olden_barplot_mul(results, feature_names, outcome_levels = tidy_object$outcome_levels,
+                        y_classes = y_classes)
+
+    } else{
+
+      olden_barplot(results, feature_names)
+
+    }
 
   }
 
   else {
 
-    stop("Method not recognized. Recognized methods are: 'PFI', 'SHAP', 'Integrated Gradients'")
+    stop("Method not recognized. Recognized methods are: 'PFI', 'SHAP', 'Integrated Gradients' or 'Olden'")
 
   }
 
@@ -108,19 +213,25 @@ plot_barplot <- function(X, func = base::mean, func_se = stats::sd, title, x_lab
 
   X <- base::as.data.frame(X)
 
+  if (!is.null(func)){
+
   summary_df <- tibble::tibble(
-      variable = base::colnames(X),
-      value = base::sapply(X, func),
-      se = base::sapply(X, func_se)
+      Variable = base::colnames(X),
+      Importance = base::sapply(X, func),
+      StDev = base::sapply(X, func_se)
     )
 
-  summary_df$variable <- factor(summary_df$variable,
-                                levels = summary_df$variable[order(summary_df$value, decreasing = F)])
+  } else{summary_df <- X}
 
-    p <- ggplot2::ggplot(summary_df, ggplot2::aes(x = value, y = variable)) +
+
+
+  summary_df$Variable <- factor(summary_df$Variable,
+                                levels = summary_df$Variable[order(summary_df$Importance, decreasing = F)])
+
+    p <- ggplot2::ggplot(summary_df, ggplot2::aes(x = Importance, y = Variable)) +
       ggplot2::geom_col(fill = "steelblue", width = 0.7) +
-      ggplot2::geom_errorbar(ggplot2::aes(xmin = value - se, xmax = value + se), width = 0.2) +
-      ggplot2::geom_text(aes(label = paste0(round(value, 2), " ± ", round(se, 2))),
+      ggplot2::geom_errorbar(ggplot2::aes(xmin = Importance - StDev, xmax = Importance + StDev), width = 0.2) +
+      ggplot2::geom_text(aes(label = paste0(round(Importance, 2), " ± ", round(StDev, 2))),
                 vjust =  -0.5,
                 hjust = -0.2) +
       ggplot2::labs(
@@ -129,6 +240,8 @@ plot_barplot <- function(X, func = base::mean, func_se = stats::sd, title, x_lab
         title = title
         ) +
       ggplot2::theme_grey()
+
+
 
     print(p)
 
@@ -215,6 +328,12 @@ pred_reg <- function(object, newdata){
 pred_bin <- function(object, newdata){
 
   return(predict(object, new_data = newdata, type = "prob")[,2])
+
+}
+
+pred_bin_class <- function(object, newdata){
+
+  return(predict(object, new_data = newdata, type = "class")$.pred_class)
 
 }
 

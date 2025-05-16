@@ -1,4 +1,4 @@
-shap_calc <- function(model, train, test, y, task){
+shap_calc <- function(model, train, test, y, task, outcome_levels){
 
   if (task == "regression"){
 
@@ -6,7 +6,15 @@ shap_calc <- function(model, train, test, y, task){
 
   } else if (task == "classification"){
 
-    shap_bin(model, train, test, y)
+    if (outcome_levels == 2){
+
+      shap_bin(model, train, test, y)
+
+    } else {
+
+      shap_mul(model, train, test, y)
+
+    }
 
   }
 
@@ -30,17 +38,13 @@ shap_reg <- function(model, train, test, y){
                   x_train = train,
                   x_explain = test,
                   predict_model = pred_reg,
-                  verbose = NULL)
+                  max_n_coalitions = 20,
+                  n_MC_samples = 1e2,
+                  iterative = T)
 
   shap_vals = shap_vals$shapley_values_est %>% select(names(train))
 
   return(shap_vals)
-
-  # shaps = shap_global(dat, y, model_parsnip)
-  #
-  # plot_shap_global(shaps$shap_vals)
-  #
-  # plot_shap_bee(shaps$shap_vals, dat, y)
 
 }
 
@@ -50,7 +54,7 @@ shap_reg <- function(model, train, test, y){
 
 shap_bin <- function(model, train, test, y){
 
-  y_vals = train[[y]]
+  y_vals = factor(ifelse(train[[y]] == target_class, 1, 0), levels = c(0,1))
 
   phi0 = mean(y_vals == levels(y_vals)[2])
 
@@ -74,22 +78,41 @@ shap_bin <- function(model, train, test, y){
 #     Multiclass Classification      #
 ######################################
 
-shap_mul <- function(tidy_object, new_data = "test"){
+shap_mul <- function(model, train, test, y){
 
-  y = all.vars(tidy_object$formula)[1]
+  results = list()
 
-  model_parsnip <- tidy_object$final_models %>%
-    tune::extract_fit_parsnip()
+  y_classes = levels(train[[y]])
 
-  dat = tidy_object$transformer %>%
-    recipes::prep(training = tidy_object$train_data) %>%
-    recipes::bake(new_data = tidy_object[[paste0(new_data, "new_data")]])
+  new_train <- train[which(names(train) != y)]
+  new_test <- test[which(names(test) != y)]
 
-  shaps = shap_global(dat, y, model_parsnip, pfun_bin)
+  for (target_class in y_classes){
 
-  plot_shap_global(shaps$shap_vals)
+    y_vals = factor(ifelse(test[[y]] == target_class, 1, 0), levels = c(0,1))
 
-  plot_shap_bee(shaps$shap_vals, dat, y)
+    pred_class = paste0(".pred_", target_class)
+
+    phi0 = mean(y_vals == 1)
+
+    pred_func <- function(object, newdata){return(predict(model, newdata, type = "prob")[[pred_class]])}
+
+    shap_vals = shapr::explain(model, phi0 = phi0,
+                             approach = "empirical",
+                             x_train = new_train,
+                             x_explain = new_test,
+                             predict_model = pred_func,
+                             max_n_coalitions = 40,
+                             n_MC_samples = 50,
+                             iterative = T)
+
+    shap_vals = shap_vals$shapley_values_est %>% select(names(new_train))
+
+    results[[target_class]] <- shap_vals
+
+  }
+
+  return(results)
 
 }
 

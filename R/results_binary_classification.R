@@ -4,7 +4,7 @@
 
 get_predictions_binary <- function(tidy_object, new_data = "test"){
 
-  model_workflow <- tidy_object$final_models
+  model_workflow <- tidy_object$final_model
 
   y = all.vars(tidy_object$formula)[1]
 
@@ -167,6 +167,7 @@ plot_dist_probs_binary <- function(predictions, new_data = "test"){
   predicted = paste0(".pred_", positive_class)
 
   predictions %>%
+    dplyr::filter(data_set == new_data) %>%
     dplyr::group_by(y) %>%
     ggplot2::ggplot(ggplot2::aes_string(x = predicted, fill = "y")) +
     ggplot2::geom_density(alpha = 0.5) +
@@ -185,6 +186,7 @@ plot_calibration_curve_binary <- function(predictions, new_data = "test"){
   predicted = sym(paste0(".pred_", positive_class))
 
   predictions %>%
+    dplyr::filter(data_set == new_data) %>%
     dplyr::mutate(y = sapply(y, function(x) if(x == positive_class) 1 else 0)) %>%
     dplyr::mutate(pred_bin = cut(predictions[[predicted]],
                                  breaks = seq(0, 1, by = 0.1), include.lowest = TRUE)) %>%  # Crear bins de probabilidad

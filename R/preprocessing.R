@@ -39,19 +39,31 @@ one_hot_predictors <- function(rec, encode_cat_vars, one_hot = T){
 
 }
 
-
+#' Preprocessing Data Matrix
+#'
+#' @param df Input Dataframe. Either a data.frame or tibble.
+#' @param formula Modelling Formula. A string of characters or formula.
+#' @param task Modelling Task. Either "regression" or "classification".
+#' @param encode_cat_vars One Hot Encode Categaorical Features. Either vector of
+#'  names of categorical features to be encoded or "all" (default).
+#' @param norm_num_vars Normalize numeric features as z-scores. Either vector of
+#'  names of numerical features to be normalized or "all" (default).
+#' @returns A tidy_object
 #' @export
-preprocessing <- function(df, formula, task = "regression", num_vars = NULL, cat_vars = NULL, norm_num_vars = "all", encode_cat_vars = "all"){
+preprocessing <- function(df, formula, task = "regression", num_vars = NULL, cat_vars = NULL,
+                          norm_num_vars = "all", encode_cat_vars = "all"){
 
           formula = as.formula(formula)
 
-          model.frame(formula, data = df)
+          check_args_preprocessing(df = df, formula = formula, task = task, num_vars = num_vars,
+                                   cat_vars = cat_vars, norm_num_vars = norm_num_vars,
+                                   encode_cat_vars = encode_cat_vars)
 
           # Subset data from formula
 
           df <- subset_data(formula = formula, data = df)
 
-          outcome_levels = NULL
+          outcome_levels = 0
 
           if (task == "classification"){
 

@@ -2,6 +2,14 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
 
   active = list(
 
+    stage = function(value) {
+      if (missing(value)) {
+        private$.stage
+      } else {
+        stop("`$stage` is read only", call. = FALSE)
+      }
+    },
+
     full_data = function(value) {
       if (missing(value)) {
         private$.full_data
@@ -58,19 +66,19 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
       }
     },
 
-    models = function(value) {
+    model = function(value) {
       if (missing(value)) {
-        private$.models
+        private$.model
       } else {
-        stop("`$models` is read only", call. = FALSE)
+        stop("`$model` is read only", call. = FALSE)
       }
     },
 
-    models_names = function(value) {
+    model_name = function(value) {
       if (missing(value)) {
-        private$.models_names
+        private$.model_name
       } else {
-        stop("`$models_names` is read only", call. = FALSE)
+        stop("`$model_name` is read only", call. = FALSE)
       }
     },
 
@@ -106,11 +114,11 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
       }
     },
 
-    final_models = function(value) {
+    final_model = function(value) {
       if (missing(value)) {
-        private$.final_models
+        private$.final_model
       } else {
-        stop("`$final_models` is read only", call. = FALSE)
+        stop("`$final_model` is read only", call. = FALSE)
       }
     },
 
@@ -157,26 +165,32 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
   ),
 
   private = list(
-
+    .stage = NULL,
     .full_data = NULL,
     .train_data = NULL,
     .validation_data = NULL,
     .test_data = NULL,
     .transformer = NULL,
     .hyperparameters = NULL,
-    .models = NULL,
-    .models_names = NULL,
+    .model = NULL,
+    .model_name = NULL,
     .workflow = NULL,
     .metrics = NULL,
     .tuner = NULL,
     .tuner_fit = NULL,
-    .final_models = NULL,
+    .final_model = NULL,
     .task = NULL,
     .formula = NULL,
     .fit_summary = NULL,
     .predictions = NULL,
     .outcome_levels = NULL,
     .sensitivity_analysis = NULL,
+
+    add_stage = function(stage){
+
+      private$.stage <- stage
+
+    },
 
     add_formula = function(formula){
 
@@ -202,15 +216,15 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
 
     },
 
-    add_models = function(models){
+    add_model = function(model){
 
-      private$.models <- models
+      private$.model <- model
 
     },
 
-    add_models_names = function(models_names){
+    add_model_name = function(model_name){
 
-      private$.models_names <- models_names
+      private$.model_name <- model_name
 
     },
 
@@ -246,9 +260,9 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
 
     },
 
-    add_final_models = function(final_models){
+    add_final_model = function(final_model){
 
-      private$.final_models = final_models
+      private$.final_model = final_model
 
     },
 
@@ -292,6 +306,7 @@ TidyMLObject <- R6::R6Class("TidyMLObject",
       private$.task <- task
       private$.formula <- formula
       private$.outcome_levels <- outcome_levels
+      private$.stage <- "preprocessing"
 
     },
 

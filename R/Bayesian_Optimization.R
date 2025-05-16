@@ -19,9 +19,9 @@ tune_models_bayesian <- function(tidy_object, sampling_method, metrics, seed = 1
     tidy_object$workflow %>%
     tune::tune_bayes(
       resamples = sampling_method,
-      iter      = 10L,
+      iter      = 25L,
       control   = bayes_control,
-      initial   = 10,
+      initial   = 20,
       param_info = extracted_hyperparams,
       metrics = metrics
     )

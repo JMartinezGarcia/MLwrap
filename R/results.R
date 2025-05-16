@@ -1,6 +1,26 @@
 ######################################################
 #         get_results                                #
 ######################################################
+
+#' Showcase Summary Results and Plots
+#'
+#' @param tidy_object Tidy_Object created from fine_tuning function.
+#' @param summary Whether to plot summary results table. Boolean (FALSE by default).
+#' @param  roc_curve Whether to plot ROC Curve (Classification task only). Boolean (FALSE by default).
+#' @param pr_curve Whether to plot ROC Curve (Classification task only). Boolean (FALSE by default).
+#' @param gain_curve Whether to plot ROC Curve (Classification task only). Boolean (FALSE by default).
+#' @param lift_curve Whether to plot ROC Curve (Classification task only). Boolean (FALSE by default).
+#' @param dist_by_class Whether to plot distribution of output probability by class (Classification task only).
+#'  Boolean (FALSE by default).
+#' @param reliability_plot Whether to plot Reliability Plot (Binary Classification task only). Boolean (FALSE by default).
+#' @param confusion_matrix Whether to Confusion Matrix (Classification task only). Boolean (FALSE by default).
+#' @param scatter_residuals Whether to plot Residuals vs Predictions (Regression task only). Boolean (FALSE by default).
+#' @param scatter_predictions Whether to plot Predictions vs Observed (Regression task only). Boolean (FALSE by defaut).
+#' @param residuals_dist Whether to plot Residuals Distribution (Regression task only). Boolean (FALSE by default).
+#' @param new_data Data to be used for Confusion Matrix, Reliability Plot, Distribution by Class Plot,
+#'        Residuals vs Predictions Plot, Predictions vs Observed Plot and Residuals Distribution Plot.
+#'        A string with the name of the data_set: "train", "validation", "test" (default) or "all".
+#' @returns Updated tidy_object
 #' @export
 show_results <- function(tidy_object,
                         summary = FALSE, roc_curve = FALSE, pr_curve = FALSE,
@@ -8,6 +28,14 @@ show_results <- function(tidy_object,
                         dist_by_class = FALSE, reliability_plot = FALSE, confusion_matrix = FALSE,
                         scatter_residuals = FALSE, scatter_predictions = FALSE, residuals_dist = FALSE,
                         new_data = "test"){
+
+  check_args_show_results(tidy_object = tidy_object,
+                          summary = summary, roc_curve = roc_curve, pr_curve = pr_curve,
+                          gain_curve = gain_curve, lift_curve = lift_curve,
+                          dist_by_class = dist_by_class, reliability_plot = reliability_plot,
+                          confusion_matrix = confusion_matrix, scatter_residuals = scatter_residuals,
+                          scatter_predictions = scatter_predictions, residuals_dist = residuals_dist,
+                          new_data = new_data)
 
   predictions = get_predictions(tidy_object, "all")
 
@@ -23,10 +51,20 @@ show_results <- function(tidy_object,
 
   if (summary == T){
 
-    # summary_results %>%
-    #   dplyr::mutate(across(where(is.numeric), ~ signif(., 3))) %>%
-    # ggpubr::ggtexttable(rows = NULL) %>%
-    #   print()
+    # Multiclass classification case
+
+    if (tidy_object$outcome_levels > 2){
+
+      summary_results %>%
+        dplyr::mutate(across(where(is.numeric), ~ signif(., 3))) %>%
+        dplyr::select(-c(Class)) %>%
+        t() %>%
+        as.data.frame() %>%
+        tibble::rownames_to_column("Metric") %>%
+        ggpubr::ggtexttable(rows = NULL) %>%
+        print()
+
+    } else {
 
     summary_results %>%
       dplyr::mutate(across(where(is.numeric), ~ signif(., 3))) %>%
@@ -36,6 +74,8 @@ show_results <- function(tidy_object,
       dplyr::rename(Value = 2) %>%
       ggpubr::ggtexttable(rows = NULL) %>%
       print()
+
+    }
 
   }
 
@@ -142,7 +182,7 @@ show_results <- function(tidy_object,
     if (tidy_object$outcome_levels == 2){
 
       pred_test %>%
-        plot_dist_probs_binary() %>%
+        plot_dist_probs_binary(new_data) %>%
         print()
 
     } else {
@@ -156,8 +196,12 @@ show_results <- function(tidy_object,
 
   if (reliability_plot == T){
 
+    print(pepe)
+
+    if (tidy_object$outcome_levels > 2){stop("Reliability Plot not implemented for Multiclass Classification!")}
+
     pred_test %>%
-      plot_calibration_curve_binary() %>%
+      plot_calibration_curve_binary(new_data = new_data) %>%
       print()
   }
 
@@ -176,7 +220,7 @@ show_results <- function(tidy_object,
   if (scatter_residuals == T){
 
     pred_test %>%
-      plot_scatter(new_data = "all", erro = T) %>%
+      plot_scatter(new_data = new_data, error = T) %>%
       print()
 
   }
@@ -184,7 +228,7 @@ show_results <- function(tidy_object,
   if (scatter_predictions == T){
 
     pred_test %>%
-      plot_scatter(new_data = "all", error = F) %>%
+      plot_scatter(new_data = new_data, error = F) %>%
       print()
 
   }
@@ -192,7 +236,7 @@ show_results <- function(tidy_object,
   if (residuals_dist == T){
 
     pred_test %>%
-      plot_residuals_density(new_data = "all") %>%
+      plot_residuals_density(new_data = new_data) %>%
       print()
 
   }
@@ -286,8 +330,5 @@ summary_results <- function(tidy_object, predictions, new_data = "test"){
 
 }
 
-###########################
-#       Interpretable ML
-###########################
 
 

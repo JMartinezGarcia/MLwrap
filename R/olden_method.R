@@ -1,4 +1,4 @@
-olden_calc <- function(model, task){
+olden_calc <- function(model, task, outcome_levels, y_classes){
 
   if (task == "regression"){
 
@@ -8,7 +8,15 @@ olden_calc <- function(model, task){
 
   else{
 
-    net_imp = olden_bin(model)
+    if (outcome_levels == 2){
+
+      net_imp = olden_bin(model)
+
+    } else {
+
+      net_imp = olden_mul(model)
+
+    }
 
   }
 
@@ -48,7 +56,18 @@ olden_bin <- function(model){
 
 }
 
-olden_barplot <- function(net_importance, names_predictor){
+olden_mul <- function(model){
+
+  w_1 = coef(model$fit)[[1]]
+  w_2 = coef(model$fit)[[3]]
+
+  imp = t(w_1) %*% t(w_2)
+
+  return(imp)
+
+}
+
+olden_barplot <- function(net_importance, names_predictor, title = "Olden Feature Importance"){
 
   df <- data.frame(
     variable = names_predictor,
@@ -66,7 +85,7 @@ olden_barplot <- function(net_importance, names_predictor){
     ggplot2::scale_fill_manual(values = c("TRUE" = "steelblue", "FALSE" = "firebrick")) +
     ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
     ggplot2::labs(
-      title = "Olden Feature Importance",
+      title = title,
       x = "Feature",
       y = "Olden Feature Importance"
     ) +
@@ -75,5 +94,19 @@ olden_barplot <- function(net_importance, names_predictor){
 
   print(p)
 
+}
+
+olden_barplot_mul <- function(importance, names_predictor, outcome_levels, y_classes){
+
+  for (i in 1:length(y_classes)){
+
+    net_importance = importance[,i]
+
+    title = paste0("Olden Feature Importance for class ", y_classes[i])
+
+    olden_barplot(net_importance, names_predictor, title)
+
+
+  }
 
 }

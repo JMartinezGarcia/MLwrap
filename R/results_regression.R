@@ -4,7 +4,7 @@
 
 get_predictions_regression <- function(tidy_object, new_data = "test"){
 
-  model_workflow <- tidy_object$final_models
+  model_workflow <- tidy_object$final_model
 
   y = all.vars(tidy_object$formula)[1]
 

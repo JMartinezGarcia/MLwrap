@@ -2,14 +2,14 @@ create_workflow <- function(tidy_object){
 
   workflow = workflows::workflow() %>%
     workflows::add_recipe(tidy_object$transformer) %>%
-    workflows::add_model(tidy_object$models)
+    workflows::add_model(tidy_object$model)
 
   return(workflow)
 }
 
 split_data <- function(tidy_object, prop_train = 0.6, prop_val = 0.2){
 
-  model_name = tidy_object$models_names
+  model_name = tidy_object$model_name
 
   if (model_name == "Neural Network"){
 
