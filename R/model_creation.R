@@ -36,6 +36,43 @@
 #'
 #' ## XGBOOST
 #'
+#' * **trees**: Number of Trees.
+#' A single value, a vector with range values `c(min_val, max_val)`. Default range ().
+#'
+#' * **mtry**: Number of variables randomly selected as candidates at each split.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#'
+#' * **min_n**: Minimum Number of samples to split at each node.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#'
+#' * **tree_depth**: Maximum tree depth.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#'
+#' * **learn_rate**: Learning Rate.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#'
+#' * **loss_reduction**: Minimum loss reduction required to make a further partition on a leaf node.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#'
+#' ## SVM
+#'
+#' * **cost**: Penalty parameter that regulates model complexity and misclassification tolerance.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#'
+#' * **margin**: Distance between the separating hyperplane and the nearest data points.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#'
+#' * **type**: Kernel to be used.
+#' A single value from ("linear", "rbf", "polynomial")
+#'
+#' * **rbf_sigma**:
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#'
+#' * **degree**: Polynomial Degree (polynomial kernel only).
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#'
+#' * **scale_factor**: Scaling coefficient applied to inputs. (polynomial kernel only)
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
 #'
 #' @export
 

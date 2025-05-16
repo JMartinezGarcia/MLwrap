@@ -175,7 +175,7 @@ check_args_sensitivity_analysis <- function(tidy_object, type, metric){
   check_args_list(arg = type, arg_list = c("PFI", "SHAP", "Integrated Gradients", "Olden"),
                   arg_name = "type", null_valid = F)
 
-  if (!(tidy_object$models_names == "Neural Network") && (type == "Integrated Gradients" || type == "Olden")){
+  if (!(tidy_object$model_name == "Neural Network") && (type == "Integrated Gradients" || type == "Olden")){
 
     stop("Integrated Gradients and Olden's method are for Neural Networks only!!")
   }
