@@ -6,7 +6,7 @@ Authors@R:
            comment = c(ORCID = "0009-0007-7861-5274"))
 Description: TidyML is a minimal library focused on providing all the essential tools for the workflow of a
         machine learning modelling process. The whole process is divided into 5 steps: 
-        preprocessing -> build_model -> fine_tuning -> show_results -> sensitivity_analysis
+        preprocessing() -> build_model() -> fine_tuning() -> show_results() -> sensitivity_analysis()
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8

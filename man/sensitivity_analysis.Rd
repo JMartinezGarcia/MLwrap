@@ -16,6 +16,9 @@ sensitivity_analysis(tidy_object, type = "PFI", metric = NULL)
 \item{metric}{Metric used for "PFI" method (Permutation Feature Importance).
 A string of the name of metric (see metrics).}
 }
+\value{
+Updated tidy_object
+}
 \description{
 Perform Sensitivity Analysis and Interpretable ML methods
 }

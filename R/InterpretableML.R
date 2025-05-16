@@ -10,6 +10,7 @@
 #'     "Olden" (Neural Network only).
 #' @param  metric Metric used for "PFI" method (Permutation Feature Importance).
 #'  A string of the name of metric (see metrics).
+#' @returns Updated tidy_object
 #' @export
 sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
 

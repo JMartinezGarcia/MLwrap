@@ -4,16 +4,16 @@
 \alias{build_model}
 \title{Create ML Model}
 \usage{
-build_model(tidy_object, model_names, hyperparameters = NULL)
+build_model(tidy_object, model_name, hyperparameters = NULL)
 }
 \arguments{
 \item{tidy_object}{Tidy_Object created from preprocessing function.}
 
-\item{model_names}{Name of the ML Model. A string of the model name: "Neural Network",
-"Random Forest", "SVM" or "XGBOOST".}
-
 \item{hyperparameters}{Hyperparameters of the ML model. List containing the name of the hyperparameter
 and its value or range of values.}
+
+\item{model_names}{Name of the ML Model. A string of the model name: "Neural Network",
+"Random Forest", "SVM" or "XGBOOST".}
 }
 \value{
 Updated tidy_object
@@ -21,3 +21,31 @@ Updated tidy_object
 \description{
 Create ML Model
 }
+\section{Hyperparameters}{
+
+\subsection{Neural Network}{
+\itemize{
+\item \strong{hidden_units}: Number of Hidden Neurons.
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range.
+\item \strong{activation}: Activation Function.
+A vector with any of ("relu", "sigmoid", "tanh") or NULL for default values.
+\item \strong{learn_rate}: Learning Rate.
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range.
+}
+}
+
+\subsection{Random Forest}{
+\itemize{
+\item \strong{trees}: Number of Trees.
+A single value, a vector with range values \code{c(min_val, max_val)}. Default range ().
+\item \strong{mtry}: Number of variables randomly selected as candidates at each split.
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range.
+\item \strong{min_n}: Minimum Number of samples to split at each node.
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range.
+}
+}
+
+\subsection{XGBOOST}{
+}
+}
+

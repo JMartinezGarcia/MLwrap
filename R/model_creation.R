@@ -6,7 +6,37 @@
 #'     "Random Forest", "SVM" or "XGBOOST".
 #' @param hyperparameters Hyperparameters of the ML model. List containing the name of the hyperparameter
 #'  and its value or range of values.
+#'
+#'
 #' @returns Updated tidy_object
+#'
+#' @section Hyperparameters:
+#'
+#' ## Neural Network
+#'
+#' * **hidden_units**: Number of Hidden Neurons.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#'
+#' * **activation**: Activation Function.
+#' A vector with any of ("relu", "sigmoid", "tanh") or NULL for default values.
+#'
+#' * **learn_rate**: Learning Rate.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#'
+#' ## Random Forest
+#'
+#' * **trees**: Number of Trees.
+#' A single value, a vector with range values `c(min_val, max_val)`. Default range ().
+#'
+#' * **mtry**: Number of variables randomly selected as candidates at each split.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#'
+#' * **min_n**: Minimum Number of samples to split at each node.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#'
+#' ## XGBOOST
+#'
+#'
 #' @export
 
 build_model <- function(tidy_object, model_name, hyperparameters = NULL){
