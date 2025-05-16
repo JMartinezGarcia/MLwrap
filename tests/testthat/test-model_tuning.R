@@ -10,7 +10,7 @@ test_that("fine_tuning Bayesian Optimization works properly classification", {
   tidy_object <- preprocessing(df = sim_data, formula = formula, task = "classification")
 
   tidy_object <- build_model(tidy_object = tidy_object,
-                               model_names = "Neural Network",
+                               model_name = "Neural Network",
                                hyperparameters = hyper_nn_tune_list)
 
   tidy_object <- fine_tuning(tidy_object = tidy_object,
@@ -42,7 +42,7 @@ test_that("fine_tuning Grid Search CV works properly regression", {
   tidy_object <- preprocessing(df = sim_data, formula = formula, task = "regression")
 
   tidy_object <- build_model(tidy_object = tidy_object,
-                             model_names = "Neural Network",
+                             model_name = "Neural Network",
                              hyperparameters = hyper_nn_tune_list)
 
   tidy_object <- fine_tuning(tidy_object = tidy_object,
@@ -73,7 +73,7 @@ test_that("Check fine_tuning wrong metric",{
   tidy_object <- preprocessing(df = sim_data, formula = formula, task = "regression")
 
   tidy_object <- build_model(tidy_object = tidy_object,
-                             model_names = "Neural Network",
+                             model_name = "Neural Network",
                              hyperparameters = hyper_nn_tune_list)
 
   expect_error(fine_tuning(tidy_object = tidy_object,
@@ -95,7 +95,7 @@ test_that("Check fine_tuning plot_results not Boolean",{
   tidy_object <- preprocessing(df = sim_data, formula = formula, task = "regression")
 
   tidy_object <- build_model(tidy_object = tidy_object,
-                             model_names = "Neural Network",
+                             model_name = "Neural Network",
                              hyperparameters = hyper_nn_tune_list)
 
   expect_error(fine_tuning(tidy_object = tidy_object,
@@ -118,7 +118,7 @@ test_that("Check fine_tuning tuner typo",{
   tidy_object <- preprocessing(df = sim_data, formula = formula, task = "regression")
 
   tidy_object <- build_model(tidy_object = tidy_object,
-                             model_names = "Neural Network",
+                             model_name = "Neural Network",
                              hyperparameters = hyper_nn_tune_list)
 
   expect_error(fine_tuning(tidy_object = tidy_object,

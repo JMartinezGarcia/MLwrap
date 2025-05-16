@@ -10,7 +10,7 @@ test_that("PFI works properly regression", {
   tidy_object <- preprocessing(df = sim_data, formula = formula, task = "regression")
 
   tidy_object <- build_model(tidy_object = tidy_object,
-                             model_names = "Neural Network",
+                             model_name = "Neural Network",
                              hyperparameters = hyper_nn_tune_list)
 
   tidy_object <- fine_tuning(tidy_object = tidy_object,

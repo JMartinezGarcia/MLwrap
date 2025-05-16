@@ -74,10 +74,10 @@ olden_barplot <- function(net_importance, names_predictor, title = "Olden Featur
     importance = as.numeric(net_importance)
   )
 
-  # Ordenar de mayor a menor
+  # Order decreasing
   df$variable <- factor(df$variable, levels = df$variable[order(df$importance, decreasing = T)])
 
-  # Graficar
+  # Plot
   p <- ggplot2::ggplot(df, aes(x = variable, y = importance, fill = importance > 0)) +
     ggplot2::geom_col(show.legend = FALSE) +
     ggplot2::geom_text(aes(label = round(importance, 3)),

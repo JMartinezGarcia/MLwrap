@@ -72,12 +72,12 @@ test_that("Check build_model NN works properly",{
 
 
     model_object = build_model(tidy_object = tidy_object,
-                             model_names = "Neural Network",
+                             model_name = "Neural Network",
                              hyperparameters = hyper_nn_tune_list)
 
     expect_equal(model_object$task, "regression")
-    expect_equal(model_object$models_names, "Neural Network")
-    expect_equal(class(model_object$models), c("mlp", "model_spec"))
+    expect_equal(model_object$model_name, "Neural Network")
+    expect_equal(class(model_object$model), c("mlp", "model_spec"))
     expect_equal(model_object$hyperparameters$tuning, T)
     expect_equal(model_object$hyperparameters$learn_rate_tune, T)
     expect_equal(model_object$hyperparameters$hidden_units_tune, F)
@@ -101,12 +101,12 @@ test_that("Check build_model RF works properly",{
   )
 
   model_object = build_model(tidy_object = tidy_object,
-                               model_names = "Random Forest",
+                               model_name = "Random Forest",
                                hyperparameters = hyper_rf_tune_list)
 
   expect_equal(model_object$task, "classification")
-  expect_equal(model_object$models_names, "Random Forest")
-  expect_equal(class(model_object$models), c("rand_forest", "model_spec"))
+  expect_equal(model_object$model_name, "Random Forest")
+  expect_equal(class(model_object$model), c("rand_forest", "model_spec"))
   expect_equal(model_object$hyperparameters$tuning, T)
   expect_equal(model_object$hyperparameters$mtry_tune, T)
   expect_equal(model_object$hyperparameters$trees_tune, F)
@@ -131,12 +131,12 @@ test_that("Check build_model SVM works properly",{
   )
 
   model_object = build_model(tidy_object = tidy_object,
-                               model_names = "SVM",
+                               model_name = "SVM",
                                hyperparameters = hyper_svm_tune_list)
 
   expect_equal(model_object$task, "classification")
-  expect_equal(model_object$models_names, "SVM")
-  expect_equal(class(model_object$models), c("svm_rbf", "model_spec"))
+  expect_equal(model_object$model_name, "SVM")
+  expect_equal(class(model_object$model), c("svm_rbf", "model_spec"))
   expect_equal(model_object$hyperparameters$tuning, T)
   expect_equal(model_object$hyperparameters$rbf_sigma_tune, T)
   expect_equal(model_object$hyperparameters$cost_tune, F)
@@ -160,7 +160,7 @@ test_that("Check build_model wrong model name",{
   )
 
   expect_error(build_model(tidy_object = tidy_object,
-                             model_names = "Neural Networkz",
+                             model_name = "Neural Networkz",
                              hyperparameters = hyper_nn_tune_list))
 })
 
@@ -177,7 +177,7 @@ test_that("Check build_model wrong hyperparameters name",{
   )
 
   expect_error(build_model(tidy_object = tidy_object,
-                           model_names = "Neural Network",
+                           model_name = "Neural Network",
                            hyperparameters = hyper_nn_tune_list))
 })
 

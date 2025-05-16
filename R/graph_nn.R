@@ -16,32 +16,32 @@ graph_nn <- function(model){
     code <- ""
 
     if (!apply_compact || total_units <= compact_threshold) {
-      # Mostrar todas las neuronas
+      # show all neurons
       for (i in 1:total_units) {
         code <- paste0(code, "  ", prefix, i,
                        " [shape=circle, style=filled, fillcolor=", color, ", label=''];\n")
       }
     } else {
-      # Mostrar la primera neurona en color
+      # Input neurons
       code <- paste0(code, "  ", prefix, 1,
                      " [shape=circle, style=filled, fillcolor=", color, ", label=''];\n")
-      # Añadir 4 nodos intermedios con puntos suspensivos
+      # Add hidden layers with dots
       for (d in 1:4) {
         code <- paste0(code, "  ", prefix, "dots", d,
                        " [shape=circle, label='...', fontcolor=black, style=filled, fillcolor=white];\n")
       }
-      # Mostrar la última neurona en color
+      # Last neuron
       code <- paste0(code, "  ", prefix, total_units,
                      " [shape=circle, style=filled, fillcolor=", color, ", label=''];\n")
     }
     return(code)
   }
 
-  # Input Layer: Siempre mostrar completas
+  # Input Layer
   graph_code <- paste0(graph_code, generate_neurons("I", input_units, compact_threshold, "lightblue", apply_compact = FALSE))
-  # Hidden Layer: Aplicar compactación si necesario
+  # Hidden Layer
   graph_code <- paste0(graph_code, generate_neurons("H", hidden_units, compact_threshold, "lightgreen", apply_compact = TRUE))
-  # Output Layer: Siempre mostrar completas
+  # Output Layer
   graph_code <- paste0(graph_code, generate_neurons("O", output_units, compact_threshold, "lightpink", apply_compact = FALSE))
 
   # ----- Add Edges -----
