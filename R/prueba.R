@@ -1,90 +1,74 @@
-#devtools::load_all()
-# #
-# library(dplyr)
-# library(TidyML)
+# ##### Formula
 #
-# #################################################
-# #             Comienzo       #
-# #################################################
-
-# df_reg <- sim_data %>%
-#  dplyr::select(-c("psych_well_bin", "psych_well_pol"))
-
-# df_mul <- sim_data %>%
-#     dplyr::select(-c("psych_well", "psych_well_bin"))
+# formula_reg = "psych_well ~ gender + age + socioec_status + depression + life_sat + emot_intel + resilience"
+# formula_bin = "psych_well_bin ~ gender + age + socioec_status + depression + life_sat + emot_intel + resilience"
+# formula_mul = "psych_well_pol ~ gender + age + socioec_status + depression + life_sat + emot_intel + resilience"
 #
-# formula_mul = "psych_well_pol ~."
+# hyper_nn_tune_list = list(
+#   learn_rate = c(-3, -1),
+#   hidden_units = c(3,10)
+# )
 #
-# formula = "psych_well_pol ~ ."
+# ##### Ejemplo Regresión
 #
-# tidy_object = preprocessing(df_mul, formula_mul, task = "classification")
+# model_reg <- preprocessing(df = sim_data, formula = formula_reg, task = "regression")
 #
-# tidy_object = build_model(tidy_object, "Neural Network",
-#                              hyperparameters = list(hidden_units = c(3, 50),
-#                              activation = c("relu", "tanh", "sigmoid")))
+# model_reg <- build_model(tidy_object = model_reg,
+#                          model_name = "Neural Network",
+#                          hyperparameters = list(
+#                            hidden_units = c(10, 25),
+#                            activation = "relu"
+#                          ))
 #
-# tidy_object = create_models(tidy_object, "XGBOOST",
-#                              hyperparameters = list(mtry = 3, trees = 100, min_n = c(3,4), tree_depth = c(3,5)))
+# model_reg <- fine_tuning(tidy_object = model_reg,
+#                          tuner = "Bayesian Optimization",
+#                          metrics = "rmse",
+#                          plot_results = TRUE,
+#                          verbose = F)
 #
-# tidy_object = fine_tuning(tidy_object, "Bayesian Optimization", c("rmse"))
-
-# tidy_object = show_results(tidy_object, summary = T, scatter_residuals = T, scatter_predictions = T,
-#                            residuals_dist = T)
+# model_reg <- show_results(tidy_object = model_reg, summary = T, scatter_residuals = T, scatter_predictions = T)
 #
-#tidy_object = sensitivity_analysis(tidy_object, type = "SHAP")
-# #################################################
-# #             Otra Forma de Hacerlo      #
-# #################################################
+# model_reg <- sensitivity_analysis(tidy_object = model_reg, type = "Integrated Gradients")
 #
-
-# formula = "Species ~ Sepal_Length + Sepal_Width + Petal_Length + Petal_Width"
-# formula2 = "Sepal_Length ~ Species + Sepal_Width + Petal_Length + Petal_Width"
+# model_reg <- sensitivity_analysis(tidy_object = model_reg, type = "SHAP")
 #
-# model_fit <- dat_big %>%
+# #### Ejemplo Binario
 #
-#                   transformer(formula = formula, task = "classification") %>%
+# model_bin <- preprocessing(df = sim_data, formula = formula_bin, task = "classification") %>%
 #
-#                   create_models(model_names = "XGBOOST",
-#                                 hyperparameters = list(
-#                                     mtry= c(2, 4),
-#                                     trees = 50
-#                                   )
-#                                 ) %>%
+#               build_model(model_name = "Random Forest",
 #
-#                   model_tuning(tuner = "Bayesian Optimization",
-#                                metrics = "roc_auc", plot_results = T)  %>%
+#                           hyperparameters = list(
+#                             mtry = c(3,5),
+#                             trees = 100,
+#                             min_n = 5
+#                           )) %>%
 #
-#                    get_results(summary = T, roc_curve = T, dist_by_class = T) %>%
+#               fine_tuning(tuner = "Bayesian Optimization",
+#                           metrics = "roc_auc",
+#                           plot_results = T,
+#                           verbose = F) %>%
 #
-#                    sensitivity_analysis(shap_plot = T)
+#               show_results(summary = T, confusion_matrix = T, roc_curve = T, dist_by_class = T)
 #
-# get_results()
-# model_fit <- dat_big %>%
+# model_bin <- sensitivity_analysis(model_bin, type = "SHAP")
 #
-#                   transformer(formula = formula2) %>%
+# ##### Multi
 #
-#                   create_models(model_names = "Neural Network",
-#                                 hyperparameters = list(hidden_units = 5, activation = c("relu", "sigmoid")),
-#                                 task = "regression") %>%
+# model_mul <- preprocessing(df = sim_data, formula = formula_mul, task = "classification") %>%
 #
-#                   model_tuning(tuner = "Bayesian Optimization",
-#                                metrics = "rmse") %>%
+#   build_model(model_name = "XGBOOST") %>%
 #
-  #
-  #
-  # get_results(summary = T)
-
-# plot_roc_curve_binary(model_fit)
+#   fine_tuning(tuner = "Bayesian Optimization",
+#               metrics = "roc_auc",
+#               plot_results = T,
+#               verbose = F) %>%
 #
-# box_plot_binary(model_fit)
+#   show_results(summary = T, confusion_matrix = T, roc_curve = T, dist_by_class = T) %>%
 #
-# plot_conf_mat_binary(model_fit)
+#     sensitivity_analysis(type = "SHAP")
 #
-# summary_binary(model_fit)
 #
-# permutation_feature_importance(model_fit)
-
-
-
+# model_mul$test_data
 
 

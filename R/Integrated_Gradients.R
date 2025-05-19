@@ -6,7 +6,11 @@ IntGrad_calc <- function(model, train, test, y, task, outcome_levels){
 
       intgrads <- IntGrad_mul(model, train, test, y, outcome_levels)
 
-    } else{
+    } else if (outcome_levels ==2){
+
+      intgrads <- IntGrad_bin(model, train, test, y)
+
+    } else {
 
       intgrads <- IntGrad_reg(model, train, test, y)
 
@@ -46,9 +50,14 @@ IntGrad_bin <- function(model, train, test, y){
               input_dim = model$fit$dims$p
       )
 
+
     intgrads <- innsight::run_intgrad(converted_model, data = test, verbose = F)
 
     intgrads = as.data.frame(intgrads$get_result())
+
+    idx <- seq(ncol(test) + 1, ncol(test) * 2)
+
+    intgrads <- as.data.frame(intgrads[idx])
 
     names(intgrads) = names(test)
 

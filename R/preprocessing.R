@@ -51,7 +51,7 @@ one_hot_predictors <- function(rec, encode_cat_vars, one_hot = T){
 #' @returns A tidy_object
 #' @export
 preprocessing <- function(df, formula, task = "regression", num_vars = NULL, cat_vars = NULL,
-                          norm_num_vars = "all", encode_cat_vars = "all"){
+                          norm_num_vars = "all", encode_cat_vars = "all", y_levels = NULL){
 
           formula = as.formula(formula)
 
@@ -69,7 +69,21 @@ preprocessing <- function(df, formula, task = "regression", num_vars = NULL, cat
 
             y = all.vars(formula)[1]
 
-            df[[y]] = as.factor(df[[y]])
+            if (!is.null(y_levels)){
+
+              if (any(!(y_levels %in% levels(as.factor(df[[y]]))))){
+
+                stop("y_levels do not correspond to original levels")
+
+              }
+
+              df[[y]] = factor(df[[y]], levels = y_levels)
+
+            } else{
+
+                df[[y]] = as.factor(df[[y]])
+
+            }
 
             outcome_levels = length(levels(df[[y]]))
 

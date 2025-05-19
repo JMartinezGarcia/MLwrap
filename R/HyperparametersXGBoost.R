@@ -15,10 +15,10 @@ HyperparamsXGBoost <- R6::R6Class("XGBOOST Hyperparameters",
 
                                    mtry = dials::mtry(range = c(3, 8)),
                                    trees = dials::trees(range = c(100, 300)),
-                                   min_n = dials::min_n(range = c(2, 25)),
-                                   tree_depth = dials::tree_depth(range = c(1L, 15L)),
-                                   learn_rate = dials::learn_rate(range = c(-10, -1)),
-                                   loss_reduction = dials::loss_reduction(range = c(-10, 1.5))
+                                   min_n = dials::min_n(range = c(5, 25)),
+                                   tree_depth = dials::tree_depth(range = c(3L, 10L)),
+                                   learn_rate = dials::learn_rate(range = c(-4, -1)),
+                                   loss_reduction = dials::loss_reduction(range = c(-5, 1.5))
 
 
                                  )

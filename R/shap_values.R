@@ -38,7 +38,7 @@ shap_reg <- function(model, train, test, y){
                   x_train = train,
                   x_explain = test,
                   predict_model = pred_reg,
-                  max_n_coalitions = 20,
+                  max_n_coalitions = 40,
                   n_MC_samples = 1e2,
                   iterative = T)
 
@@ -54,9 +54,11 @@ shap_reg <- function(model, train, test, y){
 
 shap_bin <- function(model, train, test, y){
 
+  target_class = levels(train[[y]])[1]
+
   y_vals = factor(ifelse(train[[y]] == target_class, 1, 0), levels = c(0,1))
 
-  phi0 = mean(y_vals == levels(y_vals)[2])
+  phi0 = mean(y_vals == levels(y_vals)[1])
 
   train <- train[which(names(train) != y)]
   test <- test[which(names(test) != y)]
@@ -66,6 +68,9 @@ shap_bin <- function(model, train, test, y){
                              x_train = train,
                              x_explain = test,
                              predict_model = pred_bin,
+                             max_n_coalitions = 40,
+                             n_MC_samples = 1e3,
+                             iterative = T,
                              verbose = NULL)
 
   shap_vals = shap_vals$shapley_values_est %>% select(names(train))

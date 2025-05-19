@@ -30,7 +30,6 @@ check_args_preprocessing <- function(df, formula, task, num_vars, cat_vars,
   if (any(!(encode_cat_vars %in% df_cols)) && !(is.null(encode_cat_vars)) && !(encode_cat_vars == "all")) {
     message("encode_cat_vars doesn't coincide with data columns")
   }
-
 }
 
 ########## Model building

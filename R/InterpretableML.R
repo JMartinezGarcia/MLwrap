@@ -117,6 +117,11 @@ sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
                  x_label = "Mean |SHAP|",
                  title = "Mean |SHAP| value")
 
+      plot2(results, test, func = function(x) mean(x),
+            func_se = function(x) sd(x),
+            x_label = "Mean (SHAP * sign(X))",
+            title = "Mean (SHAP * sign(X)) value")
+
     plot_boxplot(results, y_label = "SHAP value", title = "SHAP Value Distribution")
 
     plot_beeswarm(results, X_orig = test, x_label = "SHAP value", title = "SHAP Swarm Plot")
@@ -160,6 +165,13 @@ sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
                    func_se = function(x) sd(abs(x)),
                    x_label = "Mean |Integrated Gradient|",
                    title = "Mean |Integrated Gradient| value")
+
+      plot2(results, test, func = function(x) mean(x),
+            func_se = function(x) sd(x),
+            x_label = "Mean (Integrated Gradient * sign(X))",
+            title = "Mean (Integrated Gradient * sign(X)) value")
+
+
 
       plot_boxplot(results, y_label = "Integrated Gradient value", title = "Integrated Gradient Distribution")
 
@@ -210,7 +222,7 @@ sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
 
 #### plot_global
 
-plot_barplot <- function(X, func = base::mean, func_se = stats::sd, title, x_label) {
+plot_barplot <- function(X, func = NULL, func_se = stats::sd, title, x_label) {
 
   X <- base::as.data.frame(X)
 
@@ -246,7 +258,43 @@ plot_barplot <- function(X, func = base::mean, func_se = stats::sd, title, x_lab
 
     print(p)
 
-  }
+}
+
+
+plot2 <- function(X, test, func = NULL, func_se = stats::sd, title, x_label) {
+
+  X <- base::as.data.frame(X)
+
+  sign_results = as.data.frame(as.matrix(X) * sign(as.matrix(test)))
+
+  names(sign_results) <- names(X)
+
+   df <- tibble::tibble(
+    variable = base::colnames(sign_results),
+    importance = as.numeric(base::sapply(sign_results, func))
+  )
+
+  # Order decreasing
+  df$variable <- factor(df$variable, levels = df$variable[order(df$importance, decreasing = T)])
+
+  # Plot
+  p <- ggplot2::ggplot(df, aes(x = variable, y = importance, fill = importance > 0)) +
+    ggplot2::geom_col(show.legend = FALSE) +
+    ggplot2::geom_text(aes(label = round(importance, 3)),
+                       vjust = ifelse(df$importance >= 0, -0.5, 1.2)) +
+    ggplot2::scale_fill_manual(values = c("TRUE" = "steelblue", "FALSE" = "firebrick")) +
+    ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
+    ggplot2::labs(
+      title = title,
+      x = "Feature",
+      y = "Olden Feature Importance"
+    ) +
+    ggplot2::theme_grey() +
+    ggplot2::theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+  print(p)
+
+}
 
 plot_boxplot <- function(X, title, y_label){
 

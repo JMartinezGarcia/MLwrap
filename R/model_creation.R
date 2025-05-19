@@ -100,7 +100,6 @@ build_model <- function(tidy_object, model_name, hyperparameters = NULL){
 
                     } else if (model_name == "Random Forest"){
 
-
                       hyperparams_rf = HyperparamsRF$new(hyperparameters)
 
                       tidy_object$modify("hyperparameters", hyperparams_rf)
