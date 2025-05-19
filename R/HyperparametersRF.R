@@ -52,10 +52,14 @@ HyperparamsRF <- R6::R6Class("Random Forest Hyperparameters",
                                           func <- get(name, envir = asNamespace("dials"))
                                           func(range = value)
 
-                                        } else {
+                                        } else if (!is.null(value)){
 
                                           self[[paste0(name, "_tune")]] <- FALSE
                                           value
+                                        } else{
+
+                                          def_hyperparams[[name]]
+
                                         }
                                       }, names(hyperparams), hyperparams)
                                     }

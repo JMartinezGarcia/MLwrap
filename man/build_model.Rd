@@ -24,28 +24,67 @@ Create ML Model
 \section{Hyperparameters}{
 
 \subsection{Neural Network}{
+
+Parsnip model using \strong{brulee} engine.
 \itemize{
 \item \strong{hidden_units}: Number of Hidden Neurons.
-A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range.
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(5, 20).
 \item \strong{activation}: Activation Function.
-A vector with any of ("relu", "sigmoid", "tanh") or NULL for default values.
+A vector with any of ("relu", "sigmoid", "tanh") or NULL for default values c("relu", "sigmoid", "tanh").
 \item \strong{learn_rate}: Learning Rate.
-A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range.
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(-3, -1) in log10 scale.
 }
 }
 
 \subsection{Random Forest}{
+
+Parsnip model using \strong{ranger} engine.
 \itemize{
 \item \strong{trees}: Number of Trees.
-A single value, a vector with range values \code{c(min_val, max_val)}. Default range ().
+A single value, a vector with range values \code{c(min_val, max_val)}. Default range c(100, 300).
 \item \strong{mtry}: Number of variables randomly selected as candidates at each split.
-A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range.
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(3, 8).
 \item \strong{min_n}: Minimum Number of samples to split at each node.
-A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range.
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(2, 25).
 }
 }
 
 \subsection{XGBOOST}{
+
+Parsnip model using \strong{xgboost} engine.
+\itemize{
+\item \strong{trees}: Number of Trees.
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(100, 300).
+\item \strong{mtry}: Number of variables randomly selected as candidates at each split.
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(3, 8).
+\item \strong{min_n}: Minimum Number of samples to split at each node.
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(5, 25).
+\item \strong{tree_depth}: Maximum tree depth.
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(3, 10).
+\item \strong{learn_rate}: Learning Rate.
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(-4, -1) in log10 scale.
+\item \strong{loss_reduction}: Minimum loss reduction required to make a further partition on a leaf node.
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(-5, 1.5) in log10 scale.
+}
+}
+
+\subsection{SVM}{
+
+Parsnip model using \strong{kernlab} engine.
+\itemize{
+\item \strong{cost}: Penalty parameter that regulates model complexity and misclassification tolerance.
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(-3, 3) in log10 scale.
+\item \strong{margin}: Distance between the separating hyperplane and the nearest data points.
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(0, 0.2).
+\item \strong{type}: Kernel to be used.
+A single value from ("linear", "rbf", "polynomial")
+\item \strong{rbf_sigma}:
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(-5, 0) in log10 scale.
+\item \strong{degree}: Polynomial Degree (polynomial kernel only).
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(1, 3).
+\item \strong{scale_factor}: Scaling coefficient applied to inputs. (polynomial kernel only)
+A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(-5, -1) in log10 scale.
+}
 }
 }
 

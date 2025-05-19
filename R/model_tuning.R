@@ -3,10 +3,43 @@
 #' @param tidy_object Tidy_Object created from build_model function.
 #' @param tuner Name of the Hyperparameter Tuner. A string of the tuner name: "Bayesian Optimization" or
 #'     "Grid Search CV".
-#' @param metrics Metric used for Model Selection. A string of the name of metric (see metrics).
+#' @param metrics Metric used for Model Selection. A string of the name of metric (see Metrics).
 #' @param plot_results Whether to plot the tuning results. Boolean TRUE or FALSE (default).
 #' @param verbose Whether to show tuning process. Boolean TRUE or FALSE (default).
 #' @returns Updated tidy_object
+#'
+#' @section Metrics:
+#'
+#' ## Regression Metrics
+#'
+#' * rmse
+#' * mae
+#' * mpe
+#' * mape
+#' * ccc
+#' * smape
+#' * rpiq
+#' * rsq
+#'
+#' ## Classification Metrics
+#'
+#' * accuracy
+#' * bal_accuracy
+#' * recall
+#' * sensitivity
+#' * specificity
+#' * kap
+#' * f_meas
+#' * mcc
+#' * j_index
+#' * detection_prevelance
+#' * roc_auc
+#' * pr_auc
+#' * gain_capture
+#' * brier_class
+#' * roc_aunp
+#'
+#'
 #' @export
 fine_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose = FALSE){
 

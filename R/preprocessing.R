@@ -44,10 +44,13 @@ one_hot_predictors <- function(rec, encode_cat_vars, one_hot = T){
 #' @param df Input Dataframe. Either a data.frame or tibble.
 #' @param formula Modelling Formula. A string of characters or formula.
 #' @param task Modelling Task. Either "regression" or "classification".
+#' @param num_vars Optional vector of names of the numerical features.
+#' @param cat_vars Optional vector of names of the categorical features.
 #' @param encode_cat_vars One Hot Encode Categaorical Features. Either vector of
 #'  names of categorical features to be encoded or "all" (default).
 #' @param norm_num_vars Normalize numeric features as z-scores. Either vector of
 #'  names of numerical features to be normalized or "all" (default).
+#' @param y_levels Optional ordered vector with names of the target variable levels.
 #' @returns A tidy_object
 #' @export
 preprocessing <- function(df, formula, task = "regression", num_vars = NULL, cat_vars = NULL,

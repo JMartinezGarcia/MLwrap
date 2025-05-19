@@ -6,7 +6,7 @@
 #'
 #' @param tidy_object Tidy_Object created from fine_tuning function.
 #' @param summary Whether to plot summary results table. Boolean (FALSE by default).
-#' @param  roc_curve Whether to plot ROC Curve (Classification task only). Boolean (FALSE by default).
+#' @param roc_curve Whether to plot ROC Curve (Classification task only). Boolean (FALSE by default).
 #' @param pr_curve Whether to plot ROC Curve (Classification task only). Boolean (FALSE by default).
 #' @param gain_curve Whether to plot ROC Curve (Classification task only). Boolean (FALSE by default).
 #' @param lift_curve Whether to plot ROC Curve (Classification task only). Boolean (FALSE by default).

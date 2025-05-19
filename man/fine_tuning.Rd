@@ -12,7 +12,7 @@ fine_tuning(tidy_object, tuner, metrics, plot_results = F, verbose = FALSE)
 \item{tuner}{Name of the Hyperparameter Tuner. A string of the tuner name: "Bayesian Optimization" or
 "Grid Search CV".}
 
-\item{metrics}{Metric used for Model Selection. A string of the name of metric (see metrics).}
+\item{metrics}{Metric used for Model Selection. A string of the name of metric (see Metrics).}
 
 \item{plot_results}{Whether to plot the tuning results. Boolean TRUE or FALSE (default).}
 
@@ -24,3 +24,39 @@ Updated tidy_object
 \description{
 Fine Tune ML Model
 }
+\section{Metrics}{
+
+\subsection{Regression Metrics}{
+\itemize{
+\item rmse
+\item mae
+\item mpe
+\item mape
+\item ccc
+\item smape
+\item rpiq
+\item rsq
+}
+}
+
+\subsection{Classification Metrics}{
+\itemize{
+\item accuracy
+\item bal_accuracy
+\item recall
+\item sensitivity
+\item specificity
+\item kap
+\item f_meas
+\item mcc
+\item j_index
+\item detection_prevelance
+\item roc_auc
+\item pr_auc
+\item gain_capture
+\item brier_class
+\item roc_aunp
+}
+}
+}
+

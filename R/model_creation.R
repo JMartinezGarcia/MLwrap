@@ -14,65 +14,73 @@
 #'
 #' ## Neural Network
 #'
+#' Parsnip model using **brulee** engine. Hyperparameters:
+#'
 #' * **hidden_units**: Number of Hidden Neurons.
-#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range c(5, 20).
 #'
 #' * **activation**: Activation Function.
-#' A vector with any of ("relu", "sigmoid", "tanh") or NULL for default values.
+#' A vector with any of ("relu", "sigmoid", "tanh") or NULL for default values c("relu", "sigmoid", "tanh").
 #'
 #' * **learn_rate**: Learning Rate.
-#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range c(-3, -1) in log10 scale.
 #'
 #' ## Random Forest
 #'
+#' Parsnip model using **ranger** engine. Hyperparameters:
+#'
 #' * **trees**: Number of Trees.
-#' A single value, a vector with range values `c(min_val, max_val)`. Default range ().
+#' A single value, a vector with range values `c(min_val, max_val)`. Default range c(100, 300).
 #'
 #' * **mtry**: Number of variables randomly selected as candidates at each split.
-#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range c(3, 8).
 #'
 #' * **min_n**: Minimum Number of samples to split at each node.
-#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range c(2, 25).
 #'
 #' ## XGBOOST
 #'
+#' Parsnip model using **xgboost** engine. Hyperparameters:
+#'
 #' * **trees**: Number of Trees.
-#' A single value, a vector with range values `c(min_val, max_val)`. Default range ().
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range c(100, 300).
 #'
 #' * **mtry**: Number of variables randomly selected as candidates at each split.
-#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range c(3, 8).
 #'
 #' * **min_n**: Minimum Number of samples to split at each node.
-#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range c(5, 25).
 #'
 #' * **tree_depth**: Maximum tree depth.
-#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range c(3, 10).
 #'
 #' * **learn_rate**: Learning Rate.
-#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range c(-4, -1) in log10 scale.
 #'
 #' * **loss_reduction**: Minimum loss reduction required to make a further partition on a leaf node.
-#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range c(-5, 1.5) in log10 scale.
 #'
 #' ## SVM
 #'
+#' Parsnip model using **kernlab** engine. Hyperparameters:
+#'
 #' * **cost**: Penalty parameter that regulates model complexity and misclassification tolerance.
-#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range c(-3, 3) in log10 scale.
 #'
 #' * **margin**: Distance between the separating hyperplane and the nearest data points.
-#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range c(0, 0.2).
 #'
 #' * **type**: Kernel to be used.
 #' A single value from ("linear", "rbf", "polynomial")
 #'
 #' * **rbf_sigma**:
-#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range c(-5, 0) in log10 scale.
 #'
 #' * **degree**: Polynomial Degree (polynomial kernel only).
-#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range c(1, 3).
 #'
 #' * **scale_factor**: Scaling coefficient applied to inputs. (polynomial kernel only)
-#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range.
+#' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range c(-5, -1) in log10 scale.
 #'
 #' @export
 

@@ -48,13 +48,13 @@ HyperparamsNN <- R6::R6Class("Neural Network Hyperparameters",
 
                                        default_hyperparameters$learn_rate <- dials::learn_rate(range = hyperparams$learn_rate)
 
-                                     } else {
+                                     } else if (!is.null(hyperparams$learn_rate)){
 
                                        default_hyperparameters$learn_rate <- hyperparams$learn_rate
 
                                        self$learn_rate_tune = F
 
-                                     }
+                                       }
 
                                    }
 
@@ -64,7 +64,7 @@ HyperparamsNN <- R6::R6Class("Neural Network Hyperparameters",
 
                                        default_hyperparameters$hidden_units <- dials::hidden_units(range = hyperparams$hidden_units)
 
-                                     } else {
+                                     } else if (!is.null(hyperparams$hidden_units)){
 
                                        default_hyperparameters$hidden_units <- hyperparams$hidden_units
 
@@ -79,7 +79,7 @@ HyperparamsNN <- R6::R6Class("Neural Network Hyperparameters",
 
                                        default_hyperparameters$activation <- dials::activation(values = hyperparams$activation)
 
-                                     } else {
+                                     } else if (!is.null(hyperparams$activation)){
 
                                        default_hyperparameters$activation <- hyperparams$activation
 

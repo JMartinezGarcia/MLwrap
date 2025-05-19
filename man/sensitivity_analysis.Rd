@@ -14,7 +14,7 @@ sensitivity_analysis(tidy_object, type = "PFI", metric = NULL)
 "Olden" (Neural Network only).}
 
 \item{metric}{Metric used for "PFI" method (Permutation Feature Importance).
-A string of the name of metric (see metrics).}
+A string of the name of metric (see Metrics).}
 }
 \value{
 Updated tidy_object

@@ -11,7 +11,8 @@ preprocessing(
   num_vars = NULL,
   cat_vars = NULL,
   norm_num_vars = "all",
-  encode_cat_vars = "all"
+  encode_cat_vars = "all",
+  y_levels = NULL
 )
 }
 \arguments{
@@ -21,11 +22,17 @@ preprocessing(
 
 \item{task}{Modelling Task. Either "regression" or "classification".}
 
+\item{num_vars}{Optional vector of names of the numerical features.}
+
+\item{cat_vars}{Optional vector of names of the categorical features.}
+
 \item{norm_num_vars}{Normalize numeric features as z-scores. Either vector of
 names of numerical features to be normalized or "all" (default).}
 
 \item{encode_cat_vars}{One Hot Encode Categaorical Features. Either vector of
 names of categorical features to be encoded or "all" (default).}
+
+\item{y_levels}{Optional ordered vector with names of the target variable levels.}
 }
 \value{
 A tidy_object

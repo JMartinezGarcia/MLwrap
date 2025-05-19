@@ -9,7 +9,7 @@
 #'     "SHAP" (SHapley Additive exPlanations), "Integrated Gradients" (Neural Network only) or
 #'     "Olden" (Neural Network only).
 #' @param  metric Metric used for "PFI" method (Permutation Feature Importance).
-#'  A string of the name of metric (see metrics).
+#'  A string of the name of metric (see Metrics).
 #' @returns Updated tidy_object
 #' @export
 sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
@@ -189,7 +189,11 @@ sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
     results = olden_calc(model = model_parsnip, task,
                          outcome_levels = tidy_object$outcome_levels, y_classes = y_classes)
 
-    sensitivity_analysis_list[["Olden"]] <- results
+    df_results <- as.data.frame(t(results))
+
+    names(df_results) <- feature_names
+
+    sensitivity_analysis_list[["Olden"]] <- df_results
 
     if (tidy_object$outcome_levels > 2){
 
