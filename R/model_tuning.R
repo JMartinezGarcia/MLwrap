@@ -1,12 +1,27 @@
 #' Fine Tune ML Model
 #'
-#' @param tidy_object Tidy_Object created from build_model function.
+#' @param analysis_object analysis_object created from build_model function.
 #' @param tuner Name of the Hyperparameter Tuner. A string of the tuner name: "Bayesian Optimization" or
 #'     "Grid Search CV".
 #' @param metrics Metric used for Model Selection. A string of the name of metric (see Metrics).
 #' @param plot_results Whether to plot the tuning results. Boolean TRUE or FALSE (default).
 #' @param verbose Whether to show tuning process. Boolean TRUE or FALSE (default).
-#' @returns Updated tidy_object
+#' @returns Updated analysis_object
+#'
+#' @section Tuners:
+#'
+#' ## Bayesian Optimization
+#'
+#' * Initial data points: 20
+#' * Maximum number of iterations: 25
+#' * Convergence after 5 iterations without improvement
+#' * Train / Validation / Test : 0.6 / 0.2 / 0.2
+#'
+#' ## Grid Search CV
+#'
+#' * Number of Folds: 5
+#' * Maximum levels per hyperparameter: 10
+#' * Train / Test : 0.75 / 0.25
 #'
 #' @section Metrics:
 #'

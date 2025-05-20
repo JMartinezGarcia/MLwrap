@@ -16,7 +16,7 @@ preprocessing(
 )
 }
 \arguments{
-\item{df}{Input Dataframe. Either a data.frame or tibble.}
+\item{df}{Input DataFrame. Either a data.frame or tibble.}
 
 \item{formula}{Modelling Formula. A string of characters or formula.}
 
@@ -29,13 +29,13 @@ preprocessing(
 \item{norm_num_vars}{Normalize numeric features as z-scores. Either vector of
 names of numerical features to be normalized or "all" (default).}
 
-\item{encode_cat_vars}{One Hot Encode Categaorical Features. Either vector of
+\item{encode_cat_vars}{One Hot Encode Categorical Features. Either vector of
 names of categorical features to be encoded or "all" (default).}
 
-\item{y_levels}{Optional ordered vector with names of the target variable levels.}
+\item{y_levels}{Optional ordered vector with names of the target variable levels (Classification task only).}
 }
 \value{
-A tidy_object
+An analysis_object
 }
 \description{
 Preprocessing Data Matrix

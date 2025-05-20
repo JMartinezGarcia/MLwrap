@@ -4,10 +4,10 @@
 \alias{fine_tuning}
 \title{Fine Tune ML Model}
 \usage{
-fine_tuning(tidy_object, tuner, metrics, plot_results = F, verbose = FALSE)
+fine_tuning(analysis_object, tuner, metrics, plot_results = F, verbose = FALSE)
 }
 \arguments{
-\item{tidy_object}{Tidy_Object created from build_model function.}
+\item{analysis_object}{analysis_object created from build_model function.}
 
 \item{tuner}{Name of the Hyperparameter Tuner. A string of the tuner name: "Bayesian Optimization" or
 "Grid Search CV".}
@@ -19,11 +19,31 @@ fine_tuning(tidy_object, tuner, metrics, plot_results = F, verbose = FALSE)
 \item{verbose}{Whether to show tuning process. Boolean TRUE or FALSE (default).}
 }
 \value{
-Updated tidy_object
+Updated analysis_object
 }
 \description{
 Fine Tune ML Model
 }
+\section{Tuners}{
+
+\subsection{Bayesian Optimization}{
+\itemize{
+\item Initial data points: 20
+\item Maximum number of iterations: 25
+\item Convergence after 5 iterations without improvement
+\item Train / Validation / Test : 0.6 / 0.2 / 0.2
+}
+}
+
+\subsection{Grid Search CV}{
+\itemize{
+\item Number of Folds: 5
+\item Max grid size per hyperparameter: 10
+\item Train / Test : 0.75 / 0.25
+}
+}
+}
+
 \section{Metrics}{
 
 \subsection{Regression Metrics}{

@@ -4,20 +4,20 @@
 \alias{sensitivity_analysis}
 \title{Perform Sensitivity Analysis and Interpretable ML methods}
 \usage{
-sensitivity_analysis(tidy_object, type = "PFI", metric = NULL)
+sensitivity_analysis(analysis_object, methods = c("PFI"), metric = NULL)
 }
 \arguments{
-\item{tidy_object}{Tidy_Object created from fine_tuning function.}
+\item{analysis_object}{analysis_object created from fine_tuning function.}
+
+\item{metric}{Metric used for "PFI" method (Permutation Feature Importance).
+A string of the name of metric (see Metrics).}
 
 \item{type}{Type of method used. A string of the method name: "PFI" (Permutation Feature Importance),
 "SHAP" (SHapley Additive exPlanations), "Integrated Gradients" (Neural Network only) or
 "Olden" (Neural Network only).}
-
-\item{metric}{Metric used for "PFI" method (Permutation Feature Importance).
-A string of the name of metric (see Metrics).}
 }
 \value{
-Updated tidy_object
+Updated analysis_object
 }
 \description{
 Perform Sensitivity Analysis and Interpretable ML methods

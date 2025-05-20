@@ -63,7 +63,7 @@ extract_hyperparams <- function(analysis_object){
 }
 
 
-hyperparams_grid <- function(hyperparams, levels = 5){
+hyperparams_grid <- function(hyperparams, levels = 10){
 
   grid = dials::grid_regular(hyperparams$hyperparams_ranges, levels = levels)
 

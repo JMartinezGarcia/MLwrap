@@ -1,14 +1,14 @@
 
 #' Create ML Model
 #'
-#' @param tidy_object Tidy_Object created from preprocessing function.
+#' @param analysis_object analysis_object created from preprocessing function.
 #' @param model_names Name of the ML Model. A string of the model name: "Neural Network",
 #'     "Random Forest", "SVM" or "XGBOOST".
 #' @param hyperparameters Hyperparameters of the ML model. List containing the name of the hyperparameter
 #'  and its value or range of values.
 #'
 #'
-#' @returns Updated tidy_object
+#' @returns Updated analysis_object
 #'
 #' @section Hyperparameters:
 #'

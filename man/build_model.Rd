@@ -4,10 +4,10 @@
 \alias{build_model}
 \title{Create ML Model}
 \usage{
-build_model(tidy_object, model_name, hyperparameters = NULL)
+build_model(analysis_object, model_name, hyperparameters = NULL)
 }
 \arguments{
-\item{tidy_object}{Tidy_Object created from preprocessing function.}
+\item{analysis_object}{analysis_object created from preprocessing function.}
 
 \item{hyperparameters}{Hyperparameters of the ML model. List containing the name of the hyperparameter
 and its value or range of values.}
@@ -16,7 +16,7 @@ and its value or range of values.}
 "Random Forest", "SVM" or "XGBOOST".}
 }
 \value{
-Updated tidy_object
+Updated analysis_object
 }
 \description{
 Create ML Model
@@ -25,7 +25,7 @@ Create ML Model
 
 \subsection{Neural Network}{
 
-Parsnip model using \strong{brulee} engine.
+Parsnip model using \strong{brulee} engine. Hyperparameters:
 \itemize{
 \item \strong{hidden_units}: Number of Hidden Neurons.
 A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(5, 20).
@@ -38,7 +38,7 @@ A single value, a vector with range values \code{c(min_val, max_val)} or NULL fo
 
 \subsection{Random Forest}{
 
-Parsnip model using \strong{ranger} engine.
+Parsnip model using \strong{ranger} engine. Hyperparameters:
 \itemize{
 \item \strong{trees}: Number of Trees.
 A single value, a vector with range values \code{c(min_val, max_val)}. Default range c(100, 300).
@@ -51,7 +51,7 @@ A single value, a vector with range values \code{c(min_val, max_val)} or NULL fo
 
 \subsection{XGBOOST}{
 
-Parsnip model using \strong{xgboost} engine.
+Parsnip model using \strong{xgboost} engine. Hyperparameters:
 \itemize{
 \item \strong{trees}: Number of Trees.
 A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(100, 300).
@@ -70,7 +70,7 @@ A single value, a vector with range values \code{c(min_val, max_val)} or NULL fo
 
 \subsection{SVM}{
 
-Parsnip model using \strong{kernlab} engine.
+Parsnip model using \strong{kernlab} engine. Hyperparameters:
 \itemize{
 \item \strong{cost}: Penalty parameter that regulates model complexity and misclassification tolerance.
 A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(-3, 3) in log10 scale.

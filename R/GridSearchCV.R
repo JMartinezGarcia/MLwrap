@@ -1,7 +1,5 @@
 tune_models_grid_search_cv <- function(analysis_object, sampling_method, metrics, seed = 123,  verbose = TRUE){
 
-  #sampling_method <- rsample::vfold_cv(tidy_object$train_data, v = 5)
-
   grid_hyperparams = hyperparams_grid(analysis_object$hyperparameters)
 
   grid_control <- tune::control_grid(

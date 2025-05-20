@@ -4,13 +4,13 @@
 
 #' Perform Sensitivity Analysis and Interpretable ML methods
 #'
-#' @param tidy_object Tidy_Object created from fine_tuning function.
+#' @param analysis_object analysis_object created from fine_tuning function.
 #' @param type Type of method used. A string of the method name: "PFI" (Permutation Feature Importance),
 #'     "SHAP" (SHapley Additive exPlanations), "Integrated Gradients" (Neural Network only) or
 #'     "Olden" (Neural Network only).
 #' @param  metric Metric used for "PFI" method (Permutation Feature Importance).
 #'  A string of the name of metric (see Metrics).
-#' @returns Updated tidy_object
+#' @returns Updated analysis_object
 #' @export
 sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = NULL){
 
@@ -97,10 +97,15 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
       for (target_class in y_classes){
 
         plot_barplot(results[[target_class]], func = function(x) mean(abs(x)),
-                     func_se = function(x) sd(abs(x)),
+                     func_se = function(x) sd(abs(x)) / sqrt(length(x)),
                      x_label = "Mean |SHAP|",
                      title = paste0("Mean |SHAP| value for class ", target_class)
                      )
+
+        plot2(results[[target_class]], test, func = function(x) mean(x),
+              func_se = function(x) sd(x),
+              x_label = "Mean (SHAP * sign(X))",
+              title = paste0("Mean (SHAP * sign(X)) value for class ", target_class))
 
         plot_boxplot(results[[target_class]], y_label = "SHAP value",
                      title = paste0("SHAP Value Distribution for class ", target_class))
@@ -113,7 +118,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
     } else{
 
     plot_barplot(results, func = function(x) mean(abs(x)),
-                 func_se = function(x) sd(abs(x)),
+                 func_se = function(x) sd(abs(x)) / sqrt(length(x)),
                  x_label = "Mean |SHAP|",
                  title = "Mean |SHAP| value")
 
@@ -146,10 +151,15 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
       for (target_class in y_classes){
 
         plot_barplot(results[[target_class]], func = function(x) mean(abs(x)),
-                     func_se = function(x) sd(abs(x)),
+                     func_se = function(x) sd(abs(x)) / sqrt(length(x)),
                      x_label = "Mean |Integrated Gradient|",
                      title = paste0("Mean |Integrated Gradient| value for class ", target_class)
         )
+
+        plot2(results[[target_class]], test, func = function(x) mean(x),
+              func_se = function(x) sd(x),
+              x_label = "Mean (Integrated Gradient * sign(X))",
+              title = paste0("Mean (Integrated Gradient * sign(X)) value for class ", target_class))
 
         plot_boxplot(results[[target_class]], y_label = "Integrated Gradient value",
                      title = paste0("Integrated Gradient Value Distribution for class ", target_class))
@@ -162,7 +172,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
     } else{
 
       plot_barplot(results, func = function(x) mean(abs(x)),
-                   func_se = function(x) sd(abs(x)),
+                   func_se = function(x) sd(abs(x)) / sqrt(length(x)),
                    x_label = "Mean |Integrated Gradient|",
                    title = "Mean |Integrated Gradient| value")
 
@@ -242,7 +252,7 @@ plot_barplot <- function(X, func = NULL, func_se = stats::sd, title, x_label) {
     p <- ggplot2::ggplot(summary_df, ggplot2::aes(x = Importance, y = Variable)) +
       ggplot2::geom_col(fill = "steelblue", width = 0.7) +
       ggplot2::geom_errorbar(ggplot2::aes(xmin = Importance - StDev, xmax = Importance + StDev), width = 0.2) +
-      ggplot2::geom_text(aes(label = paste0(round(Importance, 2), " ± ", round(StDev, 2))),
+      ggplot2::geom_text(aes(label = paste0(round(Importance, 3), " ± ", round(StDev, 3))),
                 vjust =  -0.5,
                 hjust = -0.2) +
       ggplot2::labs(
@@ -263,7 +273,22 @@ plot2 <- function(X, test, func = NULL, func_se = stats::sd, title, x_label) {
 
   X <- base::as.data.frame(X)
 
-  sign_results = as.data.frame(as.matrix(X) * sign(as.matrix(test)))
+  #sign_results = as.data.frame(as.matrix(X) * sign(as.matrix(test)))
+
+  X_mat <- as.matrix(X)
+  test_mat <- as.matrix(test)
+
+  # Paso 1: multiplicación elemento a elemento
+  product <- X_mat * test_mat
+
+  # Paso 2: divisor por columna = media del valor absoluto de test
+  denominator <- colMeans(abs(test_mat))
+
+  # Paso 3: dividir cada columna por su media
+  sign_results <- sweep(product, 2, denominator, "/")
+
+  # Si quieres data.frame al final:
+  sign_results <- as.data.frame(sign_results)
 
   names(sign_results) <- names(X)
 

@@ -5,7 +5,7 @@
 \title{Showcase Summary Results and Plots}
 \usage{
 show_results(
-  tidy_object,
+  analysis_object,
   summary = FALSE,
   roc_curve = FALSE,
   pr_curve = FALSE,
@@ -21,7 +21,7 @@ show_results(
 )
 }
 \arguments{
-\item{tidy_object}{Tidy_Object created from fine_tuning function.}
+\item{analysis_object}{analysis_object created from fine_tuning function.}
 
 \item{summary}{Whether to plot summary results table. Boolean (FALSE by default).}
 
@@ -42,7 +42,7 @@ Boolean (FALSE by default).}
 
 \item{scatter_residuals}{Whether to plot Residuals vs Predictions (Regression task only). Boolean (FALSE by default).}
 
-\item{scatter_predictions}{Whether to plot Predictions vs Observed (Regression task only). Boolean (FALSE by defaut).}
+\item{scatter_predictions}{Whether to plot Predictions vs Observed (Regression task only). Boolean (FALSE by default).}
 
 \item{residuals_dist}{Whether to plot Residuals Distribution (Regression task only). Boolean (FALSE by default).}
 
@@ -51,7 +51,7 @@ Residuals vs Predictions Plot, Predictions vs Observed Plot and Residuals Distri
 A string with the name of the data_set: "train", "validation", "test" (default) or "all".}
 }
 \value{
-Updated tidy_object
+Updated analysis_object
 }
 \description{
 Showcase Summary Results and Plots

@@ -11,24 +11,24 @@
 #
 # ##### Ejemplo Regresión
 #
-# model_reg <- preprocessing(df = sim_data, formula = formula_reg, task = "regression")
+# analysis_reg <- preprocessing(df = sim_data, formula = formula_reg, task = "regression")
 #
-# model_reg <- build_model(analysis_object = model_reg,
+# analysis_reg <- build_model(analysis_object = analysis_reg,
 #                          model_name = "Neural Network",
 #                          hyperparameters = list(
 #                            hidden_units = c(10, 25),
 #                            activation = "relu"
 #                          ))
 #
-# model_reg <- fine_tuning(analysis_object = model_reg,
+# analysis_reg <- fine_tuning(analysis_object = analysis_reg,
 #                          tuner = "Bayesian Optimization",
 #                          metrics = "rmse",
 #                          plot_results = TRUE,
 #                          verbose = F)
 #
-# model_reg <- show_results(tidy_object = model_reg, summary = T, scatter_residuals = T, scatter_predictions = T)
+# analysis_reg <- show_results(analysis_object = analysis_reg, summary = T, scatter_residuals = T, scatter_predictions = T)
 #
-# model_reg <- sensitivity_analysis(tidy_object = model_reg, type = "Integrated Gradients")
+# analysis_reg <- sensitivity_analysis(tidy_object = model_reg, type = c("PFI", "Integrated Gradients"))
 #
 # model_reg <- sensitivity_analysis(tidy_object = model_reg, type = "SHAP")
 #

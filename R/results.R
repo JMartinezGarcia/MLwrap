@@ -4,7 +4,7 @@
 
 #' Showcase Summary Results and Plots
 #'
-#' @param tidy_object Tidy_Object created from fine_tuning function.
+#' @param analysis_object analysis_object created from fine_tuning function.
 #' @param summary Whether to plot summary results table. Boolean (FALSE by default).
 #' @param roc_curve Whether to plot ROC Curve (Classification task only). Boolean (FALSE by default).
 #' @param pr_curve Whether to plot ROC Curve (Classification task only). Boolean (FALSE by default).
@@ -15,12 +15,12 @@
 #' @param reliability_plot Whether to plot Reliability Plot (Binary Classification task only). Boolean (FALSE by default).
 #' @param confusion_matrix Whether to Confusion Matrix (Classification task only). Boolean (FALSE by default).
 #' @param scatter_residuals Whether to plot Residuals vs Predictions (Regression task only). Boolean (FALSE by default).
-#' @param scatter_predictions Whether to plot Predictions vs Observed (Regression task only). Boolean (FALSE by defaut).
+#' @param scatter_predictions Whether to plot Predictions vs Observed (Regression task only). Boolean (FALSE by default).
 #' @param residuals_dist Whether to plot Residuals Distribution (Regression task only). Boolean (FALSE by default).
 #' @param new_data Data to be used for Confusion Matrix, Reliability Plot, Distribution by Class Plot,
 #'        Residuals vs Predictions Plot, Predictions vs Observed Plot and Residuals Distribution Plot.
 #'        A string with the name of the data_set: "train", "validation", "test" (default) or "all".
-#' @returns Updated tidy_object
+#' @returns Updated analysis_object
 #' @export
 show_results <- function(analysis_object,
                         summary = FALSE, roc_curve = FALSE, pr_curve = FALSE,
