@@ -13,14 +13,14 @@
 #
 # model_reg <- preprocessing(df = sim_data, formula = formula_reg, task = "regression")
 #
-# model_reg <- build_model(tidy_object = model_reg,
+# model_reg <- build_model(analysis_object = model_reg,
 #                          model_name = "Neural Network",
 #                          hyperparameters = list(
 #                            hidden_units = c(10, 25),
 #                            activation = "relu"
 #                          ))
 #
-# model_reg <- fine_tuning(tidy_object = model_reg,
+# model_reg <- fine_tuning(analysis_object = model_reg,
 #                          tuner = "Bayesian Optimization",
 #                          metrics = "rmse",
 #                          plot_results = TRUE,

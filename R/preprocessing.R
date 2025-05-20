@@ -129,12 +129,12 @@ preprocessing <- function(df, formula, task = "regression", num_vars = NULL, cat
 
           }
 
-          # Create TidyMLObject with data and recipe
+          # Create AnalysisObject with data and recipe
 
-          tidy_object <- TidyMLObject$new(full_data = df, transformer = rec, task = task,
+          analysis_object <- AnalysisObject$new(full_data = df, transformer = rec, task = task,
                                           formula = formula, outcome_levels = outcome_levels)
 
-          return(tidy_object)
+          return(analysis_object)
 
 }
 

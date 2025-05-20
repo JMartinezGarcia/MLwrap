@@ -108,7 +108,7 @@ shap_mul <- function(model, train, test, y){
                              x_explain = new_test,
                              predict_model = pred_func,
                              max_n_coalitions = 40,
-                             n_MC_samples = 50,
+                             n_MC_samples = 1e3,
                              iterative = T)
 
     shap_vals = shap_vals$shapley_values_est %>% select(names(new_train))

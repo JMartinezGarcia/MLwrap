@@ -41,12 +41,12 @@
 #'
 #'
 #' @export
-fine_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose = FALSE){
+fine_tuning <- function(analysis_object, tuner, metrics, plot_results = F, verbose = FALSE){
 
-            check_args_fine_tuning(tidy_object = tidy_object, tuner = tuner, metrics = metrics,
+            check_args_fine_tuning(analysis_object = analysis_object, tuner = tuner, metrics = metrics,
                                    plot_results = plot_results, verbose = verbose)
 
-            tidy_object$modify("workflow", create_workflow(tidy_object))
+            analysis_object$modify("workflow", create_workflow(analysis_object))
 
             if (!all(metrics %in% names(metrics_info))) {
               invalid_metrics <- metrics[!(metrics %in% names(metrics_info))]
@@ -56,25 +56,25 @@ fine_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose =
               ))
             }
 
-            tidy_object$modify("metrics", metrics)
+            analysis_object$modify("metrics", metrics)
 
-            tidy_object$modify("tuner", tuner)
+            analysis_object$modify("tuner", tuner)
 
-            set_metrics <- create_metric_set(tidy_object$metrics)
+            set_metrics <- create_metric_set(analysis_object$metrics)
 
             set.seed(123)
 
-            split_final_data <- split_data(tidy_object)
+            split_final_data <- split_data(analysis_object)
 
             sampling_method = split_final_data$sampling_method
 
             final_data = split_final_data$final_split
 
-            if (tidy_object$hyperparameters$tuning == TRUE){
+            if (analysis_object$hyperparameters$tuning == TRUE){
 
                 print("Commencing Tuning...")
 
-                tuner_fit = tune_models(tidy_object,
+                tuner_fit = tune_models(analysis_object,
                                         tuner,
                                         sampling_method,
                                         metrics = set_metrics,
@@ -82,55 +82,55 @@ fine_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose =
 
                 print("Tuning Finalized")
 
-                tidy_object$modify("tuner_fit", tuner_fit)
+                analysis_object$modify("tuner_fit", tuner_fit)
 
                 if (plot_results == T){
 
-                  plot_tuning_results(tidy_object)
+                  plot_tuning_results(analysis_object)
 
                 }
 
                 # FINAL TRAINING
                 # ============================================================================
 
-                best_hyper <- tune::select_best(tuner_fit, metric = tidy_object$metrics[1])
+                best_hyper <- tune::select_best(tuner_fit, metric = analysis_object$metrics[1])
 
                 final_hyperparams <- c(as.list(best_hyper),
-                                       tidy_object$hyperparameters$hyperparams_constant
+                                       analysis_object$hyperparameters$hyperparams_constant
                                        )
 
             } else{
 
                 ### NO TUNING
 
-                final_hyperparams <- tidy_object$hyperparameters$hyperparams_constant
+                final_hyperparams <- analysis_object$hyperparameters$hyperparams_constant
 
             }
 
-            if (tidy_object$model_name == "Neural Network"){
+            if (analysis_object$model_name == "Neural Network"){
 
               new_hyperparams_nn = HyperparamsNN$new(final_hyperparams[!names(final_hyperparams) %in% ".config"])
 
-              new_mlp_model = create_nn(hyperparams = new_hyperparams_nn, task = tidy_object$task, epochs = 100)
+              new_mlp_model = create_nn(hyperparams = new_hyperparams_nn, task = analysis_object$task, epochs = 100)
 
-              new_workflow <- tidy_object$workflow %>%
+              new_workflow <- analysis_object$workflow %>%
                 workflows::update_model(new_mlp_model)
 
-              tidy_object$modify("workflow", new_workflow)
+              analysis_object$modify("workflow", new_workflow)
 
             }
 
             set.seed(123)
 
-            final_model <- tidy_object$workflow %>%
+            final_model <- analysis_object$workflow %>%
 
               tune::finalize_workflow(final_hyperparams)  %>%
 
               fit(final_data)
 
-            tidy_object$modify("final_model", final_model)
+            analysis_object$modify("final_model", final_model)
 
-            if (tidy_object$model_name == "Neural Network"){
+            if (analysis_object$model_name == "Neural Network"){
 
                 model_parsnip <- tune::extract_fit_parsnip(final_model)
 
@@ -147,21 +147,21 @@ fine_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose =
 
             }
 
-            tidy_object$modify("stage", "fit_model")
+            analysis_object$modify("stage", "fit_model")
 
-            return(tidy_object)
+            return(analysis_object)
 
 }
 
-tune_models <- function(tidy_object, tuner, sampling_method, metrics, verbose = TRUE){
+tune_models <- function(analysis_object, tuner, sampling_method, metrics, verbose = TRUE){
 
   if (tuner == "Bayesian Optimization"){
 
-    tuner_object <- tune_models_bayesian(tidy_object, sampling_method, metrics = metrics,  verbose = verbose)
+    tuner_object <- tune_models_bayesian(analysis_object, sampling_method, metrics = metrics,  verbose = verbose)
 
   } else if (tuner == "Grid Search CV"){
 
-    tuner_object <- tune_models_grid_search_cv(tidy_object, sampling_method, metrics = metrics, verbose = verbose)
+    tuner_object <- tune_models_grid_search_cv(analysis_object, sampling_method, metrics = metrics, verbose = verbose)
 
   }
 

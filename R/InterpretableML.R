@@ -12,36 +12,36 @@
 #'  A string of the name of metric (see Metrics).
 #' @returns Updated tidy_object
 #' @export
-sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
+sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = NULL){
 
-  check_args_sensitivity_analysis(tidy_object = tidy_object, type = type, metric = metric)
+  check_args_sensitivity_analysis(analysis_object = analysis_object, methods = methods, metric = metric)
 
-  task = tidy_object$task
+  task = analysis_object$task
 
-  y = all.vars(tidy_object$formula)[1]
+  y = all.vars(analysis_object$formula)[1]
 
-  rec =  tidy_object$transformer %>%
-    recipes::prep(training = tidy_object$train_data)
+  rec =  analysis_object$transformer %>%
+    recipes::prep(training = analysis_object$train_data)
 
-  bake_train = recipes::bake(rec, new_data = tidy_object$train_data)
-  bake_test = recipes::bake(rec, new_data = tidy_object$test_data)
+  bake_train = recipes::bake(rec, new_data = analysis_object$train_data)
+  bake_test = recipes::bake(rec, new_data = analysis_object$test_data)
 
-  model_parsnip <- tidy_object$final_model %>%
+  model_parsnip <- analysis_object$final_model %>%
     tune::extract_fit_parsnip()
 
-  if (is.null(tidy_object$sensitivity_analysis)){
+  if (is.null(analysis_object$sensitivity_analysis)){
 
     sensitivity_analysis_list = list()
 
   } else {
 
-    sensitivity_analysis_list = tidy_object$sensitivity_analysis
+    sensitivity_analysis_list = analysis_object$sensitivity_analysis
 
   }
 
   feature_names <- names(bake_train)[which(names(bake_test) != y)]
 
-  if (type == "PFI"){
+  if ("PFI" %in% methods){
 
     if (is.null(metric)){
 
@@ -57,11 +57,11 @@ sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
     }
 
     results <- pfi_calc(model = model_parsnip, train = bake_train, test = bake_test, y = y,
-                        task = task, metric = metric, outcome_levels = tidy_object$outcome_levels)
+                        task = task, metric = metric, outcome_levels = analysis_object$outcome_levels)
 
     sensitivity_analysis_list[["PFI"]] <- results
 
-    if (tidy_object$outcome_levels > 2){
+    if (analysis_object$outcome_levels > 2){
 
     y_classes <- levels(bake_train[[y]])
 
@@ -80,17 +80,17 @@ sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
 
   }
 
-  else if (type == "SHAP"){
+  if ("SHAP" %in% methods){
 
     results <- shap_calc(model = model_parsnip, train = bake_train, test = bake_test, y = y,
-                         task = task, outcome_levels = tidy_object$outcome_levels)
+                         task = task, outcome_levels = analysis_object$outcome_levels)
 
     sensitivity_analysis_list[["SHAP"]] <- results
 
     test <- bake_test[which(names(bake_test) != y)]
 
 
-    if (tidy_object$outcome_levels > 2){
+    if (analysis_object$outcome_levels > 2){
 
       y_classes = levels(bake_train[[y]])
 
@@ -130,16 +130,16 @@ sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
 
   }
 
-  else if (type == "Integrated Gradients"){
+  if ("Integrated Gradients" %in% methods){
 
     results <- IntGrad_calc(model = model_parsnip, train = bake_train, test = bake_test, y = y,
-                            task = task, outcome_levels = tidy_object$outcome_levels)
+                            task = task, outcome_levels = analysis_object$outcome_levels)
 
     sensitivity_analysis_list[["IntegratedGradients"]] <- results
 
     test <- bake_test[which(names(bake_test) != y)]
 
-    if (tidy_object$outcome_levels > 2){
+    if (analysis_object$outcome_levels > 2){
 
       y_classes = levels(bake_train[[y]])
 
@@ -182,12 +182,12 @@ sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
 
   }
 
-  else if (type == "Olden"){
+  if ("Olden" %in% methods){
 
     y_classes = levels(bake_train[[y]])
 
     results = olden_calc(model = model_parsnip, task,
-                         outcome_levels = tidy_object$outcome_levels, y_classes = y_classes)
+                         outcome_levels = analysis_object$outcome_levels, y_classes = y_classes)
 
     df_results <- as.data.frame(t(results))
 
@@ -195,9 +195,9 @@ sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
 
     sensitivity_analysis_list[["Olden"]] <- df_results
 
-    if (tidy_object$outcome_levels > 2){
+    if (analysis_object$outcome_levels > 2){
 
-      olden_barplot_mul(results, feature_names, outcome_levels = tidy_object$outcome_levels,
+      olden_barplot_mul(results, feature_names, outcome_levels = analysis_object$outcome_levels,
                         y_classes = y_classes)
 
     } else{
@@ -208,15 +208,9 @@ sensitivity_analysis <- function(tidy_object, type="PFI", metric = NULL){
 
   }
 
-  else {
+  analysis_object$modify("sensitivity_analysis", sensitivity_analysis_list)
 
-    stop("Method not recognized. Recognized methods are: 'PFI', 'SHAP', 'Integrated Gradients' or 'Olden'")
-
-  }
-
-  tidy_object$modify("sensitivity_analysis", sensitivity_analysis_list)
-
-  return(tidy_object)
+  return(analysis_object)
 
 }
 

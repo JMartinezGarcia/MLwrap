@@ -66,6 +66,11 @@ HyperparamsSVM <- R6::R6Class("Neural Network Hyperparameters",
                                                     paste(valid_hparams_poly, collapse = ", ")))
 
                                       }
+
+                                    } else {
+
+                                      stop(paste0("Incorrect kernel type. Valid options are: 'linear', 'rbf', 'poly'."))
+
                                     }
                                   }
                                },
@@ -90,6 +95,8 @@ HyperparamsSVM <- R6::R6Class("Neural Network Hyperparameters",
 
                                  }
 
+                                 type <- hyperparams$type
+
                                  hyperparams$type  <- NULL
 
                                  if (!is.null(hyperparams)) {
@@ -112,6 +119,8 @@ HyperparamsSVM <- R6::R6Class("Neural Network Hyperparameters",
                                      }
                                    }, names(hyperparams), hyperparams)
                                  }
+
+                                 def_hyperparams$type <- type
 
                                  return(def_hyperparams)
 

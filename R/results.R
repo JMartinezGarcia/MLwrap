@@ -22,14 +22,14 @@
 #'        A string with the name of the data_set: "train", "validation", "test" (default) or "all".
 #' @returns Updated tidy_object
 #' @export
-show_results <- function(tidy_object,
+show_results <- function(analysis_object,
                         summary = FALSE, roc_curve = FALSE, pr_curve = FALSE,
                         gain_curve = FALSE, lift_curve = FALSE,
                         dist_by_class = FALSE, reliability_plot = FALSE, confusion_matrix = FALSE,
                         scatter_residuals = FALSE, scatter_predictions = FALSE, residuals_dist = FALSE,
                         new_data = "test"){
 
-  check_args_show_results(tidy_object = tidy_object,
+  check_args_show_results(analysis_object = analysis_object,
                           summary = summary, roc_curve = roc_curve, pr_curve = pr_curve,
                           gain_curve = gain_curve, lift_curve = lift_curve,
                           dist_by_class = dist_by_class, reliability_plot = reliability_plot,
@@ -37,15 +37,15 @@ show_results <- function(tidy_object,
                           scatter_predictions = scatter_predictions, residuals_dist = residuals_dist,
                           new_data = new_data)
 
-  predictions = get_predictions(tidy_object, "all")
+  predictions = get_predictions(analysis_object, "all")
 
-  tidy_object$modify("predictions", predictions)
+  analysis_object$modify("predictions", predictions)
 
   pred_test = predictions %>% filter(data_set == "test")
 
-  summary_results = summary_results(tidy_object, pred_test)
+  summary_results = summary_results(analysis_object, pred_test)
 
-  tidy_object$modify("fit_summary",summary_results)
+  analysis_object$modify("fit_summary",summary_results)
 
   print("############# Showing Results")
 
@@ -53,7 +53,7 @@ show_results <- function(tidy_object,
 
     # Multiclass classification case
 
-    if (tidy_object$outcome_levels > 2){
+    if (analysis_object$outcome_levels > 2){
 
       summary_results %>%
         dplyr::mutate(across(where(is.numeric), ~ signif(., 3))) %>%
@@ -81,7 +81,7 @@ show_results <- function(tidy_object,
 
   if (roc_curve == T){
 
-    if (tidy_object$outcome_levels == 2){
+    if (analysis_object$outcome_levels == 2){
 
         p <- predictions %>%
         plot_roc_curve_binary(new_data = "all") %>%
@@ -106,7 +106,7 @@ show_results <- function(tidy_object,
 
   if (pr_curve == T){
 
-    if (tidy_object$outcome_levels == 2){
+    if (analysis_object$outcome_levels == 2){
 
     p <- predictions %>%
          plot_pr_curve_binary(new_data = "all") %>%
@@ -130,7 +130,7 @@ show_results <- function(tidy_object,
 
   if (gain_curve == T){
 
-    if (tidy_object$outcome_levels == 2){
+    if (analysis_object$outcome_levels == 2){
 
      p <- predictions %>%
           plot_gain_curve_binary() %>%
@@ -154,7 +154,7 @@ show_results <- function(tidy_object,
 
   if (lift_curve == T){
 
-    if (tidy_object$outcome_levels == 2){
+    if (analysis_object$outcome_levels == 2){
 
       p <- predictions %>%
            plot_lift_curve_binary(new_data = "all") %>%
@@ -179,7 +179,7 @@ show_results <- function(tidy_object,
 
   if (dist_by_class == T){
 
-    if (tidy_object$outcome_levels == 2){
+    if (analysis_object$outcome_levels == 2){
 
       pred_test %>%
         plot_dist_probs_binary(new_data) %>%
@@ -196,9 +196,7 @@ show_results <- function(tidy_object,
 
   if (reliability_plot == T){
 
-    print(pepe)
-
-    if (tidy_object$outcome_levels > 2){stop("Reliability Plot not implemented for Multiclass Classification!")}
+    if (analysis_object$outcome_levels > 2){stop("Reliability Plot not implemented for Multiclass Classification!")}
 
     pred_test %>%
       plot_calibration_curve_binary(new_data = new_data) %>%
@@ -241,20 +239,20 @@ show_results <- function(tidy_object,
 
   }
 
-  return(tidy_object)
+  return(analysis_object)
 
 
 
 
 }
 
-modify_datasets <- function(tidy_object){
+modify_datasets <- function(analysis_object){
 
-  rec <- recipes::prep(tidy_object$transformer,
-                       training = tidy_object$train_data,
+  rec <- recipes::prep(analysis_object$transformer,
+                       training = analysis_object$train_data,
                        strings_as_factors = T)
 
-  new_train <- recipes::bake(rec, new_data = tidy_object$train_data)
+  new_train <- recipes::bake(rec, new_data = analysis_object$train_data)
   new_test <- recipes::bake(rec, new_data = tidy_object$test_data)
 
   tidy_object$modify("train_data", new_train)
@@ -277,23 +275,23 @@ modify_datasets <- function(tidy_object){
 #         get_predictions                           #
 ######################################################
 
-get_predictions <- function(tidy_object, new_data = "test"){
+get_predictions <- function(analysis_object, new_data = "test"){
 
-  if (tidy_object$task == "regression"){
+  if (analysis_object$task == "regression"){
 
-    predictions = get_predictions_regression(tidy_object, new_data = new_data)
+    predictions = get_predictions_regression(analysis_object, new_data = new_data)
 
-  } else if (tidy_object$task == "classification"){
+  } else if (analysis_object$task == "classification"){
 
-    predictions = get_predictions_binary(tidy_object, new_data = new_data)
+    predictions = get_predictions_binary(analysis_object, new_data = new_data)
 
-    if (tidy_object$outcome_levels == 2){
+    if (analysis_object$outcome_levels == 2){
 
-      predictions = get_predictions_binary(tidy_object, new_data = new_data)
+      predictions = get_predictions_binary(analysis_object, new_data = new_data)
 
     } else {
 
-      predictions = get_predictions_multiclass(tidy_object, new_data = new_data)
+      predictions = get_predictions_multiclass(analysis_object, new_data = new_data)
 
     }
 
@@ -308,15 +306,15 @@ get_predictions <- function(tidy_object, new_data = "test"){
 #         SUMMARY                                    #
 ######################################################
 
-summary_results <- function(tidy_object, predictions, new_data = "test"){
+summary_results <- function(analysis_object, predictions, new_data = "test"){
 
-  if (tidy_object$task == "regression"){
+  if (analysis_object$task == "regression"){
 
     return(summary_regression(predictions, new_data))
 
-  } else if (tidy_object$task == "classification"){
+  } else if (analysis_object$task == "classification"){
 
-    if (tidy_object$outcome_levels == 2){
+    if (analysis_object$outcome_levels == 2){
 
       return(summary_binary(predictions, new_data))
 

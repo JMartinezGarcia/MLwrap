@@ -1,4 +1,4 @@
-tune_models_bayesian <- function(tidy_object, sampling_method, metrics, seed = 123, verbose = TRUE){
+tune_models_bayesian <- function(analysis_object, sampling_method, metrics, seed = 123, verbose = TRUE){
 
   set.seed(seed)
 
@@ -13,10 +13,10 @@ tune_models_bayesian <- function(tidy_object, sampling_method, metrics, seed = 1
 
     )
 
-  extracted_hyperparams <- extract_hyperparams(tidy_object)
+  extracted_hyperparams <- extract_hyperparams(analysis_object)
 
   tuner_object <-
-    tidy_object$workflow %>%
+    analysis_object$workflow %>%
     tune::tune_bayes(
       resamples = sampling_method,
       iter      = 25L,

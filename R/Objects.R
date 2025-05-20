@@ -1,4 +1,4 @@
-TidyMLObject <- R6::R6Class("TidyMLObject",
+AnalysisObject <- R6::R6Class("AnalysisObject",
 
   active = list(
 

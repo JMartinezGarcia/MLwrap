@@ -84,17 +84,17 @@
 #'
 #' @export
 
-build_model <- function(tidy_object, model_name, hyperparameters = NULL){
+build_model <- function(analysis_object, model_name, hyperparameters = NULL){
 
-                    check_args_build_model(tidy_object = tidy_object, model_name = model_name)
+                    check_args_build_model(analysis_object = analysis_object, model_name = model_name)
 
-                    task = tidy_object$task
+                    task = analysis_object$task
 
                     if (model_name == "Neural Network"){
 
                       hyperparams_nn = HyperparamsNN$new(hyperparameters)
 
-                      tidy_object$modify("hyperparameters", hyperparams_nn)
+                      analysis_object$modify("hyperparameters", hyperparams_nn)
 
                       model = create_nn(hyperparams = hyperparams_nn, task = task, epochs = 25)
 
@@ -102,7 +102,7 @@ build_model <- function(tidy_object, model_name, hyperparameters = NULL){
 
                       hyperparams_xgboost = HyperparamsXGBoost$new(hyperparameters)
 
-                      tidy_object$modify("hyperparameters", hyperparams_xgboost)
+                      analysis_object$modify("hyperparameters", hyperparams_xgboost)
 
                       model = create_xgboost(hyperparams = hyperparams_xgboost, task = task)
 
@@ -110,7 +110,7 @@ build_model <- function(tidy_object, model_name, hyperparameters = NULL){
 
                       hyperparams_rf = HyperparamsRF$new(hyperparameters)
 
-                      tidy_object$modify("hyperparameters", hyperparams_rf)
+                      analysis_object$modify("hyperparameters", hyperparams_rf)
 
                       model = create_rf(hyperparams = hyperparams_rf, task = task)
 
@@ -121,7 +121,7 @@ build_model <- function(tidy_object, model_name, hyperparameters = NULL){
 
                       hyperparams_svm = HyperparamsSVM$new(hyperparameters)
 
-                      tidy_object$modify("hyperparameters", hyperparams_svm)
+                      analysis_object$modify("hyperparameters", hyperparams_svm)
 
                       if (type == "rbf"){
 
@@ -146,11 +146,11 @@ build_model <- function(tidy_object, model_name, hyperparameters = NULL){
 
                     }
 
-                    tidy_object$modify("model_name", model_name)
+                    analysis_object$modify("model_name", model_name)
 
-                    tidy_object$modify("model", model)
+                    analysis_object$modify("model", model)
 
-                    tidy_object$modify("stage", "build_model")
+                    analysis_object$modify("stage", "build_model")
 
-                    return(tidy_object)
+                    return(analysis_object)
 }

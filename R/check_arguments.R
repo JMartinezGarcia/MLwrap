@@ -34,11 +34,11 @@ check_args_preprocessing <- function(df, formula, task, num_vars, cat_vars,
 
 ########## Model building
 
-check_args_build_model <- function(tidy_object, model_names){
+check_args_build_model <- function(analysis_object, model_names){
 
   ## Check tidy_object stage
 
-  if (!(tidy_object$stage == "preprocessing")){
+  if (!(analysis_object$stage == "preprocessing")){
 
     stop(paste0("You must first add a preprocessing step using preprocessing() !!"))
 
@@ -57,11 +57,11 @@ check_args_build_model <- function(tidy_object, model_names){
 
 ########## Check fine_tuning
 
-check_args_fine_tuning <- function(tidy_object, tuner, metrics, plot_results = F, verbose = FALSE){
+check_args_fine_tuning <- function(analysis_object, tuner, metrics, plot_results = F, verbose = FALSE){
 
   ## Check tidy_object stage
 
-  if (!(tidy_object$stage == "build_model")){
+  if (!(analysis_object$stage == "build_model")){
 
     stop("You must first add a model with build_model() !!")
 
@@ -89,7 +89,7 @@ check_args_fine_tuning <- function(tidy_object, tuner, metrics, plot_results = F
 
 ############ Check Results
 
-check_args_show_results <- function(tidy_object,
+check_args_show_results <- function(analysis_object,
                                     summary, roc_curve, pr_curve,
                                     gain_curve, lift_curve,
                                     dist_by_class, reliability_plot, confusion_matrix,
@@ -98,7 +98,7 @@ check_args_show_results <- function(tidy_object,
 
   ## Check tidy_object stage
 
-  if (!(tidy_object$stage == "fit_model")){
+  if (!(analysis_object$stage == "fit_model")){
 
     stop("You must first fit a model with fine_tuning() !!")
 
@@ -136,7 +136,7 @@ check_args_show_results <- function(tidy_object,
 
   regression_plots = c(scatter_residuals, scatter_predictions, residuals_dist)
 
-  if (any(regression_plots) && tidy_object$task == "classification"){
+  if (any(regression_plots) && analysis_object$task == "classification"){
 
     stop("scatter_residuals, scatter_predictions and residuals_dist are for regression taks only!")
 
@@ -147,7 +147,7 @@ check_args_show_results <- function(tidy_object,
   classification_plots = c(roc_curve, pr_curve, gain_curve, lift_curve,
                            dist_by_class, reliability_plot, confusion_matrix)
 
-  if(any(classification_plots) && tidy_object$task == "regression"){
+  if(any(classification_plots) && analysis_object$task == "regression"){
 
     stop("roc_curve, pr_curve, gain_curve, lift_curve, dist_by_class, reliability_plot and confusion
          matrix are for classification task only!")
@@ -159,25 +159,35 @@ check_args_show_results <- function(tidy_object,
 
 ############ Check sensitivity_analysis
 
-check_args_sensitivity_analysis <- function(tidy_object, type, metric){
+check_args_sensitivity_analysis <- function(analysis_object, methods, metric){
 
   ## Check tidy_object stage
 
-  if (!(tidy_object$stage == "fit_model")){
+  if (!(analysis_object$stage == "fit_model")){
 
     stop("You must first fit a model with fine_tuning() !!")
 
   }
 
-  ## Check type
+  ## Check methods
 
-  check_args_list(arg = type, arg_list = c("PFI", "SHAP", "Integrated Gradients", "Olden"),
-                  arg_name = "type", null_valid = F)
+  check_args_list(arg = methods, arg_list = c("PFI", "SHAP", "Integrated Gradients", "Olden"),
+                  arg_name = "methods", null_valid = F)
 
-  if (!(tidy_object$model_name == "Neural Network") && (type == "Integrated Gradients" || type == "Olden")){
+  if (!(analysis_object$model_name == "Neural Network") && (any(c("Integrated Gradients","Olden") %in% methods))){
 
     stop("Integrated Gradients and Olden's method are for Neural Networks only!!")
   }
+
+  if (analysis_object$model_name == "SVM" && "SHAP" %in% methods){
+
+      if (!(analysis_object$hyperparameters$hyperparams_constant$type == "linear")){
+
+        stop("SHAP method only implemented for linear kernel SVM!")
+
+      }
+  }
+
   ## Check metric
 
   check_args_list(arg = metric, arg_list = names(metrics_info), arg_name = "metric")
@@ -191,7 +201,7 @@ check_args_list <- function(arg, arg_list, arg_name, null_valid = T){
 
   if (!is.null(arg)){
 
-      if (!(arg %in% arg_list)){
+      if (any(!(arg %in% arg_list))){
 
         stop(paste0(arg_name, " option not valid. Valid options are: ", paste(arg_list, collapse = ",")))
 
