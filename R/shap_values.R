@@ -40,7 +40,8 @@ shap_reg <- function(model, train, test, y){
                   predict_model = pred_reg,
                   max_n_coalitions = 40,
                   n_MC_samples = 1e2,
-                  iterative = T)
+                  iterative = T,
+                  seed = 123)
 
   shap_vals = shap_vals$shapley_values_est %>% select(names(train))
 
@@ -71,7 +72,8 @@ shap_bin <- function(model, train, test, y){
                              max_n_coalitions = 40,
                              n_MC_samples = 1e3,
                              iterative = T,
-                             verbose = NULL)
+                             verbose = NULL,
+                             seed = 123)
 
   shap_vals = shap_vals$shapley_values_est %>% select(names(train))
 
@@ -109,7 +111,8 @@ shap_mul <- function(model, train, test, y){
                              predict_model = pred_func,
                              max_n_coalitions = 40,
                              n_MC_samples = 1e3,
-                             iterative = T)
+                             iterative = T,
+                             seed = 123)
 
     shap_vals = shap_vals$shapley_values_est %>% select(names(new_train))
 

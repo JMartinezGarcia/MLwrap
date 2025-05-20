@@ -45,6 +45,8 @@ pfi_calc <- function(model, train, test, y, task, metric, outcome_levels){
 
 pfi_reg <- function(model, new_data, y, metric){
 
+  set.seed(123)
+
   vis <- vip::vi(model,
                  method = "permute",
                  nsim = 25,
@@ -74,6 +76,8 @@ pfi_bin <- function(model, new_data, y, metric){
     pred_func = pred_bin_class
 
   }
+
+  set.seed(123)
 
   vis <- vip::vi(model,
                  method = "permute",
@@ -125,6 +129,8 @@ pfi_multiclass <- function(model, new_data, y, metric){
         return(bin_pred)
       }
     }
+
+    set.seed(123)
 
     vis <- vip::vi(model,
                                                 method = "permute",

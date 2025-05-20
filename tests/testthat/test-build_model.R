@@ -63,7 +63,7 @@ test_that("Check build_model NN works properly",{
     df = sim_data
     formula = "psych_well ~ ."
 
-    tidy_object <- preprocessing(df = df, formula = formula, task = "regression")
+    analysis_object <- preprocessing(df = df, formula = formula, task = "regression")
 
     hyper_nn_tune_list = list(
       learn_rate = c(-2, -1),
@@ -71,7 +71,7 @@ test_that("Check build_model NN works properly",{
     )
 
 
-    model_object = build_model(tidy_object = tidy_object,
+    model_object = build_model(analysis_object = analysis_object,
                              model_name = "Neural Network",
                              hyperparameters = hyper_nn_tune_list)
 
@@ -93,14 +93,14 @@ test_that("Check build_model RF works properly",{
   df = sim_data
   formula = "psych_well_bin ~ ."
 
-  tidy_object <- preprocessing(df = df, formula = formula, task = "classification")
+  analysis_object <- preprocessing(df = df, formula = formula, task = "classification")
 
   hyper_rf_tune_list = list(
     mtry = c(3,5),
     trees = 100
   )
 
-  model_object = build_model(tidy_object = tidy_object,
+  model_object = build_model(analysis_object = analysis_object,
                                model_name = "Random Forest",
                                hyperparameters = hyper_rf_tune_list)
 
@@ -122,7 +122,7 @@ test_that("Check build_model SVM works properly",{
   df = sim_data
   formula = "psych_well_bin ~ ."
 
-  tidy_object <- preprocessing(df = df, formula = formula, task = "classification")
+  analysis_object <- preprocessing(df = df, formula = formula, task = "classification")
 
   hyper_svm_tune_list = list(
     type = "rbf",
@@ -130,7 +130,7 @@ test_that("Check build_model SVM works properly",{
     rbf_sigma = c(-3,-1)
   )
 
-  model_object = build_model(tidy_object = tidy_object,
+  model_object = build_model(analysis_object = analysis_object,
                                model_name = "SVM",
                                hyperparameters = hyper_svm_tune_list)
 
@@ -152,14 +152,14 @@ test_that("Check build_model wrong model name",{
   df = sim_data
   formula = "psych_well ~ ."
 
-  tidy_object <- preprocessing(df = df, formula = formula, task = "regression")
+  analysis_object <- preprocessing(df = df, formula = formula, task = "regression")
 
   hyper_nn_tune_list = list(
     learn_rate = c(-2, -1),
     hidden_units = 15
   )
 
-  expect_error(build_model(tidy_object = tidy_object,
+  expect_error(build_model(analysis_object = analysis_object,
                              model_name = "Neural Networkz",
                              hyperparameters = hyper_nn_tune_list))
 })
@@ -169,14 +169,14 @@ test_that("Check build_model wrong hyperparameters name",{
   df = sim_data
   formula = "psych_well ~ ."
 
-  tidy_object <- preprocessing(df = df, formula = formula, task = "regression")
+  analysis_object <- preprocessing(df = df, formula = formula, task = "regression")
 
   hyper_nn_tune_list = list(
     learn_rates = c(-2, -1),
     hidden_units = 15
   )
 
-  expect_error(build_model(tidy_object = tidy_object,
+  expect_error(build_model(analysis_object = analysis_object,
                            model_name = "Neural Network",
                            hyperparameters = hyper_nn_tune_list))
 })

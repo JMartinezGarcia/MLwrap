@@ -7,18 +7,18 @@ test_that("fine_tuning Bayesian Optimization works properly classification", {
     hidden_units = c(3,10)
   )
 
-  tidy_object <- preprocessing(df = sim_data, formula = formula, task = "classification")
+  analysis_object <- preprocessing(df = sim_data, formula = formula, task = "classification")
 
-  tidy_object <- build_model(tidy_object = tidy_object,
+  analysis_object <- build_model(analysis_object = analysis_object,
                                model_name = "Neural Network",
                                hyperparameters = hyper_nn_tune_list)
 
-  tidy_object <- fine_tuning(tidy_object = tidy_object,
+  analysis_object <- fine_tuning(analysis_object = analysis_object,
                              tuner = "Bayesian Optimization",
                              metric = "roc_auc",
                              verbose = F)
 
-  fit <- tidy_object$tuner_fit
+  fit <- analysis_object$tuner_fit
 
   expect_equal(length(fit$.iter), 9)
 
@@ -39,25 +39,24 @@ test_that("fine_tuning Grid Search CV works properly regression", {
     hidden_units = c(3,10)
   )
 
-  tidy_object <- preprocessing(df = sim_data, formula = formula, task = "regression")
+  analysis_object <- preprocessing(df = sim_data, formula = formula, task = "regression")
 
-  tidy_object <- build_model(tidy_object = tidy_object,
+  analysis_object <- build_model(analysis_object = analysis_object,
                              model_name = "Neural Network",
                              hyperparameters = hyper_nn_tune_list)
 
-  tidy_object <- fine_tuning(tidy_object = tidy_object,
-                             tuner = "Bayesian Optimization",
+  analysis_object <- fine_tuning(analysis_object = analysis_object,
+                             tuner = "Grid Search CV",
                              metrics = "rmse",
                              verbose = F)
-  fit <- tidy_object$tuner_fit
 
-  expect_equal(length(fit$.iter), 18)
+  fit <- analysis_object$tuner_fit
 
-  expect_equal(fit$.predictions[[18]]$hidden_units[1], 10)
+  expect_equal(fit$.predictions[[1]]$hidden_units[1], 3)
 
-  expect_equal(fit$.predictions[[18]]$activation[1], "tanh")
+  expect_equal(fit$.predictions[[1]]$activation[1], "relu")
 
-  expect_equal(fit$.predictions[[18]]$.pred[1], 69.14775, tolerance = 1e-2)
+  expect_equal(fit$.predictions[[1]]$.pred[1], 70.56475, tolerance = 1e-2)
 
 })
 
@@ -70,13 +69,13 @@ test_that("Check fine_tuning wrong metric",{
     hidden_units = c(3,10)
   )
 
-  tidy_object <- preprocessing(df = sim_data, formula = formula, task = "regression")
+  analysis_object <- preprocessing(df = sim_data, formula = formula, task = "regression")
 
-  tidy_object <- build_model(tidy_object = tidy_object,
+  analysis_object <- build_model(analysis_object = analysis_object,
                              model_name = "Neural Network",
                              hyperparameters = hyper_nn_tune_list)
 
-  expect_error(fine_tuning(tidy_object = tidy_object,
+  expect_error(fine_tuning(analysis_object = analysis_object,
                              tuner = "Bayesian Optimization",
                              metrics = "roc_auc",
                              verbose = F))
@@ -92,13 +91,13 @@ test_that("Check fine_tuning plot_results not Boolean",{
     hidden_units = c(3,10)
   )
 
-  tidy_object <- preprocessing(df = sim_data, formula = formula, task = "regression")
+  analysis_object <- preprocessing(df = sim_data, formula = formula, task = "regression")
 
-  tidy_object <- build_model(tidy_object = tidy_object,
+  analysis_object <- build_model(analysis_object = analysis_object,
                              model_name = "Neural Network",
                              hyperparameters = hyper_nn_tune_list)
 
-  expect_error(fine_tuning(tidy_object = tidy_object,
+  expect_error(fine_tuning(analysis_object = analysis_object,
                            tuner = "Bayesian Optimization",
                            metrics = "rmse",
                            verbose = F,
@@ -115,13 +114,13 @@ test_that("Check fine_tuning tuner typo",{
     hidden_units = c(3,10)
   )
 
-  tidy_object <- preprocessing(df = sim_data, formula = formula, task = "regression")
+  analysis_object <- preprocessing(df = sim_data, formula = formula, task = "regression")
 
-  tidy_object <- build_model(tidy_object = tidy_object,
+  analysis_object <- build_model(analysis_object = analysis_object,
                              model_name = "Neural Network",
                              hyperparameters = hyper_nn_tune_list)
 
-  expect_error(fine_tuning(tidy_object = tidy_object,
+  expect_error(fine_tuning(analysis_object = analysis_object,
                            tuner = "Bayesian Optimisation",
                            metrics = "rmse",
                            verbose = F))

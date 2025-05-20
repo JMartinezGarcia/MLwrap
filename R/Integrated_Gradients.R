@@ -29,6 +29,8 @@ IntGrad_reg <- function(model, train, test, y){
                       input_dim = model$fit$dims$p
     )
 
+  set.seed(123)
+
   intgrads <- innsight::run_intgrad(converted_model, data = test)
 
   intgrads = as.data.frame(intgrads$get_result())
@@ -50,6 +52,7 @@ IntGrad_bin <- function(model, train, test, y){
               input_dim = model$fit$dims$p
       )
 
+    set.seed(123)
 
     intgrads <- innsight::run_intgrad(converted_model, data = test, verbose = F)
 
@@ -77,6 +80,8 @@ IntGrad_mul <- function(model, train, test, y, outcome_levels){
     innsight::convert(torch_model$model,
                       input_dim = model$fit$dims$p
     )
+
+  set.seed(123)
 
   intgrads <- innsight::run_intgrad(converted_model, data = test, verbose = F)
 

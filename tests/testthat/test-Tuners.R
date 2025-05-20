@@ -7,10 +7,10 @@ df <- palmerpenguins::penguins %>%
   filter(species == "Adelie" | species == "Gentoo") %>%
   mutate(species = droplevels(species))
 
-tidy_object_reg = preprocessing(df = sim_data, formula_reg, task = "regression")
+analysis_object_reg = preprocessing(df = sim_data, formula_reg, task = "regression")
 
 
-tidy_object_bin = preprocessing(df = sim_data, formula_bin, task = "classification")
+analysis_object_bin = preprocessing(df = sim_data, formula_bin, task = "classification")
 
 
 hyper_nn_tune_list = list(
@@ -25,12 +25,12 @@ hyper_rf_tune_list <- list(
   trees = 100
 )
 
-model_object_bin = build_model(tidy_object = tidy_object_bin,
-                                 model_names = "Neural Network",
+model_object_bin = build_model(analysis_object = analysis_object_bin,
+                                 model_name = "Neural Network",
                                  hyperparameters = hyper_nn_tune_list)
 
-model_object_reg = build_model(tidy_object = tidy_object_reg,
-                                 model_names = "Random Forest",
+model_object_reg = build_model(analysis_object = analysis_object_reg,
+                                 model_name = "Random Forest",
                                  hyperparameters = hyper_rf_tune_list)
 
 ### create_workflow
