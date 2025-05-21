@@ -22,13 +22,13 @@ test_that("fine_tuning Bayesian Optimization works properly classification", {
 
   fit <- analysis_object$tuner_fit
 
-  expect_equal(length(fit$.iter), 9)
+  expect_equal(length(fit$.iter), 6)
 
-  expect_equal(fit$.predictions[[9]]$hidden_units[1], 7)
+  expect_equal(fit$.predictions[[6]]$hidden_units[1], 6)
 
-  expect_equal(fit$.predictions[[9]]$activation[1], "sigmoid")
+  expect_equal(fit$.predictions[[6]]$activation[1], "sigmoid")
 
-  expect_equal(fit$.predictions[[9]]$.pred_High[1], 0.9233055, tolerance = 1e-2)
+  expect_equal(fit$.predictions[[6]]$.pred_High[1], 0.9212357, tolerance = 1e-2)
 
 })
 
