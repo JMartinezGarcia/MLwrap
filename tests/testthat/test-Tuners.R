@@ -1,12 +1,6 @@
 formula_bin <- "psych_well ~ age + gender + depression"
 formula_reg <- "psych_well_bin ~ age + gender + depression"
 
-df <- palmerpenguins::penguins %>%
-  na.omit() %>%
-  select(-year) %>%
-  filter(species == "Adelie" | species == "Gentoo") %>%
-  mutate(species = droplevels(species))
-
 analysis_object_reg = preprocessing(df = sim_data, formula_reg, task = "regression")
 
 

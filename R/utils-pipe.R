@@ -12,3 +12,6 @@
 #' @param rhs A function call using the magrittr semantics.
 #' @return The result of calling `rhs(lhs)`.
 NULL
+
+#' @importFrom stats as.formula coef model.frame predict sd update
+NULL

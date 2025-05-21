@@ -5,7 +5,7 @@
 #' Perform Sensitivity Analysis and Interpretable ML methods
 #'
 #' @param analysis_object analysis_object created from fine_tuning function.
-#' @param type Type of method used. A string of the method name: "PFI" (Permutation Feature Importance),
+#' @param methods Method to be used. A string of the method name: "PFI" (Permutation Feature Importance),
 #'     "SHAP" (SHapley Additive exPlanations), "Integrated Gradients" (Neural Network only) or
 #'     "Olden" (Neural Network only).
 #' @param  metric Metric used for "PFI" method (Permutation Feature Importance).
@@ -251,7 +251,7 @@ plot_barplot <- function(X, func = NULL, func_se = stats::sd, title, x_label) {
     p <- ggplot2::ggplot(summary_df, ggplot2::aes(x = Importance, y = Variable)) +
       ggplot2::geom_col(fill = "steelblue", width = 0.7) +
       ggplot2::geom_errorbar(ggplot2::aes(xmin = Importance - StDev, xmax = Importance + StDev), width = 0.2) +
-      ggplot2::geom_text(aes(label = paste0(round(Importance, 3), " ± ", round(StDev, 3))),
+      ggplot2::geom_text(ggplot2::aes(label = paste0(round(Importance, 3), " +/- ", round(StDev, 3))),
                 vjust =  -0.5,
                 hjust = -0.2) +
       ggplot2::labs(
@@ -281,10 +281,10 @@ plot2 <- function(X, test, func = NULL, func_se = stats::sd, title, x_label) {
   product <- X_mat * test_mat
 
   # Paso 2: divisor por columna = media del valor absoluto de test
-  denominator <- colMeans(abs(test_mat))
+  denominator <- base::colMeans(base::abs(test_mat))
 
   # Paso 3: dividir cada columna por su media
-  sign_results <- sweep(product, 2, denominator, "/")
+  sign_results <- base::sweep(product, 2, denominator, "/")
 
   # Si quieres data.frame al final:
   sign_results <- as.data.frame(sign_results)

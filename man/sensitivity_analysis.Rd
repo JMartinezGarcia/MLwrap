@@ -9,12 +9,12 @@ sensitivity_analysis(analysis_object, methods = c("PFI"), metric = NULL)
 \arguments{
 \item{analysis_object}{analysis_object created from fine_tuning function.}
 
-\item{metric}{Metric used for "PFI" method (Permutation Feature Importance).
-A string of the name of metric (see Metrics).}
-
-\item{type}{Type of method used. A string of the method name: "PFI" (Permutation Feature Importance),
+\item{methods}{Method to be used. A string of the method name: "PFI" (Permutation Feature Importance),
 "SHAP" (SHapley Additive exPlanations), "Integrated Gradients" (Neural Network only) or
 "Olden" (Neural Network only).}
+
+\item{metric}{Metric used for "PFI" method (Permutation Feature Importance).
+A string of the name of metric (see Metrics).}
 }
 \value{
 Updated analysis_object

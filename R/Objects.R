@@ -248,8 +248,6 @@ AnalysisObject <- R6::R6Class("AnalysisObject",
 
     add_metrics = function(metrics){
 
-      #### CHECK METRICS!!!!
-
       private$.metrics <- metrics
 
     },
@@ -315,15 +313,15 @@ AnalysisObject <- R6::R6Class("AnalysisObject",
       private_names <- names(private)
 
       # Filtrar solo los atributos privados que comienzan con "."
-      auxiliary_funcs <- grep("^\\.", private_names, value = TRUE)
-      auxiliary_funcs <- sub("^\\.", "", auxiliary_funcs)
+      auxiliary_funcs <- base::grep("^\\.", private_names, value = TRUE)
+      auxiliary_funcs <- base::sub("^\\.", "", auxiliary_funcs)
 
       if (!(type %in% auxiliary_funcs)){
-        stop("Tipo no válido. Usa uno de los siguientes: ", paste(auxiliary_funcs), collapse = ", ")
+        stop("Type not valid. Use one of the following types: ", paste(auxiliary_funcs), collapse = ", ")
       }
 
       method_name <- paste0("add_", type)  # "add_train", "add_test", "add_hyperparameters"
-      private_method <- get(method_name, envir = private)  # Obtener la función privada
+      private_method <- get(method_name, envir = private)
 
       private_method(value)
     }

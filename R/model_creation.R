@@ -2,7 +2,7 @@
 #' Create ML Model
 #'
 #' @param analysis_object analysis_object created from preprocessing function.
-#' @param model_names Name of the ML Model. A string of the model name: "Neural Network",
+#' @param model_name Name of the ML Model. A string of the model name: "Neural Network",
 #'     "Random Forest", "SVM" or "XGBOOST".
 #' @param hyperparameters Hyperparameters of the ML model. List containing the name of the hyperparameter
 #'  and its value or range of values.

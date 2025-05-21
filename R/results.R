@@ -56,7 +56,7 @@ show_results <- function(analysis_object,
     if (analysis_object$outcome_levels > 2){
 
       summary_results %>%
-        dplyr::mutate(across(where(is.numeric), ~ signif(., 3))) %>%
+        dplyr::mutate(dplyr::across(dplyr::where(is.numeric), ~ signif(., 3))) %>%
         dplyr::select(-c(Class)) %>%
         t() %>%
         as.data.frame() %>%
@@ -67,7 +67,7 @@ show_results <- function(analysis_object,
     } else {
 
     summary_results %>%
-      dplyr::mutate(dplyr::across(where(is.numeric), ~ signif(., 3))) %>%
+      dplyr::mutate(dplyr::across(dplyr::where(is.numeric), ~ signif(., 3))) %>%
       t() %>%
       as.data.frame() %>%
       tibble::rownames_to_column("Metric") %>%

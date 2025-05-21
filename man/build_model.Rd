@@ -9,11 +9,11 @@ build_model(analysis_object, model_name, hyperparameters = NULL)
 \arguments{
 \item{analysis_object}{analysis_object created from preprocessing function.}
 
+\item{model_name}{Name of the ML Model. A string of the model name: "Neural Network",
+"Random Forest", "SVM" or "XGBOOST".}
+
 \item{hyperparameters}{Hyperparameters of the ML model. List containing the name of the hyperparameter
 and its value or range of values.}
-
-\item{model_names}{Name of the ML Model. A string of the model name: "Neural Network",
-"Random Forest", "SVM" or "XGBOOST".}
 }
 \value{
 Updated analysis_object

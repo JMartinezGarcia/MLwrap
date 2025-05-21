@@ -221,7 +221,7 @@ plot_dist_probs_multiclass <- function(predictions, new_data = "all"){
   df_long <- predictions %>%
     dplyr::filter(data_set == "test") %>%
     dplyr::select(-c(.pred_class)) %>%
-    tidyr::pivot_longer(cols = starts_with(".pred_"),
+    tidyr::pivot_longer(cols = dplyr::starts_with(".pred_"),
                  names_to = "Class",
                  values_to = "Probability") %>%
     dplyr::mutate(Class = str_replace(Class, "^.pred_", "output_"))
