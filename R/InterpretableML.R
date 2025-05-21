@@ -398,7 +398,7 @@ pred_reg <- function(object, newdata){
 
 pred_bin <- function(object, newdata){
 
-  return(predict(object, new_data = newdata, type = "prob")[,2])
+  return(predict(object, new_data = newdata, type = "prob")[,2][[1]])
 
 }
 
