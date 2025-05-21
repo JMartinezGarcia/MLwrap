@@ -43,7 +43,7 @@ shap_reg <- function(model, train, test, y){
                   iterative = T,
                   seed = 123)
 
-  shap_vals = shap_vals$shapley_values_est %>% select(names(train))
+  shap_vals = shap_vals$shapley_values_est %>% dplyr::select(names(train))
 
   return(shap_vals)
 
@@ -75,7 +75,7 @@ shap_bin <- function(model, train, test, y){
                              verbose = NULL,
                              seed = 123)
 
-  shap_vals = shap_vals$shapley_values_est %>% select(names(train))
+  shap_vals = shap_vals$shapley_values_est %>% dplyr::select(names(train))
 
   return(shap_vals)
 
@@ -114,7 +114,7 @@ shap_mul <- function(model, train, test, y){
                              iterative = T,
                              seed = 123)
 
-    shap_vals = shap_vals$shapley_values_est %>% select(names(new_train))
+    shap_vals = shap_vals$shapley_values_est %>% dplyr::select(names(new_train))
 
     results[[target_class]] <- shap_vals
 

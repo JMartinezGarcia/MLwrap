@@ -41,7 +41,7 @@ show_results <- function(analysis_object,
 
   analysis_object$modify("predictions", predictions)
 
-  pred_test = predictions %>% filter(data_set == "test")
+  pred_test = predictions %>% dplyr::filter(data_set == "test")
 
   summary_results = summary_results(analysis_object, pred_test)
 
@@ -67,7 +67,7 @@ show_results <- function(analysis_object,
     } else {
 
     summary_results %>%
-      dplyr::mutate(across(where(is.numeric), ~ signif(., 3))) %>%
+      dplyr::mutate(dplyr::across(where(is.numeric), ~ signif(., 3))) %>%
       t() %>%
       as.data.frame() %>%
       tibble::rownames_to_column("Metric") %>%

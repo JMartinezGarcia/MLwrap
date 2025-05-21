@@ -7,6 +7,8 @@ test_that("fine_tuning Bayesian Optimization works properly classification", {
     hidden_units = c(3,10)
   )
 
+  set.seed(123)
+
   analysis_object <- preprocessing(df = sim_data, formula = formula, task = "classification")
 
   analysis_object <- build_model(analysis_object = analysis_object,

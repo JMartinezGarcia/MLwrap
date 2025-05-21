@@ -11,6 +11,8 @@ split_data <- function(analysis_object, prop_train = 0.6, prop_val = 0.2){
 
   model_name = analysis_object$model_name
 
+  set.seed(123)
+
   if (model_name == "Neural Network"){
 
   validation_split = rsample::initial_validation_split(analysis_object$full_data, prop = c(prop_train, prop_val))

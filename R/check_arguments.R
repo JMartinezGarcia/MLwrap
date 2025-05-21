@@ -34,7 +34,7 @@ check_args_preprocessing <- function(df, formula, task, num_vars, cat_vars,
 
 ########## Model building
 
-check_args_build_model <- function(analysis_object, model_names){
+check_args_build_model <- function(analysis_object, model_name){
 
   ## Check tidy_object stage
 
@@ -46,12 +46,12 @@ check_args_build_model <- function(analysis_object, model_names){
 
   ## Check model_names
 
-  check_args_list(arg = model_names, arg_list = c("Neural Network",
+  check_args_list(arg = model_name, arg_list = c("Neural Network",
                                                   "Random Forest",
                                                   "XGBOOST",
                                                   "SVM"
                                                   ),
-                  arg_name = "model_names", null_valid = F)
+                  arg_name = "model_name", null_valid = F)
 
 }
 

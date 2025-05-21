@@ -68,8 +68,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
     for (target_class in y_classes){
 
       plot_barplot(results[[target_class]], func = NULL, title = paste0("Permutation Feature Importance for class ",
-                                                                target_class),
-                           x_label = "Importance")
+                                                        target_class), x_label = "Importance")
       }
 
     } else{

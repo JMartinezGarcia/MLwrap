@@ -38,7 +38,7 @@ Fine Tune ML Model
 \subsection{Grid Search CV}{
 \itemize{
 \item Number of Folds: 5
-\item Max grid size per hyperparameter: 10
+\item Maximum levels per hyperparameter: 10
 \item Train / Test : 0.75 / 0.25
 }
 }

@@ -28,13 +28,17 @@ Imports:
     magrittr,
     vip,
     glue,
-    fmsb,
     tidyr,
     ggpubr,
     innsight,
     torch,
     shapr,
-    DiagrammeR
+    DiagrammeR,
+    ggbeeswarm,
+    brulee,
+    ranger,
+    kernlab,
+    xgboost
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
