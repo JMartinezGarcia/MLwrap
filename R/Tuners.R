@@ -82,12 +82,26 @@ plot_tuning_results <- function(analysis_object){
     p <- analysis_object$tuner_fit %>%
       tune::autoplot(type = "performance") +
       ggplot2::labs(title = "Bayesian Optimization Iteration Loss")
-      print(p)
+
+    plot_ob = analysis_object$plots
+
+    plot_ob$bayesian_opt_iter_loss = p
+
+    analysis_object$modify("plots", plot_ob)
+
+    print(p)
 
     p <- analysis_object$tuner_fit %>%
       tune::autoplot(., search_res, type = "parameters") +
       ggplot2::labs(x = "Iterations", y = NULL, title = "Bayesian Optimization Iteration Results")
-      print(p)
+
+    plot_ob = analysis_object$plots
+
+    plot_ob$bayesian_opt_iter_results = p
+
+    analysis_object$modify("plots", plot_ob)
+
+    print(p)
 
 
   }
@@ -96,7 +110,13 @@ plot_tuning_results <- function(analysis_object){
        tune::autoplot() +
        ggplot2::labs(title = paste0(analysis_object$tuner, " Search Results"))
 
-       print(p)
+  plot_ob = analysis_object$plots
+
+  plot_ob$tuner_search_results = p
+
+  analysis_object$modify("plots", plot_ob)
+
+  print(p)
 
   print("############# Best Hyperparameters Found:")
 

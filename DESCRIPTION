@@ -33,7 +33,8 @@ Imports:
     torch,
     shapr,
     DiagrammeR,
-    ggbeeswarm
+    ggbeeswarm,
+    ggplot2
 Suggests: 
     testthat (>= 3.0.0),
     brulee,
@@ -41,7 +42,6 @@ Suggests:
     kernlab,
     xgboost,
     dplyr,
-    ggplot2,
     rlang,
     tibble,
     tidyverse

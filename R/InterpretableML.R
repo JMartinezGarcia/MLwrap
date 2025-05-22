@@ -300,9 +300,9 @@ plot2 <- function(X, test, func = NULL, func_se = stats::sd, title, x_label) {
   df$variable <- factor(df$variable, levels = df$variable[order(df$importance, decreasing = T)])
 
   # Plot
-  p <- ggplot2::ggplot(df, aes(x = variable, y = importance, fill = importance > 0)) +
+  p <- ggplot2::ggplot(df, ggplot2::aes(x = variable, y = importance, fill = importance > 0)) +
     ggplot2::geom_col(show.legend = FALSE) +
-    ggplot2::geom_text(aes(label = round(importance, 3)),
+    ggplot2::geom_text(ggplot2::aes(label = round(importance, 3)),
                        vjust = ifelse(df$importance >= 0, -0.5, 1.2)) +
     ggplot2::scale_fill_manual(values = c("TRUE" = "steelblue", "FALSE" = "firebrick")) +
     ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
@@ -312,7 +312,7 @@ plot2 <- function(X, test, func = NULL, func_se = stats::sd, title, x_label) {
       y = "Olden Feature Importance"
     ) +
     ggplot2::theme_grey() +
-    ggplot2::theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
 
   print(p)
 
@@ -345,7 +345,7 @@ plot_boxplot <- function(X, title, y_label){
         title = title
       ) +
       ggplot2::theme_grey() +
-      ggplot2::theme(axis.text.x = element_text(angle = 45, hjust = 1))
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
 
     print(p)
 
@@ -376,7 +376,7 @@ plot_beeswarm <- function(X_vals, X_orig, title, x_label){
   summary_df["val_color"] = X["val_color"]
 
 
-  p <- ggplot2::ggplot(summary_df, aes(x=value, y=variable, color = val_color)) +
+  p <- ggplot2::ggplot(summary_df, ggplot2::aes(x=value, y=variable, color = val_color)) +
     ggbeeswarm::geom_quasirandom(bandwidth = 0.2, method = "pseudorandom", cex = 2, orientation = 'x') +
     ggplot2::labs(x = x_label, y = "Feature" ,title = title) +
     ggplot2::theme_grey() +

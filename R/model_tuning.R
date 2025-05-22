@@ -154,6 +154,12 @@ fine_tuning <- function(analysis_object, tuner, metrics, plot_results = F, verbo
                 p <- autoplot(model_parsnip) +
                      ggplot2::labs(title = "Neural Network Loss Curve")
 
+                plot_ob = analysis_object$plots
+
+                plot_ob$nn_loss_curve = p
+
+                analysis_object$modify("plots", plot_ob)
+
                 print(p)
 
                 p <- graph_nn(model_parsnip)

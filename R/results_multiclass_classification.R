@@ -62,6 +62,15 @@ summary_multiclass_per_class <- function(predictions, new_data = "test"){
   class_metrics_funcs <- list(
 
     Accuracy = accuracy,
+    Balanced_Accuracy = bal_accuracy,
+    F1_score = f_meas,
+    Recall = recall,
+    Precision = precision,
+    Specificity = specificity,
+    Sensitivity = sensitivity,
+    MCC = mcc,
+    J_index = j_index,
+    Detection_Prevalence = detection_prevalence,
     Kappa = kap
 
   )

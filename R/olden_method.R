@@ -78,9 +78,9 @@ olden_barplot <- function(net_importance, names_predictor, title = "Olden Featur
   df$variable <- factor(df$variable, levels = df$variable[order(df$importance, decreasing = T)])
 
   # Plot
-  p <- ggplot2::ggplot(df, aes(x = variable, y = importance, fill = importance > 0)) +
+  p <- ggplot2::ggplot(df, ggplot2::aes(x = variable, y = importance, fill = importance > 0)) +
     ggplot2::geom_col(show.legend = FALSE) +
-    ggplot2::geom_text(aes(label = round(importance, 3)),
+    ggplot2::geom_text(ggplot2::aes(label = round(importance, 3)),
              vjust = ifelse(df$importance >= 0, -0.5, 1.2)) +
     ggplot2::scale_fill_manual(values = c("TRUE" = "steelblue", "FALSE" = "firebrick")) +
     ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
@@ -90,7 +90,7 @@ olden_barplot <- function(net_importance, names_predictor, title = "Olden Featur
       y = "Olden Feature Importance"
     ) +
     ggplot2::theme_grey() +
-    ggplot2::theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
 
   print(p)
 
