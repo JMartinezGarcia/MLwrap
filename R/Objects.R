@@ -168,7 +168,7 @@ AnalysisObject <- R6::R6Class("AnalysisObject",
       } else {
         stop("`$plots` is read only", call. = FALSE)
       }
-    },
+    }
 
   ),
 
@@ -307,7 +307,7 @@ AnalysisObject <- R6::R6Class("AnalysisObject",
 
       private$.plots = plot_object
 
-    },
+    }
   ),
 
   public = list(
