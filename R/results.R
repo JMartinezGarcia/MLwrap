@@ -83,12 +83,10 @@ show_results <- function(analysis_object,
 
     if (analysis_object$outcome_levels == 2){
 
-        p <- predictions %>%
+      p <- predictions %>%
         plot_roc_curve_binary(new_data = "all") %>%
         autoplot() +
         ggplot2::labs(title = "ROC Curve")
-
-        print(p)
 
 
     } else {
@@ -98,9 +96,15 @@ show_results <- function(analysis_object,
             autoplot() +
             ggplot2::labs(title = "ROC Curve")
 
-      print(p)
-
     }
+
+    plot_ob = analysis_object$plots
+
+    plot_ob$roc_curve = p
+
+    analysis_object$modify("plots", plot_ob)
+
+    print(p)
 
   }
 
@@ -113,7 +117,6 @@ show_results <- function(analysis_object,
          autoplot() +
          ggplot2::labs(title = "Precision Recall Curve")
 
-    print(p)
 
     } else {
 
@@ -122,9 +125,17 @@ show_results <- function(analysis_object,
            autoplot() +
            ggplot2::labs(title = "Precision Recall Curve")
 
-      print(p)
 
     }
+
+    plot_ob = analysis_object$plots
+
+    plot_ob$pr_curve = p
+
+    analysis_object$modify("plots", plot_ob)
+
+    print(p)
+
 
   }
 
@@ -137,7 +148,6 @@ show_results <- function(analysis_object,
           autoplot() +
           ggplot2::labs(title = "Gain Curve")
 
-    print(p)
 
     } else {
 
@@ -146,9 +156,15 @@ show_results <- function(analysis_object,
         autoplot() +
         ggplot2::labs(title = "Gain Curve")
 
-    print(p)
-
     }
+
+    plot_ob = analysis_object$plots
+
+    plot_ob$gain_curve = p
+
+    analysis_object$modify("plots", plot_ob)
+
+    print(p)
 
   }
 
@@ -161,7 +177,6 @@ show_results <- function(analysis_object,
            autoplot() +
            ggplot2::labs(title = "Lift Curve")
 
-      print(p)
 
     } else{
 
@@ -171,9 +186,16 @@ show_results <- function(analysis_object,
            autoplot() +
            ggplot2::labs(title = "Lift Curve")
 
-      print(p)
 
     }
+
+    plot_ob = analysis_object$plots
+
+    plot_ob$lift_curve = p
+
+    analysis_object$modify("plots", plot_ob)
+
+    print(p)
 
   }
 
@@ -181,61 +203,105 @@ show_results <- function(analysis_object,
 
     if (analysis_object$outcome_levels == 2){
 
-      pred_test %>%
-        plot_dist_probs_binary(new_data) %>%
-        print()
+   p <- pred_test %>%
+        plot_dist_probs_binary(new_data)
 
     } else {
 
-      pred_test %>%
-        plot_dist_probs_multiclass() %>%
-        print()
+   p <- pred_test %>%
+        plot_dist_probs_multiclass()
 
     }
+
+    plot_ob = analysis_object$plots
+
+    plot_ob$dist_by_class = p
+
+    analysis_object$modify("plots", plot_ob)
+
+    print(p)
+
   }
 
   if (reliability_plot == T){
 
     if (analysis_object$outcome_levels > 2){stop("Reliability Plot not implemented for Multiclass Classification!")}
 
-    pred_test %>%
-      plot_calibration_curve_binary(new_data = new_data) %>%
-      print()
+     p <- pred_test %>%
+          plot_calibration_curve_binary(new_data = new_data)
+
+     plot_ob = analysis_object$plots
+
+     plot_ob$reliability_plot = p
+
+     analysis_object$modify("plots", plot_ob)
+
+     print(p)
+
   }
 
   if (confusion_matrix == T){
 
 
      p <- pred_test %>%
-      plot_conf_mat(new_data = new_data) %>%
-      autoplot(type = "heatmap") +
-      ggplot2::labs(title = "Confusion Matrix")
+          plot_conf_mat(new_data = new_data) %>%
+          autoplot(type = "heatmap") +
+          ggplot2::labs(title = "Confusion Matrix")
 
-      print(p)
+     plot_ob = analysis_object$plots
+
+     plot_ob$confusion_matrix = p
+
+     analysis_object$modify("plots", plot_ob)
+
+     print(p)
 
   }
 
   if (scatter_residuals == T){
 
-    pred_test %>%
-      plot_scatter(new_data = new_data, error = T) %>%
-      print()
+     p <- pred_test %>%
+          plot_scatter(new_data = new_data, error = T)
+
+     plot_ob = analysis_object$plots
+
+     plot_ob$scatter_residuals = p
+
+     analysis_object$modify("plots", plot_ob)
+
+     print(p)
+
 
   }
 
   if (scatter_predictions == T){
 
-    pred_test %>%
-      plot_scatter(new_data = new_data, error = F) %>%
-      print()
+    p <- pred_test %>%
+      plot_scatter(new_data = new_data, error = F)
+
+    plot_ob = analysis_object$plots
+
+    plot_ob$scatter_predicitons = p
+
+    analysis_object$modify("plots", plot_ob)
+
+    print(p)
 
   }
 
   if (residuals_dist == T){
 
-    pred_test %>%
-      plot_residuals_density(new_data = new_data) %>%
-      print()
+     p <- pred_test %>%
+          plot_residuals_density(new_data = new_data)
+
+     plot_ob = analysis_object$plots
+
+     plot_ob$residuals_dist = p
+
+     analysis_object$modify("plots", plot_ob)
+
+     print(p)
+
 
   }
 
