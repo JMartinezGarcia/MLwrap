@@ -8,27 +8,29 @@ sobol_calc <- function(model, train, task, feature_names){
   names(X1) <- feature_names
   names(X2) <- feature_names
 
+  set.seed(123)
+
   if (task == "regression"){
 
-    func_model <- function(X) {
+    func_model_reg <- function(X) {
 
-      predict(model_parsnip, new_data = X)$.pred
+      predict(model, new_data = X)$.pred
 
     }
+
+    res <- sensitivity::soboljansen(model = func_model_reg, X1, X2, nboot = 100, conf = 0.95)
 
   } else{
 
-    func_model <- function(X) {
+    func_model_bin <- function(X) {
 
-      as.numeric(predict(model_parsnip, new_data = X, type = "prob")[,2])
+      predict(model, new_data = X, type = "prob")[,2][[1]]
 
     }
 
+    res <- sensitivity::soboljansen(model = func_model_bin, X1, X2, nboot = 100, conf = 0.95)
+
   }
-
-  set.seed(123)
-
-  res <- sensitivity::soboljansen(model = func_model, X1, X2, nboot = 100, conf = 0.95)
 
   return(res)
 

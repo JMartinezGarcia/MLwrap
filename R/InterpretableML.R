@@ -99,7 +99,11 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
   feature_names <- names(bake_train)[which(names(bake_test) != y)]
 
+  plot_ob = analysis_object$plots
+
   if ("PFI" %in% methods){
+
+    method_name = "PFI"
 
     if (is.null(metric)){
 
@@ -125,9 +129,15 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     for (target_class in y_classes){
 
-      plot_barplot(results[[target_class]], func = NULL, title = paste0("Permutation Feature Importance for class ",
-                                                        target_class), x_label = "Importance",
-                                                        plot_name = paste0("PFI_",target_class))
+      p <- plot_barplot(results[[target_class]], func = NULL, title = paste0("Permutation Feature Importance for class ",
+                                                        target_class), x_label = "Importance")
+
+      plot_name <- paste0(method_name,"_",target_class,"_barplot")
+
+      plot_ob[[plot_name]] = p
+
+      print(p)
+
       }
 
     } else{
@@ -139,14 +149,21 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
       print("##############################################")
       cat("\n")
 
-      plot_barplot(results, func = NULL, title = "Permutation Feature Importance", x_label = "Importance",
-                                                    plot_name = "PFI")
+      p <- plot_barplot(results, func = NULL, title = "Permutation Feature Importance", x_label = "Importance")
+
+      plot_name <- paste0(method_name,"_barplot")
+
+      plot_ob[[plot_name]] = p
+
+      print(p)
 
     }
 
   }
 
   if ("SHAP" %in% methods){
+
+    method_name = "SHAP"
 
     results <- shap_calc(model = model_parsnip, train = bake_train, test = bake_test, y = y,
                          task = task, outcome_levels = analysis_object$outcome_levels)
@@ -161,29 +178,49 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       for (target_class in y_classes){
 
-        plot_barplot(results[[target_class]], func = function(x) mean(abs(x)),
+        p <- plot_barplot(results[[target_class]], func = function(x) mean(abs(x)),
                      func_se = function(x) sd(abs(x)) / sqrt(length(x)),
                      x_label = "Mean |SHAP|",
-                     title = paste0("Mean |SHAP| value for class ", target_class),
-                     plot_name = paste0("SHAP_", target_class)
+                     title = paste0("Mean |SHAP| value for class ", target_class)
                      )
 
-        plot2(results[[target_class]], test, func = function(x) mean(x),
+        plot_name <- paste0(method_name,"_",target_class,"_barplot")
+
+        plot_ob[[plot_name]] = p
+
+        print(p)
+
+        p <- plot2(results[[target_class]], test, func = function(x) mean(x),
               func_se = function(x) sd(x),
               x_label = "Mean (SHAP * sign(X))",
-              title = paste0("Mean (SHAP * sign(X)) value for class ", target_class),
-              plot_name = paste0("SHAP_", target_class)
+              title = paste0("Mean (SHAP * sign(X)) value for class ", target_class)
               )
 
-        plot_boxplot(results[[target_class]], y_label = "SHAP value",
-                     title = paste0("SHAP Value Distribution for class ", target_class),
-                     plot_name = paste0("SHAP_", target_class)
+        plot_name <- paste0(method_name,"_",target_class,"_barplot2")
+
+        plot_ob[[plot_name]] = p
+
+        print(p)
+
+        p <- plot_boxplot(results[[target_class]], y_label = "SHAP value",
+                     title = paste0("SHAP Value Distribution for class ", target_class)
                      )
 
-        plot_beeswarm(results[[target_class]], X_orig = test, x_label = "SHAP value",
-                      title = paste0("SHAP Swarm Plot for class ", target_class),
-                      plot_name = paste0("SHAP_", target_class)
+        plot_name <- paste0(method_name,"_",target_class,"_boxplot")
+
+        plot_ob[[plot_name]] = p
+
+        print(p)
+
+        p <- plot_beeswarm(results[[target_class]], X_orig = test, x_label = "SHAP value",
+                      title = paste0("SHAP Swarm Plot for class ", target_class)
                       )
+
+        plot_name <- paste0(method_name,"_",target_class,"_swarmplot")
+
+        plot_ob[[plot_name]] = p
+
+        print(p)
 
       }
 
@@ -196,27 +233,51 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
       print("##############################################")
       cat("\n")
 
-    plot_barplot(results, func = function(x) mean(abs(x)),
+    p <- plot_barplot(results, func = function(x) mean(abs(x)),
                  func_se = function(x) sd(abs(x)) / sqrt(length(x)),
                  x_label = "Mean |SHAP|",
-                 title = "Mean |SHAP| value",
-                 plot_name = "SHAP")
+                 title = "Mean |SHAP| value")
 
-      plot2(results, test, func = function(x) mean(x),
+    plot_name <- paste0(method_name, "_barplot")
+
+    plot_ob[[plot_name]] = p
+
+    print(p)
+
+    p <- plot2(results, test, func = function(x) mean(x),
             func_se = function(x) sd(x),
             x_label = "Mean (SHAP * sign(X))",
-            title = "Mean (SHAP * sign(X)) value",
-            plot_name = "SHAP")
+            title = "Mean (SHAP * sign(X)) value")
 
-    plot_boxplot(results, y_label = "SHAP value", title = "SHAP Value Distribution", plot_name = "SHAP")
+    plot_name <- paste0(method_name, "_barplot2")
 
-    plot_beeswarm(results, X_orig = test, x_label = "SHAP value", title = "SHAP Swarm Plot", plot_name = "SHAP")
+    plot_ob[[plot_name]] = p
+
+    print(p)
+
+    p <- plot_boxplot(results, y_label = "SHAP value", title = "SHAP Value Distribution")
+
+    plot_name <- paste0(method_name, "_boxplot")
+
+    plot_ob[[plot_name]] = p
+
+    print(p)
+
+    p <- plot_beeswarm(results, X_orig = test, x_label = "SHAP value", title = "SHAP Swarm Plot")
+
+    plot_name <- paste0(method_name, "_swarmplot")
+
+    plot_ob[[plot_name]] = p
+
+    print(p)
 
     }
 
   }
 
   if ("Integrated Gradients" %in% methods){
+
+    method_name = "IntegratedGradients"
 
     results <- IntGrad_calc(model = model_parsnip, train = bake_train, test = bake_test, y = y,
                             task = task, outcome_levels = analysis_object$outcome_levels)
@@ -231,28 +292,48 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       for (target_class in y_classes){
 
-        plot_barplot(results[[target_class]], func = function(x) mean(abs(x)),
+        p <- plot_barplot(results[[target_class]], func = function(x) mean(abs(x)),
                      func_se = function(x) sd(abs(x)) / sqrt(length(x)),
                      x_label = "Mean |Integrated Gradient|",
-                     title = paste0("Mean |Integrated Gradient| value for class ", target_class),
-                     plot_name = paste0("IntegratedGradients_", target_class)
+                     title = paste0("Mean |Integrated Gradient| value for class ", target_class)
         )
 
-        plot2(results[[target_class]], test, func = function(x) mean(x),
+        plot_name <- paste0(method_name,"_",target_class,"_barplot")
+
+        plot_ob[[plot_name]] = p
+
+        print(p)
+
+        p <- plot2(results[[target_class]], test, func = function(x) mean(x),
               func_se = function(x) sd(x),
               x_label = "Mean (Integrated Gradient * sign(X))",
-              title = paste0("Mean (Integrated Gradient * sign(X)) value for class ", target_class),
-              plot_name = paste0("IntegratedGradients_", target_class)
+              title = paste0("Mean (Integrated Gradient * sign(X)) value for class ", target_class)
               )
 
-        plot_boxplot(results[[target_class]], y_label = "Integrated Gradient value",
-                     title = paste0("Integrated Gradient Value Distribution for class ", target_class),
-                     plot_name = paste0("IntegratedGradients_", target_class)
+        plot_name <- paste0(method_name,"_",target_class,"_barplot2")
+
+        plot_ob[[plot_name]] = p
+
+        print(p)
+
+        p <- plot_boxplot(results[[target_class]], y_label = "Integrated Gradient value",
+                     title = paste0("Integrated Gradient Value Distribution for class ", target_class)
                      )
 
-        plot_beeswarm(results[[target_class]], X_orig = test, x_label = "SHAP value",
-                      title = paste0("Integrated Gradient Swarm Plot for class ", target_class),
-                      plot_name = paste0("IntegratedGradients_", target_class))
+        plot_name <- paste0(method_name,"_",target_class,"_boxplot")
+
+        plot_ob[[plot_name]] = p
+
+        print(p)
+
+        p <- plot_beeswarm(results[[target_class]], X_orig = test, x_label = "SHAP value",
+                      title = paste0("Integrated Gradient Swarm Plot for class ", target_class))
+
+        plot_name <- paste0(method_name,"_",target_class,"_swarmplot")
+
+        plot_ob[[plot_name]] = p
+
+        print(p)
 
       }
 
@@ -265,33 +346,53 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
       print("##############################################")
       cat("\n")
 
-      plot_barplot(results, func = function(x) mean(abs(x)),
+      p <- plot_barplot(results, func = function(x) mean(abs(x)),
                    func_se = function(x) sd(abs(x)) / sqrt(length(x)),
                    x_label = "Mean |Integrated Gradient|",
-                   title = "Mean |Integrated Gradient| value",
-                   plot_name = "IntegratedGradients"
+                   title = "Mean |Integrated Gradient| value"
                    )
 
-      plot2(results, test, func = function(x) mean(x),
+      plot_name <- paste0(method_name,"_barplot")
+
+      plot_ob[[plot_name]] = p
+
+      print(p)
+
+      p <- plot2(results, test, func = function(x) mean(x),
             func_se = function(x) sd(x),
             x_label = "Mean (Integrated Gradient * sign(X))",
-            title = "Mean (Integrated Gradient * sign(X)) value",
-            plot_name = "IntegratedGradients")
+            title = "Mean (Integrated Gradient * sign(X)) value")
 
+      plot_name <- paste0(method_name,"_barplot2")
 
+      plot_ob[[plot_name]] = p
 
-      plot_boxplot(results, y_label = "Integrated Gradient value", title = "Integrated Gradient Distribution",
-                   plot_name = "IntegratedGradients")
+      print(p)
 
-      plot_beeswarm(results, X_orig = test, x_label = "Integrated Gradient value",
-                    title = "Integrated Gradient Swarm Plot",
-                    plot_name = "IntegratedGradients")
+      p <- plot_boxplot(results, y_label = "Integrated Gradient value", title = "Integrated Gradient Distribution")
+
+      plot_name <- paste0(method_name,"_boxplot")
+
+      plot_ob[[plot_name]] = p
+
+      print(p)
+
+      p <- plot_beeswarm(results, X_orig = test, x_label = "Integrated Gradient value",
+                    title = "Integrated Gradient Swarm Plot")
+
+      plot_name <- paste0(method_name,"_swarmplot")
+
+      plot_ob[[plot_name]] = p
+
+      print(p)
 
     }
 
   }
 
   if ("Olden" %in% methods){
+
+    method_name = "Olden"
 
     y_classes = levels(bake_train[[y]])
 
@@ -307,8 +408,22 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     if (analysis_object$outcome_levels > 2){
 
-      olden_barplot_mul(analysis_object, results, feature_names, outcome_levels = analysis_object$outcome_levels,
-                        y_classes = y_classes)
+      for (i in 1:length(y_classes)){
+
+        net_importance = importance[,i]
+
+        title = paste0("Olden Feature Importance for class ", y_classes[i])
+
+        plot_name = paste0("Olden_", y_classes[i])
+
+        p <- olden_barplot(net_importance, feature_names, title)
+
+        plot_name = paste0("Olden_", y_classes[i], "_barplot")
+
+        plot_ob[[plot_name]] = p
+
+        print(p)
+      }
 
     } else{
 
@@ -319,13 +434,20 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
       print("##############################################")
       cat("\n")
 
-      olden_barplot(analysis_object, results, feature_names, plot_name = "Olden")
+      p <- olden_barplot(results, feature_names)
+
+      plot_name <- paste0(method_name,"_barplot")
+
+      plot_ob[[plot_name]] = p
+
+      print(p)
 
     }
+  }
 
     if ("Sobol_Jansen" %in% methods){
 
-      results <- sobol_calc(model_parnsip, bake_train, task, feature_names)
+      results <- sobol_calc(model_parsnip, bake_train, task, feature_names)
 
       sensitivity_analysis_list[["Sobol_Jansen"]] <- results
 
@@ -338,20 +460,17 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       p <- sobol_plot(results)
 
-      plot_ob = analysis_object$plots
-
       plot_ob[["Sobol_Jansen"]] = p
-
-      analysis_object$modify("plots", plot_ob)
 
       print(p)
 
 
     }
 
-  }
 
   analysis_object$modify("sensitivity_analysis", sensitivity_analysis_list)
+
+  analysis_object$modify("plots", plot_ob)
 
   return(analysis_object)
 
@@ -363,7 +482,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
 #### plot_global
 
-plot_barplot <- function(X, func = NULL, func_se = stats::sd, title, x_label, plot_name) {
+plot_barplot <- function(X, func = NULL, func_se = stats::sd, title, x_label) {
 
   X <- base::as.data.frame(X)
 
@@ -395,20 +514,12 @@ plot_barplot <- function(X, func = NULL, func_se = stats::sd, title, x_label, pl
         ) +
       ggplot2::theme_grey()
 
-    plot_name <- paste0(plot_name, "_barplot")
-
-    plot_ob = analysis_object$plots
-
-    plot_ob[[plot_name]] = p
-
-    analysis_object$modify("plots", plot_ob)
-
-    print(p)
+  return(p)
 
 }
 
 
-plot2 <- function(X, test, func = NULL, func_se = stats::sd, title, x_label, plot_name) {
+plot2 <- function(X, test, func = NULL, func_se = stats::sd, title, x_label) {
 
   X <- base::as.data.frame(X)
 
@@ -454,19 +565,11 @@ plot2 <- function(X, test, func = NULL, func_se = stats::sd, title, x_label, plo
     ggplot2::theme_grey() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
 
-  plot_name <- paste0(plot_name, "_barplot2")
-
-  plot_ob = analysis_object$plots
-
-  plot_ob[[plot_name]] = p
-
-  analysis_object$modify("plots", plot_ob)
-
-  print(p)
+  return(p)
 
 }
 
-plot_boxplot <- function(X, title, y_label, plot_name){
+plot_boxplot <- function(X, title, y_label){
 
   X <- base::as.data.frame(X)
 
@@ -495,21 +598,13 @@ plot_boxplot <- function(X, title, y_label, plot_name){
       ggplot2::theme_grey() +
       ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
 
-    plot_name <- paste0(plot_name, "_boxplot")
-
-    plot_ob = analysis_object$plots
-
-    plot_ob[[plot_name]] = p
-
-    analysis_object$modify("plots", plot_ob)
-
-    print(p)
+  return(p)
 
 }
 
 ###### Beeswarm
 
-plot_beeswarm <- function(X_vals, X_orig, title, x_label, plot_name){
+plot_beeswarm <- function(X_vals, X_orig, title, x_label){
 
   order_df <- tibble::tibble(
     variable = base::colnames(X_vals),
@@ -538,15 +633,7 @@ plot_beeswarm <- function(X_vals, X_orig, title, x_label, plot_name){
     ggplot2::theme_grey() +
     ggplot2::scale_color_viridis_c(option = "A")
 
-  plot_name <- paste0(plot_name, "_swarmplot")
-
-  plot_ob = analysis_object$plots
-
-  plot_ob[[plot_name]] = p
-
-  analysis_object$modify("plots", plot_ob)
-
-  print(p)
+  return(p)
 
 }
 

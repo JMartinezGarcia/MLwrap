@@ -67,7 +67,7 @@ olden_mul <- function(model){
 
 }
 
-olden_barplot <- function(analysis_object, net_importance, names_predictor, title = "Olden Feature Importance", plot_name){
+olden_barplot <- function(net_importance, names_predictor, title = "Olden Feature Importance"){
 
   df <- data.frame(
     variable = names_predictor,
@@ -92,29 +92,6 @@ olden_barplot <- function(analysis_object, net_importance, names_predictor, titl
     ggplot2::theme_grey() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
 
-  plot_ob = analysis_object$plots
-
-  plot_ob[[plot_name]] = p
-
-  analysis_object$modify("plots", plot_ob)
-
-  print(p)
-
-}
-
-olden_barplot_mul <- function(analysis_object, importance, names_predictor, outcome_levels, y_classes){
-
-  for (i in 1:length(y_classes)){
-
-    net_importance = importance[,i]
-
-    title = paste0("Olden Feature Importance for class ", y_classes[i])
-
-    plot_name = paste0("Olden_", y_classes[i])
-
-    olden_barplot(analysis_object, net_importance, names_predictor, title, plot_name)
-
-
-  }
+  return(p)
 
 }
