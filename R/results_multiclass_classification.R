@@ -174,7 +174,7 @@ plot_pr_curve_multiclass <- function(predictions, new_data = "all"){
 
   y_classes = levels(predictions$y)
 
-  predicted = lapply(y_classes, function(target_class) paste0(".pred_", target_class))
+  predicted = unlist(lapply(y_classes, function(target_class) paste0(".pred_", target_class)))
 
   if (new_data == "all"){
 
@@ -193,7 +193,7 @@ plot_gain_curve_multiclass <- function(predictions, new_data = "all"){
 
   y_classes = levels(predictions$y)
 
-  predicted = lapply(y_classes, function(target_class) paste0(".pred_", target_class))
+  predicted = unlist(lapply(y_classes, function(target_class) paste0(".pred_", target_class)))
 
   if (new_data == "all"){
 
@@ -212,7 +212,7 @@ plot_lift_curve_multiclass <- function(predictions, new_data = "all"){
 
   y_classes = levels(predictions$y)
 
-  predicted = lapply(y_classes, function(target_class) paste0(".pred_", target_class))
+  predicted = unlist(lapply(y_classes, function(target_class) paste0(".pred_", target_class)))
 
   if (new_data == "all"){
 
@@ -233,14 +233,16 @@ plot_dist_probs_multiclass <- function(predictions, new_data = "all"){
     tidyr::pivot_longer(cols = dplyr::starts_with(".pred_"),
                  names_to = "Class",
                  values_to = "Probability") %>%
-    dplyr::mutate(Class = str_replace(Class, "^.pred_", "output_"))
+    dplyr::mutate(Class = stringr::str_replace(Class, "^.pred_", "output_"))
 
-  ggplot2::ggplot(df_long, aes(x = Probability, fill = y, color = y)) +
+  p <- ggplot2::ggplot(df_long, ggplot2::aes(x = Probability, fill = y, color = y)) +
     ggplot2::geom_density(alpha = 0.5, bw = 0.1) +
     ggplot2::facet_wrap(~Class) +  # Facet por clase verdadera
     ggplot2::labs(title = "Probability Density for each Class",
          x = "Output", y = "Density") +
     ggplot2::theme_minimal()
+
+  return(p)
 
 }
 

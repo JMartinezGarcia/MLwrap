@@ -1,14 +1,32 @@
 Package: TidyML
 Title: Machine Learning Modelling For Everyone
 Version: 0.0.0.9000
-Authors@R: 
-    person("Javier", "Martínez García", , "javier.nezcia@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "0009-0007-7861-5274"))
-Description: TidyML is a minimal library focused on providing all the essential tools for the workflow of a
-        machine learning modelling process. The whole process is divided into 5 steps: 
-        preprocessing() -> build_model() -> fine_tuning() -> show_results() -> sensitivity_analysis()
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Authors@R: c(person(given   = "Javier", familiy = "Martínez García",
+                    role    = c("aut", "cre"), 
+                    email   = "javier.nezcia@gmail.com",
+                    comment = c(ORCID = "0009-0007-7861-5274")),
+             person(given = "Juan José", familiy = "Montaño Moreno",
+                    role  = "ctb", 
+                    email = "juanjo.montano@uib.es",
+                    comment = c(ORCID = "0000-0002-1116-1964")),
+             person(given = "Albert", familiy = "Sesé",
+                    role  = "ctb", 
+                    email = "albert.sese@uib.es",
+                    comment = c(ORCID = "0000-0003-3771-1749")),
+Description: TidyML is a minimalistic library specifically designed to make the estimation of Machine
+             Learning (ML) techniques as easy and accessible as possible, particularly within the framework
+             of the Knowledge Discovery in Databases (KDD) process in data mining. The package provides
+             all the essential tools needed to efficiently structure and execute each stage of a predictive
+             or classification modeling workflow, aligning closely with the fundamental steps of the KDD
+             methodology, from data selection and preparation, through model building and tuning, to the
+             interpretation and evaluation of results using Sensitivity Analysis. The TidyML workflow is
+             organized into five core steps; preprocessing(), build_model(), fine_tuning(), show_results(),
+             and sensitivity_analysis(). These steps correspond, respectively, to data preparation and
+             transformation, model construction, hyperparameter optimization, resuresults presentation, and
+             sensitivity analysis. By streamlining these phases, TidyML aims to simplify the implementation
+             of ML techniques, allowing analysts and data scientists to focus on extracting actionable insights
+             and meaningful patterns from large datasets, in line with the objectives of the KDD process.
+License: "GPL-3"
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
@@ -34,9 +52,9 @@ Imports:
     shapr,
     DiagrammeR,
     ggbeeswarm,
-    ggplot2
-Suggests: 
-    testthat (>= 3.0.0),
+    ggplot2,
+    stringr,
+    sensitivity,
     brulee,
     ranger,
     kernlab,
@@ -45,6 +63,8 @@ Suggests:
     rlang,
     tibble,
     tidyverse
+Suggests: 
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
 URL: https://github.com/JMartinezGarcia/TidyML
 BugReports: https://github.com/JMartinezGarcia/TidyML/issues

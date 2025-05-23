@@ -2,7 +2,7 @@
 % Please edit documentation in R/results.R
 \name{show_results}
 \alias{show_results}
-\title{Showcase Summary Results and Plots}
+\title{04 Showcase Summary Results and Plots}
 \usage{
 show_results(
   analysis_object,
@@ -51,8 +51,43 @@ Residuals vs Predictions Plot, Predictions vs Observed Plot and Residuals Distri
 A string with the name of the data_set: "train", "validation", "test" (default) or "all".}
 }
 \value{
-Updated analysis_object
+An updated analysis_object containing the generated predictions, summary statistics, and any
+visualizations or diagnostic outputs selected by the user. This object reflects the results of model
+evaluation and can be further used for reporting, interpretation, or additional analyses within the
+ML tidyML workflow.
 }
 \description{
-Showcase Summary Results and Plots
+The \strong{show_results()} function is a central component of the ML workflow established by the package,
+following the stages of data preprocessing, model construction (build_model), and hyperparameter optimization
+(fine_tuning). After a model has been trained and tuned, show_results() enables users to generate comprehensive
+\strong{visualizations and summaries of model performance}, including metrics tables, ROC and PR curves, gain and lift
+curves, confusion matrices, calibration plots, and regression diagnostics, tailored to both regression and
+classification tasks. This function provides a thorough and interpretable assessment of the fitted model,
+supporting informed evaluation and communication of results. Importantly, show_results() is not the final step
+of the workflow, as further analyses such as sensitivity analysis can be performed subsequently to deepen the
+understanding of model robustness and behavior (Molnar, 2025).
+}
+\examples{
+# Example 1: Classification Task
+# Display summary metrics, ROC curve, and confusion matrix for a classification model with test partition
+
+tidy_object<-show_results(tidy_object,
+                          summary = TRUE,
+                          roc_curve = TRUE,
+                          confusion_matrix = TRUE,
+                          new_data = "test")
+
+# Example 2: Regression Task
+# Display summary metrics, scatter plot of predictions, and residuals distribution for a regression model
+with train partition
+
+tidy_object<-show_results(tidy_object,
+                          summary = TRUE,
+                          scatter_predictions = TRUE,
+                          residuals_dist = TRUE,
+                          new_data = "train")
+}
+\references{
+Molnar, C. (2025). \emph{Interpretable Machine Learning: A Guide for Making Black Box Models Explainable (3rd. ed.)}.
+cristophm.github.io/interpretable-ml-book/
 }

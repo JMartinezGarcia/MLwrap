@@ -99,7 +99,8 @@ graph_nn <- function(model){
     graph_code,
     "  Hyperparams [shape=note, style=filled, fillcolor=lightyellow, fontsize=30, ",
     "label=\"", hyperparams, "\"];\n",
-    "  Hyperparams -> I1 [style=dashed, arrowhead=none];\n"
+    "  Hyperparams -> I1 [style=invis, arrowhead=none];\n",
+    "  {rank=same; Hyperparams; I1;}\n"
   )
 
   # ----- Close Graph -----

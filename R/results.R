@@ -2,7 +2,17 @@
 #         get_results                                #
 ######################################################
 
-#' Showcase Summary Results and Plots
+#' 04 Showcase Summary Results and Plots
+#'
+#' The **show_results()** function is a central component of the ML workflow established by the package,
+#' following the stages of data preprocessing, model construction (build_model), and hyperparameter optimization
+#' (fine_tuning). After a model has been trained and tuned, show_results() enables users to generate comprehensive
+#' **visualizations and summaries of model performance**, including metrics tables, ROC and PR curves, gain and lift
+#' curves, confusion matrices, calibration plots, and regression diagnostics, tailored to both regression and
+#' classification tasks. This function provides a thorough and interpretable assessment of the fitted model,
+#' supporting informed evaluation and communication of results. Importantly, show_results() is not the final step
+#' of the workflow, as further analyses such as sensitivity analysis can be performed subsequently to deepen the
+#' understanding of model robustness and behavior (Molnar, 2025).
 #'
 #' @param analysis_object analysis_object created from fine_tuning function.
 #' @param summary Whether to plot summary results table. Boolean (FALSE by default).
@@ -20,7 +30,32 @@
 #' @param new_data Data to be used for Confusion Matrix, Reliability Plot, Distribution by Class Plot,
 #'        Residuals vs Predictions Plot, Predictions vs Observed Plot and Residuals Distribution Plot.
 #'        A string with the name of the data_set: "train", "validation", "test" (default) or "all".
-#' @returns Updated analysis_object
+#' @returns An updated analysis_object containing the generated predictions, summary statistics, and any
+#' visualizations or diagnostic outputs selected by the user. This object reflects the results of model
+#' evaluation and can be further used for reporting, interpretation, or additional analyses within the
+#' ML tidyML workflow.
+#' @examples
+#' # Example 1: Classification Task
+#' # Display summary metrics, ROC curve, and confusion matrix for a classification model with test partition
+#'
+#' tidy_object<-show_results(tidy_object,
+#'                           summary = TRUE,
+#'                           roc_curve = TRUE,
+#'                           confusion_matrix = TRUE,
+#'                           new_data = "test")
+#'
+#' # Example 2: Regression Task
+#' # Display summary metrics, scatter plot of predictions, and residuals distribution for a regression model
+#' with train partition
+#'
+#' tidy_object<-show_results(tidy_object,
+#'                           summary = TRUE,
+#'                           scatter_predictions = TRUE,
+#'                           residuals_dist = TRUE,
+#'                           new_data = "train")
+#' @references
+#' Molnar, C. (2025). *Interpretable Machine Learning: A Guide for Making Black Box Models Explainable (3rd. ed.)*.
+#' cristophm.github.io/interpretable-ml-book/
 #' @export
 show_results <- function(analysis_object,
                         summary = FALSE, roc_curve = FALSE, pr_curve = FALSE,
@@ -47,9 +82,14 @@ show_results <- function(analysis_object,
 
   analysis_object$modify("fit_summary",summary_results)
 
-  print("############# Showing Results")
+  print("############# Showing Results #############")
 
   if (summary == T){
+
+    print("###### Summary ######")
+    print(summary_results)
+    print("####################")
+    cat("\n")
 
     # Multiclass classification case
 
@@ -121,7 +161,7 @@ show_results <- function(analysis_object,
     } else {
 
       p <- predictions %>%
-           plot_pr_curve_multlicass(new_data = "all") %>%
+           plot_pr_curve_multiclass(new_data = "all") %>%
            autoplot() +
            ggplot2::labs(title = "Precision Recall Curve")
 
@@ -242,10 +282,21 @@ show_results <- function(analysis_object,
 
   if (confusion_matrix == T){
 
+    # y = all.vars(analysis_object$formula)[1]
+    # y_levels <- levels(analysis_object$full_data[[y]])
+    #
+    # print(y_levels)
+    #
+    #
+    # pred_test <- pred_test %>%
+    #   mutate(
+    #     y = factor(y, levels = y_levels)
+    #   )
 
-     p <- pred_test %>%
-          plot_conf_mat(new_data = new_data) %>%
-          autoplot(type = "heatmap") +
+     cm <- pred_test %>%
+          plot_conf_mat(new_data = new_data)
+
+    p <- cm %>% autoplot(type = "heatmap") +
           ggplot2::labs(title = "Confusion Matrix")
 
      plot_ob = analysis_object$plots

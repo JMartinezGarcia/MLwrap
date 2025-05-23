@@ -1,4 +1,15 @@
-#' Fine Tune ML Model
+#' 03 Fine Tune ML Model
+#'
+#' The **fine_tuning()** function performs automated hyperparameter optimization for ML workflows encapsulated
+#' within an AnalysisObject. It supports different tuning strategies, such as **Bayesian Optimization** and
+#' **Grid Search Cross-Validation**, allowing the user to specify evaluation metrics and whether to visualize
+#' tuning results. The function first validates arguments and updates the workflow and metric settings within
+#' the AnalysisObject. If hyperparameter tuning is enabled, it executes the selected tuning procedure,
+#' identifies the best hyperparameter configuration based on the specified metrics, and updates the workflow
+#' accordingly. For neural network models, it also manages the creation and integration of new model instances
+#' and provides additional visualization of training dynamics. Finally, the function fits the optimized model to
+#' the training data and updates the AnalysisObject, ensuring a reproducible and efficient model selection process
+#' (Bartz et al., 2023).
 #'
 #' @param analysis_object analysis_object created from build_model function.
 #' @param tuner Name of the Hyperparameter Tuner. A string of the tuner name: "Bayesian Optimization" or
@@ -6,7 +17,6 @@
 #' @param metrics Metric used for Model Selection. A string of the name of metric (see Metrics).
 #' @param plot_results Whether to plot the tuning results. Boolean TRUE or FALSE (default).
 #' @param verbose Whether to show tuning process. Boolean TRUE or FALSE (default).
-#' @returns Updated analysis_object
 #'
 #' @section Tuners:
 #'
@@ -53,8 +63,31 @@
 #' * gain_capture
 #' * brier_class
 #' * roc_aunp
+#' @returns An updated analysis_object containing the fitted model with optimized hyperparameters,
+#' the tuning results, and all relevant workflow modifications. This object includes the final trained
+#' model, the best hyperparameter configuration, tuning diagnostics, and, if applicable, plots of the
+#' tuning process. It can be used for further model evaluation, prediction, or downstream analysis within
+#' the package workflow.
+#' @examples
+#' # Example 1: Fine tuning function applied to a regression task
 #'
+#' tidy_object <- fine_tuning(tidy_object,
+#'                              tuner = "Bayesian Optimization",
+#'                              metrics = c("rmse", "mape"),
+#'                              plot_results = TRUE
+#'                              )
 #'
+#' # Example 2: Fine tuning function applied to a classification task
+#'
+#' tidy_object <- fine_tuning(tidy_object,
+#'                              tuner = "Grid Search CV",
+#'                              metrics = c("roc_auc", "f_meas"),
+#'                              plot_results = TRUE
+#'                              )
+#' @references
+#' Bartz, E., Bartz-Beielstein, T., Zaefferer, M., & Mersmann, O. (2023). *Hyperparameter tuner
+#' for Machine and Deep Learning with R. A Practical Guide*. Springer, Singapore.
+#' https://doi.org/10.1007/978-981-19-5170-1
 #' @export
 fine_tuning <- function(analysis_object, tuner, metrics, plot_results = F, verbose = FALSE){
 

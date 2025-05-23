@@ -171,7 +171,7 @@ check_args_sensitivity_analysis <- function(analysis_object, methods, metric){
 
   ## Check methods
 
-  check_args_list(arg = methods, arg_list = c("PFI", "SHAP", "Integrated Gradients", "Olden"),
+  check_args_list(arg = methods, arg_list = c("PFI", "SHAP", "Integrated Gradients", "Olden" ,"Sobol_Jansen"),
                   arg_name = "methods", null_valid = F)
 
   if (!(analysis_object$model_name == "Neural Network") && (any(c("Integrated Gradients","Olden") %in% methods))){
@@ -186,6 +186,20 @@ check_args_sensitivity_analysis <- function(analysis_object, methods, metric){
         stop("SHAP method only implemented for linear kernel SVM!")
 
       }
+  }
+
+  features_names <- all.vars(analysis_object$formula)[-1]
+
+  if ((!all(sapply(analysis_object$train_data[features_names], is.numeric))) && ("Sobol_Jansen" %in% methods)) {
+
+    stop("Sobol_Jansen requires all features to be numeric!")
+
+  }
+
+  if (("Sobol_Jansen" %in% methods) && (analysis_object$outcome_levels > 2)){
+
+    stop("Sobol_Jansen is not available for multiclass classification!")
+
   }
 
   ## Check metric

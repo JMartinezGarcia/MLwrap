@@ -166,7 +166,7 @@ plot_dist_probs_binary <- function(predictions, new_data = "test"){
 
   predicted = paste0(".pred_", positive_class)
 
-  predictions %>%
+  p <- predictions %>%
     dplyr::filter(data_set == new_data) %>%
     dplyr::group_by(y) %>%
     ggplot2::ggplot(ggplot2::aes_string(x = predicted, fill = "y")) +
@@ -177,6 +177,8 @@ plot_dist_probs_binary <- function(predictions, new_data = "test"){
                   fill = "Class") +
     ggplot2::theme_minimal()
 
+  return(p)
+
 }
 
 plot_calibration_curve_binary <- function(predictions, new_data = "test"){
@@ -185,10 +187,10 @@ plot_calibration_curve_binary <- function(predictions, new_data = "test"){
 
   predicted = sym(paste0(".pred_", positive_class))
 
-  predictions %>%
+  p <- predictions %>%
     dplyr::filter(data_set == new_data) %>%
     dplyr::mutate(y = sapply(y, function(x) if(x == positive_class) 1 else 0)) %>%
-    dplyr::mutate(pred_bin = cut(predictions[[predicted]],
+    dplyr::mutate(pred_bin = base::cut(predictions[[predicted]],
                                  breaks = seq(0, 1, by = 0.1), include.lowest = TRUE)) %>%  # Crear bins de probabilidad
     dplyr::group_by(pred_bin) %>%
     dplyr::summarise(
@@ -201,12 +203,19 @@ plot_calibration_curve_binary <- function(predictions, new_data = "test"){
     ggplot2::labs(title = "Reliability Plot", x = "Predicted Probability", y = "Observed Probability") +
     ggplot2::theme_minimal()
 
+  return(p)
+
 }
 
 
 plot_conf_mat <- function(predictions, new_data = "test"){
 
   confusion_matrix = yardstick::conf_mat(predictions, truth = y, estimate = .pred_class)
+
+  print("###### Confusion Matrix ######")
+  print(confusion_matrix)
+  print("####################")
+  cat("\n")
 
   return(confusion_matrix)
 

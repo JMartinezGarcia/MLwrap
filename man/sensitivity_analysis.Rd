@@ -2,7 +2,7 @@
 % Please edit documentation in R/InterpretableML.R
 \name{sensitivity_analysis}
 \alias{sensitivity_analysis}
-\title{Perform Sensitivity Analysis and Interpretable ML methods}
+\title{05 Perform Sensitivity Analysis and Interpretable ML methods}
 \usage{
 sensitivity_analysis(analysis_object, methods = c("PFI"), metric = NULL)
 }
@@ -10,15 +10,76 @@ sensitivity_analysis(analysis_object, methods = c("PFI"), metric = NULL)
 \item{analysis_object}{analysis_object created from fine_tuning function.}
 
 \item{methods}{Method to be used. A string of the method name: "PFI" (Permutation Feature Importance),
-"SHAP" (SHapley Additive exPlanations), "Integrated Gradients" (Neural Network only) or
-"Olden" (Neural Network only).}
+"SHAP" (SHapley Additive exPlanations), "Integrated Gradients" (Neural Network only), "Olden"
+(Neural Network only).}
 
 \item{metric}{Metric used for "PFI" method (Permutation Feature Importance).
 A string of the name of metric (see Metrics).}
 }
 \value{
-Updated analysis_object
+An updated \code{analysis_object} with the results of the sensitivity analysis stored in the
+\code{sensitivity_analysis} slot as a list. Each method's results are accessible under named elements
+(e.g., \code{sensitivity_analysis[["PFI"]]}). Additionally, the function produces various plots (bar plots,
+box plots, beeswarm plots) for visual interpretation of feature importance, tailored to the task type
+and number of outcome levels, completing the TidyML workflow with actionable model insights.
 }
 \description{
-Perform Sensitivity Analysis and Interpretable ML methods
+As the final step in the TidyML package workflow, this function performs Sensitivity Analysis (SA) on a fitted
+ML model stored in an \code{analysis_object} (in the examples, e.g., tidy_object). It evaluates the importance
+of features using various methods such as Permutation Feature Importance (PFI), SHAP (SHapley Additive
+exPlanations), Integrated Gradients, Olden sensitivity analysis, and Sobol indices. The function generates
+numerical results and visualizations (e.g., bar plots, box plots, beeswarm plots) to help interpret the impact
+of each feature on the model's predictions for both regression and classification tasks, providing critical
+insights after model training and evaluation.
+}
+\details{
+Following the steps of data preprocessing, model fitting, and performance assessment in the TidyML pipeline,
+\emph{sensitivity_analysis()} processes the training and test data using the preprocessing recipe stored in the
+analysis_object, applies the specified SA methods, and stores the results within the analysis_object. It
+supports different metrics for evaluation and handles multi-class classification by producing class-specific
+analyses and plots, ensuring a comprehensive understanding of model behavior (Iooss & Lemaître, 2015).
+
+As the concluding phase of the TidyML workflow—after data preparation, model training, and evaluation—this
+function enables users to interpret their models by quantifying and visualizing feature importance. It first
+validates the input arguments using \code{check_args_sensitivity_analysis()}. Then, it preprocesses the training
+and test data using the recipe stored in \code{analysis_object$transformer}. Depending on the specified \code{methods},
+it calculates feature importance using:
+\itemize{
+\item \strong{PFI (Permutation Feature Importance):} Assesses importance by shuffling feature values and measuring
+the change in model performance (using the specified or default
+\code{metric}).
+\item \strong{SHAP (SHapley Additive exPlanations):} Computes SHAP values to explain individual predictions by
+attributing contributions to each feature.
+\item \strong{Integrated Gradients:} Evaluates feature importance by integrating gradients of the model's output
+with respect to input features.
+\item \strong{Olden:} Calculates sensitivity based on connection weights, typically for neural network models, to
+determine feature contributions.
+\item \strong{Sobol_Jansen:} Performs variance-based global sensitivity analysis by decomposing the model output variance
+into contributions from individual features and their interactions, quantifying how much each
+feature and combination of features accounts for the variability in predictions. Only for
+continuous outcomes, not for categorical. Specifically, estimates first-order and total-order
+Sobol' sensitivity indices simultaneously using the Jansen (1999) Monte Carlo estimator.
+}
+
+For classification tasks with more than two outcome levels, the function generates separate results and plots
+for each class. Visualizations include bar plots for importance metrics, box plots for distribution of values,
+and beeswarm plots for detailed feature impact across observations. All results are stored in the \code{analysis_object}
+under the \code{sensitivity_analysis} slot, finalizing the TidyML pipeline with a deep understanding of model drivers.
+}
+\examples{
+# Example 1: Using SHAP
+
+tidy_object <- sensitivity_analysis(analysis_object, methods = "SHAP")
+
+# Example 2: using PFI
+
+tidy_object <- sensitivity_analysis(analysis_object, methods = "PFI", metric = "mape")
+}
+\references{
+Iooss, B., & Lemaître, P. (2015). A review on global sensitivity analysis methods. In C. Meloni & G. Dellino
+(Eds.), \emph{Uncertainty Management in Simulation-Optimization of Complex Systems: Algorithms and Applications}
+(pp. 101-122). Springer. https://doi.org/10.1007/978-1-4899-7547-8_5
+
+Jansen, M. J. W. (1999). Analysis of variance designs for model output. Computer Physics Communications,
+117(1-2), 35–43. https://doi.org/10.1016/S0010-4655(98)00154-4
 }

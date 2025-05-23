@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_creation.R
 \name{build_model}
 \alias{build_model}
-\title{Create ML Model}
+\title{02 Create ML Model}
 \usage{
 build_model(analysis_object, model_name, hyperparameters = NULL)
 }
@@ -16,10 +16,24 @@ build_model(analysis_object, model_name, hyperparameters = NULL)
 and its value or range of values.}
 }
 \value{
-Updated analysis_object
+An updated analysis_object containing the fitted machine learning model, the model name,
+the specified hyperparameters, and the current processing stage. This enriched object retains all
+previously stored information from the preprocessing step and incorporates the results of the
+model-building process, ensuring a coherent and reproducible workflow for subsequent training,
+evaluation, or prediction tasks.
 }
 \description{
-Create ML Model
+The function \strong{build_model()} is designed to construct and attach a ML model to an existing
+analysis object,which contains the preprocessed dataset generated in the previous step using the
+preprocessing() function. Based on the specified model type and optional hyperparameters, it supports
+several popular algorithms—including \strong{Neural Network}, \strong{XGBOOST}, \strong{Random Forest}, and \strong{SVM}
+(James et al., 2021)— by initializing the corresponding hyperparameter class, updating the analysis object
+with these settings, and invoking the appropriate model creation function. For SVM models, it further
+distinguishes between kernel types (rbf, polynomial, linear) to ensure the correct implementation. The
+function also updates the analysis object with the model name, the fitted model, and the current processing
+stage before returning the enriched object, thereby streamlining the workflow for subsequent training,
+evaluation, or prediction steps. This modular approach facilitates flexible and reproducible ML pipelines
+by encapsulating both the model and its configuration within a single structured object.
 }
 \section{Hyperparameters}{
 
@@ -88,3 +102,35 @@ A single value, a vector with range values \code{c(min_val, max_val)} or NULL fo
 }
 }
 
+\examples{
+# Example 1: Neural Network for regression task
+
+tidy_object <- build_model(
+               analysis_object = tidy_object,
+               model_name = "Neural Network",
+               hyperparameters = list(
+                                 hidden_units = 10,
+                                 activation = "relu",
+                                 learn_rate = 0.01
+                                 )
+                           )
+# It is safe to reuse the same object name (e.g., tidy_object, or whatever) step by step,
+as all previous results and information are retained within the updated analysis object.
+
+# Example 2: SVM for classification task
+
+tidy_object <- build_model(
+               analysis_object = tidy_object,
+               model_name = "SVM",
+               hyperparameters = list(
+                                 type = "rbf",
+                                 cost = 1,
+                                 margin = 0.1,
+                                 rbf_sigma = 0.05
+                                 )
+                           )
+}
+\references{
+James, G., Witten, D., Hastie, T., & Tibshirani, R. (2021). \emph{An Introduction to Statistical Learning:
+with Applications in R (2nd ed.)}. Springer. https://doi.org/10.1007/978-1-0716-1418-1
+}
