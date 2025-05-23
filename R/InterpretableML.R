@@ -410,7 +410,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       for (i in 1:length(y_classes)){
 
-        net_importance = importance[,i]
+        net_importance = results[,i]
 
         title = paste0("Olden Feature Importance for class ", y_classes[i])
 
