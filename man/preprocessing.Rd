@@ -2,7 +2,7 @@
 % Please edit documentation in R/preprocessing.R
 \name{preprocessing}
 \alias{preprocessing}
-\title{01 Preprocessing Data Matrix}
+\title{Preprocessing Data Matrix}
 \usage{
 preprocessing(
   df,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_creation.R
 \name{build_model}
 \alias{build_model}
-\title{02 Create ML Model}
+\title{Create ML Model}
 \usage{
 build_model(analysis_object, model_name, hyperparameters = NULL)
 }

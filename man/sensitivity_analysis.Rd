@@ -2,7 +2,7 @@
 % Please edit documentation in R/InterpretableML.R
 \name{sensitivity_analysis}
 \alias{sensitivity_analysis}
-\title{05 Perform Sensitivity Analysis and Interpretable ML methods}
+\title{Perform Sensitivity Analysis and Interpretable ML methods}
 \usage{
 sensitivity_analysis(analysis_object, methods = c("PFI"), metric = NULL)
 }

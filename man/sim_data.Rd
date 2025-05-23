@@ -3,7 +3,7 @@
 \docType{data}
 \name{sim_data}
 \alias{sim_data}
-\title{00 sim_data}
+\title{sim_data}
 \format{
 A data frame with 1,000 rows and 10 columns:
 \describe{

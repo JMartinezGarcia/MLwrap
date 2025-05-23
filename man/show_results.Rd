@@ -2,7 +2,7 @@
 % Please edit documentation in R/results.R
 \name{show_results}
 \alias{show_results}
-\title{04 Showcase Summary Results and Plots}
+\title{Showcase Summary Results and Plots}
 \usage{
 show_results(
   analysis_object,

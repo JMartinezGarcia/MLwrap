@@ -2,7 +2,7 @@
 % Please edit documentation in R/model_tuning.R
 \name{fine_tuning}
 \alias{fine_tuning}
-\title{03 Fine Tune ML Model}
+\title{Fine Tune ML Model}
 \usage{
 fine_tuning(analysis_object, tuner, metrics, plot_results = F, verbose = FALSE)
 }
