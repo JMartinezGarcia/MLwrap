@@ -39,7 +39,7 @@ one_hot_predictors <- function(rec, encode_cat_vars, one_hot = T){
 
 }
 
-#' 01 Preprocessing Data Matrix
+#' Preprocessing Data Matrix
 #'
 #' The **preprocessing()** function streamlines data preparation for regression and classification tasks by
 #' integrating variable selection, type conversion, normalization, and categorical encoding into a single

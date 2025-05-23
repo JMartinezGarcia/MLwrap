@@ -1,5 +1,5 @@
 
-#' 02 Create ML Model
+#' Create ML Model
 #'
 #' The function **build_model()** is designed to construct and attach a ML model to an existing
 #' analysis object,which contains the preprocessed dataset generated in the previous step using the

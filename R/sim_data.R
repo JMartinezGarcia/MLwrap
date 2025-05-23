@@ -1,4 +1,4 @@
-#' 00 sim_data
+#' sim_data
 #'
 #' This dataset, included in the tidyML package, is a simulated dataset (Martínez et al., 2025) designed to capture
 #' relationships among psychological and demographic variables influencing psychological wellbeing, the primary

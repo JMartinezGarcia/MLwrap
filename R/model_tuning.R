@@ -1,4 +1,4 @@
-#' 03 Fine Tune ML Model
+#' Fine Tune ML Model
 #'
 #' The **fine_tuning()** function performs automated hyperparameter optimization for ML workflows encapsulated
 #' within an AnalysisObject. It supports different tuning strategies, such as **Bayesian Optimization** and

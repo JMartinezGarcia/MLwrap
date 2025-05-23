@@ -2,7 +2,7 @@
 #         get_results                                #
 ######################################################
 
-#' 04 Showcase Summary Results and Plots
+#' Showcase Summary Results and Plots
 #'
 #' The **show_results()** function is a central component of the ML workflow established by the package,
 #' following the stages of data preprocessing, model construction (build_model), and hyperparameter optimization

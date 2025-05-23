@@ -2,7 +2,7 @@
 #       Interpretable ML
 ###########################
 
-#' 05 Perform Sensitivity Analysis and Interpretable ML methods
+#' Perform Sensitivity Analysis and Interpretable ML methods
 #'
 #' As the final step in the TidyML package workflow, this function performs Sensitivity Analysis (SA) on a fitted
 #' ML model stored in an `analysis_object` (in the examples, e.g., tidy_object). It evaluates the importance
