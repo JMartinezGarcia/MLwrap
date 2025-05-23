@@ -35,7 +35,7 @@ sobol_calc <- function(model, train, task, feature_names){
 }
 
 sobol_plot <- function(sobol_result) {
-  # Extraer índices y errores estándar
+  # Extraer indices y errores estandar
   first_order <- sobol_result$S
   total_order <- sobol_result$T
 
@@ -60,7 +60,7 @@ sobol_plot <- function(sobol_result) {
   # Etiquetas con valor ± error (ambos con 3 cifras significativas)
   df_long$label <- paste0(signif(df_long$value, 3), " ± ", signif(df_long$se, 1))
 
-  # Crear gráfico
+  # Crear grafico
   p <- ggplot2::ggplot(df_long, ggplot2::aes(x = value, y = variable, fill = type)) +
     ggplot2::geom_bar(stat = "identity",
                       position = ggplot2::position_dodge(width = 0.7),

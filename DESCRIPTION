@@ -12,7 +12,7 @@ Authors@R: c(person(given   = "Javier", familiy = "Martínez García",
              person(given = "Albert", familiy = "Sesé",
                     role  = "ctb", 
                     email = "albert.sese@uib.es",
-                    comment = c(ORCID = "0000-0003-3771-1749")),
+                    comment = c(ORCID = "0000-0003-3771-1749"))
 Description: TidyML is a minimalistic library specifically designed to make the estimation of Machine
              Learning (ML) techniques as easy and accessible as possible, particularly within the framework
              of the Knowledge Discovery in Databases (KDD) process in data mining. The package provides

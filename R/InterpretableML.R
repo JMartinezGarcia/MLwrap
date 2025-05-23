@@ -574,7 +574,7 @@ pred_bin_class <- function(object, newdata){
 
 summarize_importance <- function(importance_matrix) {
 
-  # Calcular media y error estándar para cada variable
+  # Calcular media y error estandar para cada variable
   mean_importance <- colMeans(importance_matrix, na.rm = TRUE)
   std_error <- apply(importance_matrix, 2, function(x) sd(x, na.rm = TRUE) / sqrt(length(x)))
 
