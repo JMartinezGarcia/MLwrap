@@ -38,6 +38,33 @@
 #' # Example 1: Classification Task
 #' # Display summary metrics, ROC curve, and confusion matrix for a classification model with test partition
 #'
+#' library(TidyML)
+#'
+#' data(sim_data) # sim_data is a simulated dataset wtih psychological variables
+#'
+#' tidy_object <- preprocessing(
+#'                              df = sim_data,
+#'                              formula = psych_well_bin ~ depression + emot_intel + resilience + life_sat,
+#'                              task = "classification"
+#'                              )
+#'
+#' tidy_object <- build_model(
+#'                analysis_object = tidy_object,
+#'                model_name = "SVM",
+#'                hyperparameters = list(
+#'                                  type = "rbf",
+#'                                  cost = 1,
+#'                                  margin = 0.1,
+#'                                  rbf_sigma = 0.05
+#'                                  )
+#'                            )
+#'
+#' tidy_object <- fine_tuning(tidy_object,
+#'                              tuner = "Grid Search CV",
+#'                              metrics = c("roc_auc", "f_meas"),
+#'                              plot_results = TRUE
+#'                              )
+#'
 #' tidy_object<-show_results(tidy_object,
 #'                           summary = TRUE,
 #'                           roc_curve = TRUE,
@@ -46,7 +73,31 @@
 #'
 #' # Example 2: Regression Task
 #' # Display summary metrics, scatter plot of predictions, and residuals distribution for a regression model
-#' with train partition
+#' # with train partition
+#'
+#' data(sim_data) # sim_data is a simulated dataset wtih psychological variables
+#'
+#' tidy_object <- preprocessing(
+#'                              df = sim_data,
+#'                              formula = psych_well ~ depression + emot_intel + resilience + life_sat,
+#'                              task = "regression"
+#'                              )
+#'
+#' tidy_object <- build_model(
+#'                analysis_object = tidy_object,
+#'                model_name = "Neural Network",
+#'                hyperparameters = list(
+#'                                  hidden_units = 10,
+#'                                  activation = "relu",
+#'                                  learn_rate = 0.01
+#'                                  )
+#'                            )
+#'
+#' tidy_object <- fine_tuning(tidy_object,
+#'                              tuner = "Bayesian Optimization",
+#'                              metrics = c("rmse", "mape"),
+#'                              plot_results = TRUE
+#'                              )
 #'
 #' tidy_object<-show_results(tidy_object,
 #'                           summary = TRUE,
@@ -127,7 +178,7 @@ show_results <- function(analysis_object,
 
       p <- predictions %>%
         plot_roc_curve_binary(new_data = "all") %>%
-        autoplot() +
+        ggplot2::autoplot() +
         ggplot2::labs(title = "ROC Curve")
 
 
@@ -135,7 +186,7 @@ show_results <- function(analysis_object,
 
       p <-  predictions %>%
             plot_roc_curve_multiclass(new_data = "all") %>%
-            autoplot() +
+            ggplot2::autoplot() +
             ggplot2::labs(title = "ROC Curve")
 
     }
@@ -156,7 +207,7 @@ show_results <- function(analysis_object,
 
     p <- predictions %>%
          plot_pr_curve_binary(new_data = "all") %>%
-         autoplot() +
+         ggplot2::autoplot() +
          ggplot2::labs(title = "Precision Recall Curve")
 
 
@@ -164,7 +215,7 @@ show_results <- function(analysis_object,
 
       p <- predictions %>%
            plot_pr_curve_multiclass(new_data = "all") %>%
-           autoplot() +
+           ggplot2::autoplot() +
            ggplot2::labs(title = "Precision Recall Curve")
 
 
@@ -187,7 +238,7 @@ show_results <- function(analysis_object,
 
      p <- predictions %>%
           plot_gain_curve_binary() %>%
-          autoplot() +
+          ggplot2::autoplot() +
           ggplot2::labs(title = "Gain Curve")
 
 
@@ -195,7 +246,7 @@ show_results <- function(analysis_object,
 
     p <-predictions %>%
         plot_gain_curve_multiclass() %>%
-        autoplot() +
+        ggplot2::autoplot() +
         ggplot2::labs(title = "Gain Curve")
 
     }
@@ -216,7 +267,7 @@ show_results <- function(analysis_object,
 
       p <- predictions %>%
            plot_lift_curve_binary(new_data = "all") %>%
-           autoplot() +
+           ggplot2::autoplot() +
            ggplot2::labs(title = "Lift Curve")
 
 
@@ -225,7 +276,7 @@ show_results <- function(analysis_object,
 
       p <- predictions %>%
            plot_lift_curve_multiclass(new_data = "all") %>%
-           autoplot() +
+           ggplot2::autoplot() +
            ggplot2::labs(title = "Lift Curve")
 
 
@@ -298,7 +349,7 @@ show_results <- function(analysis_object,
      cm <- pred_test %>%
           plot_conf_mat(new_data = new_data)
 
-    p <- cm %>% autoplot(type = "heatmap") +
+    p <- cm %>% ggplot2::autoplot(type = "heatmap") +
           ggplot2::labs(title = "Confusion Matrix")
 
      plot_ob = analysis_object$plots

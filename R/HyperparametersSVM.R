@@ -26,10 +26,6 @@ HyperparamsSVM <- R6::R6Class("Neural Network Hyperparameters",
 
                                  if (!is.null(hyperparams)){
 
-                                   if (is.null(hyperparams$type)){stop("Kernel must be specified with hyperparameter 'type' with values:
-                                                                        'linear', 'rbf', 'poly'
-                                                                       ")}
-
                                    if (hyperparams$type == "linear"){
 
                                       if (all(names(hyperparams) %in% valid_hparams_linear)){

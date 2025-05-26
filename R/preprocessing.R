@@ -70,7 +70,9 @@ one_hot_predictors <- function(rec, encode_cat_vars, one_hot = T){
 #' @examples
 #' # Example 1: Dataset with preformatted categorical variables
 #' # In this case, internal options for variable types are not needed since categorical features
-#' are already formatted as factors.
+#' # are already formatted as factors.
+#'
+#' library(TidyML)
 #'
 #' data(sim_data) # sim_data is a simulated dataset wtih psychological variables
 #'
@@ -81,13 +83,13 @@ one_hot_predictors <- function(rec, encode_cat_vars, one_hot = T){
 #'                              )
 #'
 #' # Example 2: Dataset where neither the outcome nor the categorical features are formatted as factors
-#' and all categorical variables are specified to be formatted as factors
+#' # and all categorical variables are specified to be formatted as factors
 #'
 #' tidy_object <- preprocessing(
-#'                              df = raw_data,
-#'                              formula = outcome ~ gender + group + age + score,
+#'                              df = sim_data,
+#'                              formula = psych_well_bin ~ gender + depression + age + life_sat,
 #'                              task = "classification",
-#'                              cat_vars = c("outcome", "gender", "group")
+#'                              cat_vars = c("gender")
 #'                              )
 #' @references
 #' Kuhn, M., & Johnson, K. (2019). *Feature Engineering and Selection: A Practical Approach

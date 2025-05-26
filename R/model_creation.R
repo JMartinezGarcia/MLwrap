@@ -99,6 +99,16 @@
 #' @examples
 #' # Example 1: Neural Network for regression task
 #'
+#' library(TidyML)
+#'
+#' data(sim_data) # sim_data is a simulated dataset wtih psychological variables
+#'
+#' tidy_object <- preprocessing(
+#'                              df = sim_data,
+#'                              formula = psych_well ~ depression + emot_intel + resilience + life_sat,
+#'                              task = "regression"
+#'                              )
+#'
 #' tidy_object <- build_model(
 #'                analysis_object = tidy_object,
 #'                model_name = "Neural Network",
@@ -109,9 +119,17 @@
 #'                                  )
 #'                            )
 #' # It is safe to reuse the same object name (e.g., tidy_object, or whatever) step by step,
-#' as all previous results and information are retained within the updated analysis object.
+#' # as all previous results and information are retained within the updated analysis object.
 #'
 #' # Example 2: SVM for classification task
+#'
+#' data(sim_data) # sim_data is a simulated dataset wtih psychological variables
+#'
+#' tidy_object <- preprocessing(
+#'                              df = sim_data,
+#'                              formula = psych_well_bin ~ depression + emot_intel + resilience + life_sat,
+#'                              task = "classification"
+#'                              )
 #'
 #' tidy_object <- build_model(
 #'                analysis_object = tidy_object,
@@ -163,6 +181,8 @@ build_model <- function(analysis_object, model_name, hyperparameters = NULL){
 
 
                     } else if (model_name == "SVM"){
+
+                      if (is.null(hyperparameters$type)){hyperparameters$type = "linear"}
 
                       type = hyperparameters$type
 

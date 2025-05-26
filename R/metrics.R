@@ -57,7 +57,7 @@ create_metric_function <- function(metric_name, metric_info) {
          \"{metric_name}\",
          yardstick::{func_name}_vec,
          data = data,
-         truth = !!enquo(truth),
+         truth = !!dplyr::enquo(truth),
          estimator = estimator,
          na_rm = na_rm,
          ...
@@ -75,8 +75,8 @@ create_metric_function <- function(metric_name, metric_info) {
          \"{metric_name}\",
          yardstick::{func_name}_vec,
          data = data,
-         truth = !!enquo(truth),
-         estimate = !!enquo(estimate),
+         truth = !!dplyr::enquo(truth),
+         estimate = !!dplyr::enquo(estimate),
          na_rm = na_rm,
          ...
        )

@@ -37,7 +37,7 @@ sobol_calc <- function(model, train, task, feature_names){
 }
 
 sobol_plot <- function(sobol_result) {
-  # Extraer indices y errores estandar
+
   first_order <- sobol_result$S
   total_order <- sobol_result$T
 
@@ -49,20 +49,18 @@ sobol_plot <- function(sobol_result) {
     ST_se = total_order$`std. error`
   )
 
-  # Ordenar por ST de mayor a menor
+  # Order
   df_plot <- df_plot[order(df_plot$ST, decreasing = TRUE), ]
   df_plot$variable <- factor(df_plot$variable, levels = df_plot$variable)
 
-  # Pivot a formato largo
+  # Pivot
   df_long <- df_plot %>%
     tidyr::pivot_longer(cols = c(S1, ST), names_to = "type", values_to = "value")
 
   df_long$se <- c(df_plot$S1_se, df_plot$ST_se)
 
-  # Etiquetas con valor ± error (ambos con 3 cifras significativas)
-  df_long$label <- paste0(signif(df_long$value, 3), " ± ", signif(df_long$se, 1))
+  df_long$label <- paste0(signif(df_long$value, 3), " +/- ", signif(df_long$se, 1))
 
-  # Crear grafico
   p <- ggplot2::ggplot(df_long, ggplot2::aes(x = value, y = variable, fill = type)) +
     ggplot2::geom_bar(stat = "identity",
                       position = ggplot2::position_dodge(width = 0.7),

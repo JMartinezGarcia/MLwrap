@@ -14,7 +14,8 @@
 #' @param analysis_object analysis_object created from build_model function.
 #' @param tuner Name of the Hyperparameter Tuner. A string of the tuner name: "Bayesian Optimization" or
 #'     "Grid Search CV".
-#' @param metrics Metric used for Model Selection. A string of the name of metric (see Metrics).
+#' @param metrics Metric used for Model Selection. A string of the name of metric (see Metrics). By default
+#'    either "rmse" (regression) or "roc_auc" (classification).
 #' @param plot_results Whether to plot the tuning results. Boolean TRUE or FALSE (default).
 #' @param verbose Whether to show tuning process. Boolean TRUE or FALSE (default).
 #'
@@ -71,6 +72,26 @@
 #' @examples
 #' # Example 1: Fine tuning function applied to a regression task
 #'
+#' library(TidyML)
+#'
+#' data(sim_data) # sim_data is a simulated dataset wtih psychological variables
+#'
+#' tidy_object <- preprocessing(
+#'                              df = sim_data,
+#'                              formula = psych_well ~ depression + emot_intel + resilience + life_sat,
+#'                              task = "regression"
+#'                              )
+#'
+#' tidy_object <- build_model(
+#'                analysis_object = tidy_object,
+#'                model_name = "Neural Network",
+#'                hyperparameters = list(
+#'                                  hidden_units = c(10,15),
+#'                                  activation = "relu",
+#'                                  learn_rate = c(1e-3, 1e-1)
+#'                                  )
+#'                            )
+#'
 #' tidy_object <- fine_tuning(tidy_object,
 #'                              tuner = "Bayesian Optimization",
 #'                              metrics = c("rmse", "mape"),
@@ -78,6 +99,25 @@
 #'                              )
 #'
 #' # Example 2: Fine tuning function applied to a classification task
+#'
+#' data(sim_data) # sim_data is a simulated dataset wtih psychological variables
+#'
+#' tidy_object <- preprocessing(
+#'                              df = sim_data,
+#'                              formula = psych_well_bin ~ depression + emot_intel + resilience + life_sat,
+#'                              task = "classification"
+#'                              )
+#'
+#' tidy_object <- build_model(
+#'                analysis_object = tidy_object,
+#'                model_name = "SVM",
+#'                hyperparameters = list(
+#'                                  type = "rbf",
+#'                                  cost = c(1e-3,1),
+#'                                  margin = 0.1,
+#'                                  rbf_sigma = 0.05
+#'                                  )
+#'                            )
 #'
 #' tidy_object <- fine_tuning(tidy_object,
 #'                              tuner = "Grid Search CV",
@@ -183,7 +223,7 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, plot_results = F
 
               tune::finalize_workflow(final_hyperparams)  %>%
 
-              fit(final_data)
+              workflows::fit(final_data)
 
             analysis_object$modify("final_model", final_model)
 
@@ -194,7 +234,7 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, plot_results = F
                 print("###### Loss Curve ######")
                 cat("\n")
 
-                p <- autoplot(model_parsnip) +
+                p <- brulee::autoplot(model_parsnip) +
                      ggplot2::labs(title = "Neural Network Loss Curve")
 
                 plot_ob = analysis_object$plots

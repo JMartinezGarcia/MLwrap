@@ -26,7 +26,7 @@ Description: TidyML is a minimalistic library specifically designed to make the 
              sensitivity analysis. By streamlining these phases, TidyML aims to simplify the implementation
              of ML techniques, allowing analysts and data scientists to focus on extracting actionable insights
              and meaningful patterns from large datasets, in line with the objectives of the KDD process.
-License: "GPL-3"
+License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2

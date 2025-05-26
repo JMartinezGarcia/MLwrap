@@ -4,7 +4,13 @@
 \alias{fine_tuning}
 \title{Fine Tune ML Model}
 \usage{
-fine_tuning(analysis_object, tuner, metrics, plot_results = F, verbose = FALSE)
+fine_tuning(
+  analysis_object,
+  tuner,
+  metrics = NULL,
+  plot_results = F,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{analysis_object}{analysis_object created from build_model function.}
@@ -12,7 +18,8 @@ fine_tuning(analysis_object, tuner, metrics, plot_results = F, verbose = FALSE)
 \item{tuner}{Name of the Hyperparameter Tuner. A string of the tuner name: "Bayesian Optimization" or
 "Grid Search CV".}
 
-\item{metrics}{Metric used for Model Selection. A string of the name of metric (see Metrics).}
+\item{metrics}{Metric used for Model Selection. A string of the name of metric (see Metrics). By default
+either "rmse" (regression) or "roc_auc" (classification).}
 
 \item{plot_results}{Whether to plot the tuning results. Boolean TRUE or FALSE (default).}
 
@@ -96,6 +103,26 @@ the training data and updates the AnalysisObject, ensuring a reproducible and ef
 \examples{
 # Example 1: Fine tuning function applied to a regression task
 
+library(TidyML)
+
+data(sim_data) # sim_data is a simulated dataset wtih psychological variables
+
+tidy_object <- preprocessing(
+                             df = sim_data,
+                             formula = psych_well ~ depression + emot_intel + resilience + life_sat,
+                             task = "regression"
+                             )
+
+tidy_object <- build_model(
+               analysis_object = tidy_object,
+               model_name = "Neural Network",
+               hyperparameters = list(
+                                 hidden_units = c(10,15),
+                                 activation = "relu",
+                                 learn_rate = c(1e-3, 1e-1)
+                                 )
+                           )
+
 tidy_object <- fine_tuning(tidy_object,
                              tuner = "Bayesian Optimization",
                              metrics = c("rmse", "mape"),
@@ -103,6 +130,25 @@ tidy_object <- fine_tuning(tidy_object,
                              )
 
 # Example 2: Fine tuning function applied to a classification task
+
+data(sim_data) # sim_data is a simulated dataset wtih psychological variables
+
+tidy_object <- preprocessing(
+                             df = sim_data,
+                             formula = psych_well_bin ~ depression + emot_intel + resilience + life_sat,
+                             task = "classification"
+                             )
+
+tidy_object <- build_model(
+               analysis_object = tidy_object,
+               model_name = "SVM",
+               hyperparameters = list(
+                                 type = "rbf",
+                                 cost = c(1e-3,1),
+                                 margin = 0.1,
+                                 rbf_sigma = 0.05
+                                 )
+                           )
 
 tidy_object <- fine_tuning(tidy_object,
                              tuner = "Grid Search CV",

@@ -57,11 +57,38 @@
 #' @examples
 #' # Example 1: Using SHAP
 #'
-#' tidy_object <- sensitivity_analysis(analysis_object, methods = "SHAP")
+#' library(TidyML)
+#'
+#' data(sim_data) # sim_data is a simulated dataset wtih psychological variables
+#'
+#' tidy_object <- preprocessing(
+#'                              df = sim_data,
+#'                              formula = psych_well ~ depression + emot_intel + resilience + life_sat,
+#'                              task = "regression"
+#'                              )
+#'
+#' tidy_object <- build_model(
+#'                analysis_object = tidy_object,
+#'                model_name = "Neural Network",
+#'                hyperparameters = list(
+#'                                  hidden_units = 10,
+#'                                  activation = "relu",
+#'                                  learn_rate = 0.01
+#'                                  )
+#'                            )
+#'
+#' tidy_object <- fine_tuning(tidy_object,
+#'                              tuner = "Bayesian Optimization",
+#'                              metrics = c("rmse", "mape"),
+#'                              plot_results = TRUE
+#'                              )
+#'
+#' tidy_object <- sensitivity_analysis(tidy_object, methods = "SHAP")
 #'
 #' # Example 2: using PFI
 #'
-#' tidy_object <- sensitivity_analysis(analysis_object, methods = "PFI", metric = "mape")
+#' tidy_object <- sensitivity_analysis(tidy_object, methods = "PFI", metric = "mape")
+#'
 #' @references
 #' Iooss, B., & Lemaître, P. (2015). A review on global sensitivity analysis methods. In C. Meloni & G. Dellino
 #' (Eds.), *Uncertainty Management in Simulation-Optimization of Complex Systems: Algorithms and Applications*
