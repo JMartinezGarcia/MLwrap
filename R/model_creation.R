@@ -133,6 +133,8 @@ build_model <- function(analysis_object, model_name, hyperparameters = NULL){
 
                     check_args_build_model(analysis_object = analysis_object, model_name = model_name)
 
+                    analysis_object = analysis_object$clone()
+
                     task = analysis_object$task
 
                     if (model_name == "Neural Network"){

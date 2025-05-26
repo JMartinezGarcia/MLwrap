@@ -74,7 +74,7 @@ check_args_fine_tuning <- function(analysis_object, tuner, metrics, plot_results
 
   ## Check metrics
 
-  check_args_list(arg = metrics, arg_list = names(metrics_info), arg_name = "metrics", null_valid = F)
+  check_args_list(arg = metrics, arg_list = names(metrics_info), arg_name = "metrics", null_valid = T)
 
   ## Check plot_results
 

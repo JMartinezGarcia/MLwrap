@@ -89,10 +89,19 @@
 #' for Machine and Deep Learning with R. A Practical Guide*. Springer, Singapore.
 #' https://doi.org/10.1007/978-981-19-5170-1
 #' @export
-fine_tuning <- function(analysis_object, tuner, metrics, plot_results = F, verbose = FALSE){
+fine_tuning <- function(analysis_object, tuner, metrics = NULL, plot_results = F, verbose = FALSE){
 
             check_args_fine_tuning(analysis_object = analysis_object, tuner = tuner, metrics = metrics,
                                    plot_results = plot_results, verbose = verbose)
+
+            analysis_object = analysis_object$clone()
+
+            if (is.null(metrics)){
+
+              if (analysis_object$task == "regression"){metrics = "rmse"}
+              else {metrics = "roc_auc"}
+
+            }
 
             analysis_object$modify("workflow", create_workflow(analysis_object))
 
