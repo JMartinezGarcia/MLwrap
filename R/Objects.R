@@ -399,6 +399,12 @@ HyperparametersBase <- R6::R6Class("HyperparametersBase",
                   )
 
 
+summary.AnalyisObject <- function(object, ...) {
+  cat("Resumen del objeto AnalysisObject:\n")
+  cat("Stage:", object$stage, "\n")
+  invisible(object)
+}
+
 
 
 

@@ -74,6 +74,8 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
   check_args_sensitivity_analysis(analysis_object = analysis_object, methods = methods, metric = metric)
 
+  analysis_object = analysis_object$clone()
+
   task = analysis_object$task
 
   y = all.vars(analysis_object$formula)[1]

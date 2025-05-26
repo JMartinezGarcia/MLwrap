@@ -118,10 +118,13 @@ plot_tuning_results <- function(analysis_object){
 
   print(p)
 
-  print("############# Best Hyperparameters Found:")
+  print("####### Best Hyperparameters Found #######")
+  cat("\n")
 
   analysis_object$tuner_fit %>%
     tune::show_best(metric = analysis_object$metrics[1], n = 1) %>%
     print()
+
+  cat("\n")
 
 }

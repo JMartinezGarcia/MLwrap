@@ -72,6 +72,8 @@ show_results <- function(analysis_object,
                           scatter_predictions = scatter_predictions, residuals_dist = residuals_dist,
                           new_data = new_data)
 
+  analysis_object = analysis_object$clone()
+
   predictions = get_predictions(analysis_object, "all")
 
   analysis_object$modify("predictions", predictions)
@@ -87,8 +89,8 @@ show_results <- function(analysis_object,
   if (summary == T){
 
     print("###### Summary ######")
+    cat("\n")
     print(summary_results)
-    print("####################")
     cat("\n")
 
     # Multiclass classification case
