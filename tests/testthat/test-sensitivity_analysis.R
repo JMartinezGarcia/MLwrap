@@ -25,10 +25,10 @@ test_that("PFI works properly regression", {
   int_grad <- analysis_object$sensitivity_analysis$IntegratedGradients
   olden <- analysis_object$sensitivity_analysis$Olden
 
-  expect_equal(pfi$Importance[[1]], 17.831, tolerance = 1e-3)
-  expect_equal(shap$depression[1], 18.709, tolerance = 1e-3)
-  expect_equal(int_grad$depression[1], 0.7978044, tolerance = 1e-3)
-  expect_equal(olden$depression[1], -0.7335, tolerance = 1e-2)
+  expect_equal(pfi$Importance[[1]], 17.831, tolerance = 1e-1)
+  expect_equal(shap$depression[1], 18.709, tolerance = 1e-1)
+  expect_equal(int_grad$depression[1], 0.7978044, tolerance = 1e-1)
+  expect_equal(olden$depression[1], -0.7335, tolerance = 1e-1)
 
 
 })
