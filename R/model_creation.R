@@ -158,6 +158,18 @@ build_model <- function(analysis_object, model_name, hyperparameters = NULL){
 
                     if (model_name == "Neural Network"){
 
+                      if (!requireNamespace("torch", quietly = TRUE)) {
+                        install.packages("torch")
+                      }
+
+                      if (!requireNamespace("brulee", quietly = TRUE)) {
+                        install.packages("brulee")
+                      }
+
+                      if (!torch::torch_is_installed()) {
+                        torch::install_torch()
+                      }
+
                       hyperparams_nn = HyperparamsNN$new(hyperparameters)
 
                       analysis_object$modify("hyperparameters", hyperparams_nn)
@@ -165,6 +177,10 @@ build_model <- function(analysis_object, model_name, hyperparameters = NULL){
                       model = create_nn(hyperparams = hyperparams_nn, task = task, epochs = 25)
 
                     } else if (model_name == "XGBOOST"){
+
+                      if (!requireNamespace("xgboost", quietly = TRUE)) {
+                        install.packages("xgboost")
+                      }
 
                       hyperparams_xgboost = HyperparamsXGBoost$new(hyperparameters)
 
@@ -174,6 +190,10 @@ build_model <- function(analysis_object, model_name, hyperparameters = NULL){
 
                     } else if (model_name == "Random Forest"){
 
+                      if (!requireNamespace("ranger", quietly = TRUE)) {
+                        install.packages("ranger")
+                      }
+
                       hyperparams_rf = HyperparamsRF$new(hyperparameters)
 
                       analysis_object$modify("hyperparameters", hyperparams_rf)
@@ -182,6 +202,10 @@ build_model <- function(analysis_object, model_name, hyperparameters = NULL){
 
 
                     } else if (model_name == "SVM"){
+
+                      if (!requireNamespace("kernlab", quietly = TRUE)) {
+                        install.packages("kernlab")
+                      }
 
                       if (is.null(hyperparameters$type)){hyperparameters$type = "linear"}
 
