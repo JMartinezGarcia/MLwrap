@@ -22,6 +22,8 @@ HyperparamsNN <- R6::R6Class("Neural Network Hyperparameters",
 
                                    if (all(names(hyperparams) %in% valid_hparams)){
 
+
+
                                    }
 
                                    else {
@@ -30,8 +32,11 @@ HyperparamsNN <- R6::R6Class("Neural Network Hyperparameters",
 
                                                  paste(valid_hparams, collapse = ",")))
 
-                                        }
+                                   }
+
                                  }
+
+
                                },
 
                                set_hyperparams = function(hyperparams = NULL) {

@@ -34,7 +34,7 @@ check_args_preprocessing <- function(df, formula, task, num_vars, cat_vars,
 
 ########## Model building
 
-check_args_build_model <- function(analysis_object, model_name){
+check_args_build_model <- function(analysis_object, model_name, hyperparameters){
 
   ## Check tidy_object stage
 
@@ -52,6 +52,13 @@ check_args_build_model <- function(analysis_object, model_name){
                                                   "SVM"
                                                   ),
                   arg_name = "model_name", null_valid = F)
+
+  if (model_name == "Neural Network"){
+
+    check_args_list(arg = hyperparameters$activation, arg_list = c("relu", "sigmoid", "tanh"),
+                    arg_name = "Activation Function", null_valid = T)
+
+  }
 
 }
 
