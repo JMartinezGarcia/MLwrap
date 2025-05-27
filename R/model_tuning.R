@@ -78,26 +78,26 @@
 #' data(sim_data) # sim_data is a simulated dataset wtih psychological variables
 #'
 #' tidy_object <- preprocessing(
-#'                              df = sim_data,
-#'                              formula = psych_well ~ depression + emot_intel + resilience + life_sat,
-#'                              task = "regression"
-#'                              )
+#'            df = sim_data,
+#'            formula = psych_well ~ depression + emot_intel + resilience + life_sat,
+#'            task = "regression"
+#'            )
 #'
 #' tidy_object <- build_model(
 #'                analysis_object = tidy_object,
 #'                model_name = "Neural Network",
 #'                hyperparameters = list(
-#'                                  hidden_units = c(10,15),
-#'                                  activation = "relu",
-#'                                  learn_rate = c(1e-3, 1e-1)
-#'                                  )
-#'                            )
+#'                      hidden_units = c(10,15),
+#'                      activation = "relu",
+#'                      learn_rate = c(1e-3, 1e-1)
+#'                      )
+#'                  )
 #'
 #' tidy_object <- fine_tuning(tidy_object,
-#'                              tuner = "Bayesian Optimization",
-#'                              metrics = c("rmse", "mape"),
-#'                              plot_results = TRUE
-#'                              )
+#'                 tuner = "Bayesian Optimization",
+#'                 metrics = c("rmse", "mape"),
+#'                 plot_results = TRUE
+#'                )
 #'
 #' # Example 2: Fine tuning function applied to a classification task
 #'

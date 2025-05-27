@@ -77,20 +77,20 @@ one_hot_predictors <- function(rec, encode_cat_vars, one_hot = T){
 #' data(sim_data) # sim_data is a simulated dataset wtih psychological variables
 #'
 #' tidy_object <- preprocessing(
-#'                              df = sim_data,
-#'                              formula = psych_well ~ depression + emot_intel + resilience + life_sat,
-#'                              task = "regression"
-#'                              )
+#'           df = sim_data,
+#'           formula = psych_well ~ depression + emot_intel + resilience + life_sat + gender,
+#'           task = "regression"
+#'          )
 #'
 #' # Example 2: Dataset where neither the outcome nor the categorical features are formatted as factors
 #' # and all categorical variables are specified to be formatted as factors
 #'
 #' tidy_object <- preprocessing(
-#'                              df = sim_data,
-#'                              formula = psych_well_bin ~ gender + depression + age + life_sat,
-#'                              task = "classification",
-#'                              cat_vars = c("gender")
-#'                              )
+#'            df = sim_data,
+#'            formula = psych_well_bin ~ gender + depression + age + life_sat,
+#'            task = "classification",
+#'            cat_vars = c("gender")
+#'          )
 #' @references
 #' Kuhn, M., & Johnson, K. (2019). *Feature Engineering and Selection: A Practical Approach
 #' for Predictive Models (1st ed.)*. Chapman and Hall/CRC. https://doi.org/10.1201/9781315108230
