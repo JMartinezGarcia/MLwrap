@@ -91,7 +91,7 @@ A single value, a vector with range values \code{c(min_val, max_val)} or NULL fo
 \item \strong{margin}: Distance between the separating hyperplane and the nearest data points.
 A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(0, 0.2).
 \item \strong{type}: Kernel to be used.
-A single value from ("linear", "rbf", "polynomial")
+A single value from ("linear", "rbf", "polynomial"). Default: "linear".
 \item \strong{rbf_sigma}:
 A single value, a vector with range values \code{c(min_val, max_val)} or NULL for default range c(-5, 0) in log10 scale.
 \item \strong{degree}: Polynomial Degree (polynomial kernel only).

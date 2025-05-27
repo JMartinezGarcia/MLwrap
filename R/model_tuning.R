@@ -64,6 +64,7 @@
 #' * gain_capture
 #' * brier_class
 #' * roc_aunp
+#'
 #' @returns An updated analysis_object containing the fitted model with optimized hyperparameters,
 #' the tuning results, and all relevant workflow modifications. This object includes the final trained
 #' model, the best hyperparameter configuration, tuning diagnostics, and, if applicable, plots of the

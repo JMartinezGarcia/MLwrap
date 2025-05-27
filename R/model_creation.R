@@ -80,7 +80,7 @@
 #' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range c(0, 0.2).
 #'
 #' * **type**: Kernel to be used.
-#' A single value from ("linear", "rbf", "polynomial")
+#' A single value from ("linear", "rbf", "polynomial"). Default: "linear".
 #'
 #' * **rbf_sigma**:
 #' A single value, a vector with range values `c(min_val, max_val)` or NULL for default range c(-5, 0) in log10 scale.
