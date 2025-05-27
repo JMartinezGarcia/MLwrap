@@ -98,14 +98,26 @@ plot_scatter <- function(predictions, new_data = "test", error = F){
 
 }
 
-plot_residuals_density <- function(predictions, new_data = "test"){
+# plot_residuals_density <- function(predictions, new_data = "test"){
+#
+#   predictions %>%
+#     dplyr::mutate(error = y - .pred) %>%
+#
+#     ggplot2::ggplot(ggplot2::aes(x = error))+
+#     ggplot2::geom_density(alpha = 0.5) +
+#     ggplot2::labs(title = "Residuals vs Predictions", x = "Predictions", y = "Residuals") +
+#     ggplot2::theme_minimal()
+#
+# }
 
+plot_residuals_density <- function(predictions, new_data = "test") {
   predictions %>%
     dplyr::mutate(error = y - .pred) %>%
-
-    ggplot2::ggplot(ggplot2::aes(x = error))+
-    ggplot2::geom_density(alpha = 0.5) +
-    ggplot2::labs(title = "Residuals vs Predictions", x = "Predictions", y = "Residuals") +
+    ggplot2::ggplot(ggplot2::aes(x = error)) +
+    ggplot2::geom_histogram(aes(y = ..density..),
+                            bins = 30, fill = "lightgray", color = "white", alpha = 0.5) +
+    ggplot2::geom_density(color = "steelblue", size = 1.2, alpha = 0.6) +
+    ggplot2::labs(title = paste("Residual Density -", new_data, "set"),
+                  x = "Residuals", y = "Density") +
     ggplot2::theme_minimal()
-
 }
