@@ -169,7 +169,7 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, plot_results = F
 
             if (analysis_object$hyperparameters$tuning == TRUE){
 
-                print("Commencing Tuning...")
+                cat("Commencing Tuning...")
 
                 tuner_fit = tune_models(analysis_object,
                                         tuner,
@@ -177,7 +177,7 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, plot_results = F
                                         metrics = set_metrics,
                                         verbose = verbose)
 
-                print("Tuning Finalized")
+                cat("Tuning Finalized")
 
                 analysis_object$modify("tuner_fit", tuner_fit)
 
@@ -231,7 +231,7 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, plot_results = F
 
                 model_parsnip <- tune::extract_fit_parsnip(final_model)
 
-                print("###### Loss Curve ######")
+                cat("###### Loss Curve ######")
                 cat("\n")
 
                 p <- brulee::autoplot(model_parsnip) +

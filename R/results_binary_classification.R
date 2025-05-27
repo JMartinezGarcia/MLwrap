@@ -212,7 +212,7 @@ plot_conf_mat <- function(predictions, new_data = "test"){
 
   confusion_matrix = yardstick::conf_mat(predictions, truth = y, estimate = .pred_class)
 
-  print("###### Confusion Matrix ######")
+  cat("###### Confusion Matrix ###### \n")
   print(confusion_matrix)
   cat("\n")
 

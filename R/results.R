@@ -135,11 +135,11 @@ show_results <- function(analysis_object,
 
   analysis_object$modify("fit_summary",summary_results)
 
-  print("############# Showing Results #############")
+  cat("############# Showing Results ############# \n")
 
   if (summary == T){
 
-    print("###### Summary ######")
+    cat("###### Summary ###### \n")
     cat("\n")
     print(summary_results)
     cat("\n")

@@ -156,7 +156,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     y_classes <- levels(bake_train[[y]])
 
-    print("######### PFI Method Results ##############")
+    cat("######### PFI Method Results ############## \n")
 
     for (target_class in y_classes){
 
@@ -178,7 +178,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     } else{
 
-      print("######### PFI Method Results ##############")
+      cat("######### PFI Method Results ############## \n")
       cat("\n")
       print(results)
       cat("\n")
@@ -210,7 +210,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       y_classes = levels(bake_train[[y]])
 
-      print("######### SHAP Method Results ##############")
+      cat("######### SHAP Method Results ############## \n")
 
       for (target_class in y_classes){
 
@@ -267,7 +267,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     } else{
 
-      print("######### SHAP Method Results ##############")
+      cat("######### SHAP Method Results ############## \n")
       cat("\n")
       print(summarize_importance(abs(results), feature_names))
       cat("\n")
@@ -329,7 +329,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       y_classes = levels(bake_train[[y]])
 
-      print("######### Integrated Gradients Method Results ##############")
+      cat("######### Integrated Gradients Method Results ############## \n")
 
       for (target_class in y_classes){
 
@@ -385,9 +385,9 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     } else{
 
-      print("######### Integrated Gradients Method Results ##############")
+      cat("######### Integrated Gradients Method Results ############## \n")
       cat("\n")
-      print(summarize_importance(abs(results)))
+      print(summarize_importance(abs(results), feature_names))
       cat("\n")
 
       p <- plot_barplot(results, func = function(x) mean(abs(x)),
@@ -454,7 +454,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       rownames(df_results) <- y_classes
 
-      print("######### Olden's Method Results ##############")
+      cat("######### Olden's Method Results ############## \n")
       cat("\n")
       print(df_results)
       cat("\n")
@@ -478,7 +478,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     } else{
 
-      print("######### Olden's Method Results ##############")
+      cat("######### Olden's Method Results ############## \n")
       cat("\n")
       print(df_results)
       cat("\n")
@@ -500,7 +500,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       sensitivity_analysis_list[["Sobol_Jansen"]] <- results
 
-      print("######### Sobol_Jansen's Method Results ##############")
+      cat("######### Sobol_Jansen's Method Results ############## \n")
       cat("\n")
       print(results)
       cat("\n")
