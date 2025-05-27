@@ -177,7 +177,7 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, plot_results = F
                                         metrics = set_metrics,
                                         verbose = verbose)
 
-                cat("Tuning Finalized")
+                cat("Tuning Finalized \n")
 
                 analysis_object$modify("tuner_fit", tuner_fit)
 

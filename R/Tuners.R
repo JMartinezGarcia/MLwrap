@@ -75,7 +75,7 @@ hyperparams_grid <- function(hyperparams, levels = 10){
 
 plot_tuning_results <- function(analysis_object){
 
-  cat("############# Hyperparameter Tuning Results \n")
+  cat("######## Hyperparameter Tuning Results ########## \n")
 
   if (analysis_object$tuner == "Bayesian Optimization"){
 
