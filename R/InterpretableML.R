@@ -216,7 +216,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
         cat("\n")
         print(paste0("abs(SHAP) for class ", target_class))
-        print(summarize_importance(results[[target_class]]))
+        print(summarize_importance(abs(results[[target_class]]), feature_names))
         cat("\n")
 
         p <- plot_barplot(results[[target_class]], func = function(x) mean(abs(x)),
@@ -269,7 +269,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       print("######### SHAP Method Results ##############")
       cat("\n")
-      print(summarize_importance(abs(results)))
+      print(summarize_importance(abs(results), feature_names))
       cat("\n")
 
     p <- plot_barplot(results, func = function(x) mean(abs(x)),
@@ -335,7 +335,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
         cat("\n")
         print(paste0("abs(Integrated Gradients) for class ", target_class))
-        print(summarize_importance(results[[target_class]]))
+        print(summarize_importance(abs(results[[target_class]]), feature_names))
         cat("\n")
 
         p <- plot_barplot(results[[target_class]], func = function(x) mean(abs(x)),
@@ -708,7 +708,7 @@ pred_bin_class <- function(object, newdata){
 
 }
 
-summarize_importance <- function(importance_matrix) {
+summarize_importance <- function(importance_matrix, feature_names) {
 
   # Calcular media y error estandar para cada variable
   mean_importance <- colMeans(importance_matrix, na.rm = TRUE)
@@ -720,8 +720,11 @@ summarize_importance <- function(importance_matrix) {
     StDev = signif(std_error,2)
   )
 
+  rownames(summary_df) <- feature_names
+
   # Ordenar de mayor a menor importancia
-  summary_df <- dplyr::as_tibble(summary_df[order(-summary_df$Importance), ])
+
+  summary_df <- summary_df[order(-summary_df$Importance), ]
 
   return(summary_df)
 }
