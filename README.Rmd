@@ -1,0 +1,83 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# TidyML
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+TidyML is a minimalistic library specifically designed to make the estimation of Machine
+Learning (ML) techniques as easy and accessible as possible, particularly within the framework
+of the Knowledge Discovery in Databases (KDD) process in data mining. The package provides
+all the essential tools needed to efficiently structure and execute each stage of a predictive
+or classification modeling workflow, aligning closely with the fundamental steps of the KDD
+methodology, from data selection and preparation, through model building and tuning, to the
+interpretation and evaluation of results using Sensitivity Analysis. The TidyML workflow is
+organized into five core steps; preprocessing(), build_model(), fine_tuning(), show_results(),
+and sensitivity_analysis(). These steps correspond, respectively, to data preparation and
+transformation, model construction, hyperparameter optimization, resuresults presentation, and
+sensitivity analysis. By streamlining these phases, TidyML aims to simplify the implementation
+of ML techniques, allowing analysts and data scientists to focus on extracting actionable insights
+and meaningful patterns from large datasets, in line with the objectives of the KDD process.
+
+## Installation
+
+You can install the development version of TidyML from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("pak")
+pak::pak("JMartinezGarcia/TidyML")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+library(TidyML)
+## basic example code
+
+formula_reg <- "psych_well ~ age + gender + socioec_status + emot_intel + depression"
+
+analysis_object <- preprocessing(sim_data, formula_reg, task = "regression")
+
+analysis_object <- TidyML::build_model(analysis_object, "Random Forest",
+                                       hyperparameters = list(trees = 150))
+
+analysis_object <- fine_tuning(analysis_object, "Bayesian Optimization", metrics = "rmse", plot_results = T)
+
+analysis_object <- show_results(analysis_object, summary = T, scatter_residuals = T, scatter_predictions = T,
+                                residuals_dist = T)
+
+analysis_object <- sensitivity_analysis(analysis_object, methods = c("PFI", "SHAP"), 
+                                        metric = "rsq")
+
+```
+
+What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+
+```{r cars}
+summary(cars)
+```
+
+You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
+
+You can also embed plots, for example:
+
+```{r pressure, echo = FALSE}
+plot(pressure)
+```
+
+In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.

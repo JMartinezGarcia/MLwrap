@@ -1,2 +1,4 @@
 ^TidyML\.Rproj$
 ^\.Rproj\.user$
+^cran-comments\.md$
+^README\.Rmd$
