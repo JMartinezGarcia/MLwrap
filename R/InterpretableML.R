@@ -156,9 +156,10 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     y_classes <- levels(bake_train[[y]])
 
+    print("######### PFI Method Results ##############")
+
     for (target_class in y_classes){
 
-      print("######### PFI Method Results ##############")
       cat("\n")
       print(paste0("PFI for class ", target_class))
       print(results[[target_class]])
@@ -209,9 +210,10 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       y_classes = levels(bake_train[[y]])
 
+      print("######### SHAP Method Results ##############")
+
       for (target_class in y_classes){
 
-        print("######### SHAP Method Results ##############")
         cat("\n")
         print(paste0("abs(SHAP) for class ", target_class))
         print(summarize_importance(results[[target_class]]))
@@ -327,9 +329,10 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       y_classes = levels(bake_train[[y]])
 
+      print("######### Integrated Gradients Method Results ##############")
+
       for (target_class in y_classes){
 
-        print("######### Integrated Gradients Method Results ##############")
         cat("\n")
         print(paste0("abs(Integrated Gradients) for class ", target_class))
         print(summarize_importance(results[[target_class]]))

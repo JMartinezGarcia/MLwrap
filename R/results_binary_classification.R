@@ -214,7 +214,6 @@ plot_conf_mat <- function(predictions, new_data = "test"){
 
   print("###### Confusion Matrix ######")
   print(confusion_matrix)
-  print("####################")
   cat("\n")
 
   return(confusion_matrix)
