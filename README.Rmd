@@ -51,33 +51,18 @@ library(TidyML)
 
 formula_reg <- "psych_well ~ age + gender + socioec_status + emot_intel + depression"
 
-analysis_object <- preprocessing(sim_data, formula_reg, task = "regression")
+analysis_object <- preprocessing(sim_data, formula_reg, task = "regression") %>%
 
-analysis_object <- TidyML::build_model(analysis_object, "Random Forest",
-                                       hyperparameters = list(trees = 150))
+                   build_model(model_name = "Random Forest",
+                                       hyperparameters = list(trees = 150)) %>%
 
-analysis_object <- fine_tuning(analysis_object, "Bayesian Optimization", metrics = "rmse", plot_results = T)
+                   fine_tuning(tuner = "Bayesian Optimization", metrics = "rmse",
+                               plot_results = T) %>%
 
-analysis_object <- show_results(analysis_object, summary = T, scatter_residuals = T, scatter_predictions = T,
-                                residuals_dist = T)
-
-analysis_object <- sensitivity_analysis(analysis_object, methods = c("PFI", "SHAP"), 
+                   show_results(summary = T, scatter_residuals = T, scatter_predictions = T,
+                                residuals_dist = T) %>%
+   
+                   sensitivity_analysis(methods = c("PFI", "SHAP"), 
                                         metric = "rsq")
 
 ```
-
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.

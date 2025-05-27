@@ -45,12 +45,19 @@ library(TidyML)
 
 formula_reg <- "psych_well ~ age + gender + socioec_status + emot_intel + depression"
 
-analysis_object <- preprocessing(sim_data, formula_reg, task = "regression")
+analysis_object <- preprocessing(sim_data, formula_reg, task = "regression") %>%
 
-analysis_object <- TidyML::build_model(analysis_object, "Random Forest",
-                                       hyperparameters = list(trees = 150))
+                   build_model(model_name = "Random Forest",
+                                       hyperparameters = list(trees = 150)) %>%
 
-analysis_object <- fine_tuning(analysis_object, "Bayesian Optimization", metrics = "rmse", plot_results = T)
+                   fine_tuning(tuner = "Bayesian Optimization", metrics = "rmse",
+                               plot_results = T) %>%
+
+                   show_results(summary = T, scatter_residuals = T, scatter_predictions = T,
+                                residuals_dist = T) %>%
+   
+                   sensitivity_analysis(methods = c("PFI", "SHAP"), 
+                                        metric = "rsq")
 #> Commencing Tuning...
 #> ! No improvement for 5 iterations; returning current results.
 #> Tuning Finalized 
@@ -64,49 +71,33 @@ analysis_object <- fine_tuning(analysis_object, "Bayesian Optimization", metrics
     #>    mtry min_n .metric .estimator  mean     n std_err .config               .iter
     #>   <int> <int> <chr>   <chr>      <dbl> <int>   <dbl> <chr>                 <int>
     #> 1     6    25 rmse    standard    13.8     5   0.238 Preprocessor1_Model13     0
-
-    analysis_object <- show_results(analysis_object, summary = T, scatter_residuals = T, scatter_predictions = T,
-                                    residuals_dist = T)
+    #> 
     #> ############# Showing Results ############# 
     #> ###### Summary ###### 
     #> 
     #>       RMSE      MAE MAPE  MPE       CCC    SMAPE     RPIQ       RSQ
     #> 1 13.60194 11.02878  Inf -Inf 0.8124794 29.10788 2.407744 0.6808136
 
-<img src="man/figures/README-example-4.png" width="100%" /><img src="man/figures/README-example-5.png" width="100%" /><img src="man/figures/README-example-6.png" width="100%" />
+<img src="man/figures/README-example-4.png" width="100%" /><img src="man/figures/README-example-5.png" width="100%" /><img src="man/figures/README-example-6.png" width="100%" /><img src="man/figures/README-example-7.png" width="100%" />
 
-    #> Warning: The dot-dot notation (`..density..`) was deprecated in ggplot2 3.4.0.
-    #> ℹ Please use `after_stat(density)` instead.
-    #> ℹ The deprecated feature was likely used in the TidyML package.
-    #>   Please report the issue at <https://github.com/JMartinezGarcia/TidyML/issues>.
-    #> This warning is displayed once every 8 hours.
-    #> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
-
-<img src="man/figures/README-example-7.png" width="100%" />
-
-``` r
-
-analysis_object <- sensitivity_analysis(analysis_object, methods = c("PFI", "SHAP"), 
-                                        metric = "rsq")
-#> ######### PFI Method Results ############## 
-#> 
-#> # A tibble: 8 × 3
-#>   Variable              Importance    StDev
-#>   <chr>                      <dbl>    <dbl>
-#> 1 depression              0.654    0.0180  
-#> 2 emot_intel              0.0973   0.0155  
-#> 3 socioec_status_Medium   0.00187  0.000923
-#> 4 socioec_status_Low      0.000745 0.000755
-#> 5 gender_Female           0.000313 0.000820
-#> 6 gender_Male            -0.000954 0.000714
-#> 7 socioec_status_High    -0.00238  0.00153 
-#> 8 age                    -0.00684  0.00545
-```
+    #> ######### PFI Method Results ############## 
+    #> 
+    #> # A tibble: 8 × 3
+    #>   Variable              Importance    StDev
+    #>   <chr>                      <dbl>    <dbl>
+    #> 1 depression              0.654    0.0180  
+    #> 2 emot_intel              0.0973   0.0155  
+    #> 3 socioec_status_Medium   0.00187  0.000923
+    #> 4 socioec_status_Low      0.000745 0.000755
+    #> 5 gender_Female           0.000313 0.000820
+    #> 6 gender_Male            -0.000954 0.000714
+    #> 7 socioec_status_High    -0.00238  0.00153 
+    #> 8 age                    -0.00684  0.00545
 
 <img src="man/figures/README-example-8.png" width="100%" />
 
     #> 
-    #> ── Starting `shapr::explain()` at 2025-05-27 12:13:18 ──────────────────────────────────────────────────────────────────
+    #> ── Starting `shapr::explain()` at 2025-05-27 12:17:20 ──────────────────────────────────────────────────────────────────
     #> ℹ You passed a model to `shapr::explain()` which is not natively supported, and did not supply a `get_model_specs`
     #>   function to `shapr::explain()`.
     #>   Consistency checks between model and data is therefore disabled.
@@ -127,7 +118,7 @@ analysis_object <- sensitivity_analysis(analysis_object, methods = c("PFI", "SHA
     #> • Number of observations to explain: 250
     #> 
     #> • Computations (temporary) saved at:
-    #> '/var/folders/x5/8z0mshcj4gb4__ckxrrmpg480000gn/T//RtmprVV1vb/shapr_obj_81ba27b0a9e2.rds'
+    #> '/var/folders/x5/8z0mshcj4gb4__ckxrrmpg480000gn/T//RtmprVV1vb/shapr_obj_81baf49c618.rds'
     #> 
     #> 
     #> 
@@ -157,27 +148,3 @@ analysis_object <- sensitivity_analysis(analysis_object, methods = c("PFI", "SHA
     #> gender_Male                0.305 0.016
 
 <img src="man/figures/README-example-9.png" width="100%" /><img src="man/figures/README-example-10.png" width="100%" /><img src="man/figures/README-example-11.png" width="100%" /><img src="man/figures/README-example-12.png" width="100%" />
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
-
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
