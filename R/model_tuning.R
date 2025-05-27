@@ -96,7 +96,7 @@
 #' tidy_object <- fine_tuning(tidy_object,
 #'                 tuner = "Bayesian Optimization",
 #'                 metrics = c("rmse", "mape"),
-#'                 plot_results = TRUE
+#'                 plot_results = T
 #'                )
 #'
 #' # Example 2: Fine tuning function applied to a classification task
@@ -121,7 +121,7 @@
 #'                            )
 #'
 #' tidy_object <- fine_tuning(tidy_object,
-#'                              tuner = "Grid Search CV",
+#'                              tuner = "Bayesian Optimization",
 #'                              metrics = c("roc_auc", "f_meas"),
 #'                              plot_results = TRUE
 #'                              )

@@ -80,7 +80,7 @@
 #' tidy_object <- fine_tuning(tidy_object,
 #'                 tuner = "Bayesian Optimization",
 #'                 metrics = c("rmse", "mape"),
-#'                 plot_results = TRUE
+#'                 plot_results = F
 #'                 )
 #'
 #' tidy_object <- sensitivity_analysis(tidy_object, methods = "SHAP")
