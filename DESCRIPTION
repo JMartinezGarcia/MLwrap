@@ -1,6 +1,6 @@
 Package: TidyML
 Title: Machine Learning Modelling For Everyone
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: c(person(given   = "Javier", family = "Martínez García",
                     role    = c("aut", "cre"), 
                     email   = "javier.nezcia@gmail.com",
