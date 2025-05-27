@@ -98,18 +98,6 @@ plot_scatter <- function(predictions, new_data = "test", error = F){
 
 }
 
-# plot_residuals_density <- function(predictions, new_data = "test"){
-#
-#   predictions %>%
-#     dplyr::mutate(error = y - .pred) %>%
-#
-#     ggplot2::ggplot(ggplot2::aes(x = error))+
-#     ggplot2::geom_density(alpha = 0.5) +
-#     ggplot2::labs(title = "Residuals vs Predictions", x = "Predictions", y = "Residuals") +
-#     ggplot2::theme_minimal()
-#
-# }
-
 plot_residuals_density <- function(predictions, new_data = "test") {
   predictions %>%
     dplyr::mutate(error = y - .pred) %>%
