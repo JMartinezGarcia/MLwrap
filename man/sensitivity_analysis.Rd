@@ -74,10 +74,10 @@ library(TidyML)
 data(sim_data) # sim_data is a simulated dataset wtih psychological variables
 
 tidy_object <- preprocessing(
-                             df = sim_data,
-                             formula = psych_well ~ depression + emot_intel + resilience + life_sat,
-                             task = "regression"
-                             )
+       df = sim_data,
+       formula = psych_well ~ depression + emot_intel + resilience + life_sat,
+       task = "regression"
+       )
 
 tidy_object <- build_model(
                analysis_object = tidy_object,
@@ -90,10 +90,10 @@ tidy_object <- build_model(
                            )
 
 tidy_object <- fine_tuning(tidy_object,
-                             tuner = "Bayesian Optimization",
-                             metrics = c("rmse", "mape"),
-                             plot_results = TRUE
-                             )
+                tuner = "Bayesian Optimization",
+                metrics = c("rmse", "mape"),
+                plot_results = FALSE
+                )
 
 tidy_object <- sensitivity_analysis(tidy_object, methods = "SHAP")
 

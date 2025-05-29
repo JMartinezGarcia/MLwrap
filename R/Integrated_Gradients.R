@@ -30,7 +30,6 @@ IntGrad_reg <- function(model, train, test, y){
     )
 
   set.seed(123)
-
   intgrads <- innsight::run_intgrad(converted_model, data = test)
 
   intgrads = as.data.frame(intgrads$get_result())
@@ -53,7 +52,6 @@ IntGrad_bin <- function(model, train, test, y){
       )
 
     set.seed(123)
-
     intgrads <- innsight::run_intgrad(converted_model, data = test, verbose = F)
 
     intgrads = as.data.frame(intgrads$get_result())
@@ -82,7 +80,6 @@ IntGrad_mul <- function(model, train, test, y, outcome_levels){
     )
 
   set.seed(123)
-
   intgrads <- innsight::run_intgrad(converted_model, data = test, verbose = F)
 
   intgrads = as.data.frame(intgrads$get_result())

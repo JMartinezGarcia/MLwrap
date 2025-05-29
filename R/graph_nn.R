@@ -94,14 +94,28 @@ graph_nn <- function(model){
     "Learning Rate: ", signif(learn_rate, 3), "\\n",
     "Activation: ", activation, "\\n"
   )
+#
+#   graph_code <- paste0(
+#     graph_code,
+#     "  Hyperparams [shape=note, style=filled, fillcolor=lightyellow, fontsize=30, ",
+#     "label=\"", hyperparams, "\"];\n",
+#     "  Hyperparams -> I1 [style=invis, arrowhead=none];\n",
+#     "  {rank=same; Hyperparams; I1;}\n"
+#   )
 
   graph_code <- paste0(
     graph_code,
+    # Nodo invisible ancla a la izquierda
+    "  dummy [style=invis, width=0];\n",
+    # Nodo de hiperparámetros
     "  Hyperparams [shape=note, style=filled, fillcolor=lightyellow, fontsize=30, ",
     "label=\"", hyperparams, "\"];\n",
-    "  Hyperparams -> I1 [style=invis, arrowhead=none];\n",
-    "  {rank=same; Hyperparams; I1;}\n"
+    # Poner ambos en el nivel más a la izquierda
+    "  {rank=min; dummy; Hyperparams;}\n",
+    # Forzar conexión invisible (alineación izquierda → derecha)
+    "  dummy -> Hyperparams [style=invis];\n"
   )
+
 
   # ----- Close Graph -----
   graph_code <- paste0(graph_code, "}")

@@ -238,7 +238,7 @@ check_args_list <- function(arg, arg_list, arg_name, null_valid = T){
 
 check_boolean <- function(arg, arg_name){
 
-  if (!(class(arg) == "logical")){
+  if (!is.logical(arg)){
 
     stop(paste0(arg_name, " must be boolean! (TRUE or FALSE)"))
 

@@ -76,33 +76,33 @@ library(TidyML)
 data(sim_data) # sim_data is a simulated dataset wtih psychological variables
 
 tidy_object <- preprocessing(
-                             df = sim_data,
-                             formula = psych_well_bin ~ depression + emot_intel + resilience + life_sat,
-                             task = "classification"
-                             )
+       df = sim_data,
+       formula = psych_well_bin ~ depression + emot_intel + resilience + life_sat,
+       task = "classification"
+      )
 
 tidy_object <- build_model(
-               analysis_object = tidy_object,
-               model_name = "SVM",
-               hyperparameters = list(
-                                 type = "rbf",
-                                 cost = 1,
-                                 margin = 0.1,
-                                 rbf_sigma = 0.05
-                                 )
-                           )
+         analysis_object = tidy_object,
+         model_name = "SVM",
+         hyperparameters = list(
+             type = "rbf",
+             cost = 1,
+             margin = 0.1,
+             rbf_sigma = 0.05
+             )
+          )
 
 tidy_object <- fine_tuning(tidy_object,
-                             tuner = "Grid Search CV",
-                             metrics = c("roc_auc", "f_meas"),
-                             plot_results = TRUE
-                             )
+             tuner = "Grid Search CV",
+             metrics = c("roc_auc", "f_meas"),
+             plot_results = FALSE
+             )
 
 tidy_object<-show_results(tidy_object,
-                          summary = TRUE,
-                          roc_curve = TRUE,
-                          confusion_matrix = TRUE,
-                          new_data = "test")
+         summary = TRUE,
+         roc_curve = TRUE,
+         confusion_matrix = TRUE,
+         new_data = "test")
 
 # Example 2: Regression Task
 # Display summary metrics, scatter plot of predictions, and residuals distribution for a regression model
@@ -111,32 +111,32 @@ tidy_object<-show_results(tidy_object,
 data(sim_data) # sim_data is a simulated dataset wtih psychological variables
 
 tidy_object <- preprocessing(
-                             df = sim_data,
-                             formula = psych_well ~ depression + emot_intel + resilience + life_sat,
-                             task = "regression"
-                             )
+      df = sim_data,
+      formula = psych_well ~ depression + emot_intel + resilience + life_sat,
+      task = "regression"
+      )
 
 tidy_object <- build_model(
                analysis_object = tidy_object,
                model_name = "Neural Network",
                hyperparameters = list(
-                                 hidden_units = 10,
-                                 activation = "relu",
-                                 learn_rate = 0.01
-                                 )
-                           )
+                  hidden_units = 10,
+                  activation = "relu",
+                  learn_rate = 0.01
+                )
+        )
 
 tidy_object <- fine_tuning(tidy_object,
-                             tuner = "Bayesian Optimization",
-                             metrics = c("rmse", "mape"),
-                             plot_results = TRUE
-                             )
+           tuner = "Bayesian Optimization",
+           metrics = c("rmse", "mape"),
+           plot_results = FALSE
+          )
 
 tidy_object<-show_results(tidy_object,
-                          summary = TRUE,
-                          scatter_predictions = TRUE,
-                          residuals_dist = TRUE,
-                          new_data = "train")
+              summary = TRUE,
+              scatter_predictions = TRUE,
+              residuals_dist = TRUE,
+              new_data = "train")
 }
 \references{
 Molnar, C. (2025). \emph{Interpretable Machine Learning: A Guide for Making Black Box Models Explainable (3rd. ed.)}.

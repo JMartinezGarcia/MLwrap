@@ -159,11 +159,11 @@ build_model <- function(analysis_object, model_name, hyperparameters = NULL){
                     if (model_name == "Neural Network"){
 
                       if (!requireNamespace("torch", quietly = TRUE)) {
-                        install.packages("torch")
+                        utils::install.packages("torch")
                       }
 
                       if (!requireNamespace("brulee", quietly = TRUE)) {
-                        install.packages("brulee")
+                        utils::install.packages("brulee")
                       }
 
                       if (!torch::torch_is_installed()) {
@@ -179,7 +179,7 @@ build_model <- function(analysis_object, model_name, hyperparameters = NULL){
                     } else if (model_name == "XGBOOST"){
 
                       if (!requireNamespace("xgboost", quietly = TRUE)) {
-                        install.packages("xgboost")
+                        utils::install.packages("xgboost")
                       }
 
                       hyperparams_xgboost = HyperparamsXGBoost$new(hyperparameters)
@@ -191,7 +191,7 @@ build_model <- function(analysis_object, model_name, hyperparameters = NULL){
                     } else if (model_name == "Random Forest"){
 
                       if (!requireNamespace("ranger", quietly = TRUE)) {
-                        install.packages("ranger")
+                        utils::install.packages("ranger")
                       }
 
                       hyperparams_rf = HyperparamsRF$new(hyperparameters)
@@ -204,7 +204,7 @@ build_model <- function(analysis_object, model_name, hyperparameters = NULL){
                     } else if (model_name == "SVM"){
 
                       if (!requireNamespace("kernlab", quietly = TRUE)) {
-                        install.packages("kernlab")
+                        utils::install.packages("kernlab")
                       }
 
                       if (is.null(hyperparameters$type)){hyperparameters$type = "linear"}

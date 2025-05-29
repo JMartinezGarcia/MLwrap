@@ -96,7 +96,7 @@
 #' tidy_object <- fine_tuning(tidy_object,
 #'                 tuner = "Bayesian Optimization",
 #'                 metrics = c("rmse", "mape"),
-#'                 plot_results = T
+#'                 plot_results = TRUE
 #'                )
 #'
 #' # Example 2: Fine tuning function applied to a classification task
@@ -218,13 +218,10 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, plot_results = F
 
             }
 
+            final_model <-  tune::finalize_workflow(analysis_object$workflow ,final_hyperparams)
+
             set.seed(123)
-
-            final_model <- analysis_object$workflow %>%
-
-              tune::finalize_workflow(final_hyperparams)  %>%
-
-              workflows::fit(final_data)
+            final_model <- workflows::fit(final_model, final_data)
 
             analysis_object$modify("final_model", final_model)
 

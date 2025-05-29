@@ -1,7 +1,5 @@
 tune_models_bayesian <- function(analysis_object, sampling_method, metrics, seed = 123, verbose = TRUE){
 
-  set.seed(seed)
-
   bayes_control <-
     tune::control_bayes(
       no_improve    = 5L,
@@ -15,9 +13,11 @@ tune_models_bayesian <- function(analysis_object, sampling_method, metrics, seed
 
   extracted_hyperparams <- extract_hyperparams(analysis_object)
 
-  tuner_object <-
-    analysis_object$workflow %>%
-    tune::tune_bayes(
+
+  set.seed(seed)
+  tuner_object <- tune::tune_bayes(
+
+      object = analysis_object$workflow,
       resamples = sampling_method,
       iter      = 25L,
       control   = bayes_control,

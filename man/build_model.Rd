@@ -110,10 +110,10 @@ library(TidyML)
 data(sim_data) # sim_data is a simulated dataset wtih psychological variables
 
 tidy_object <- preprocessing(
-                             df = sim_data,
-                             formula = psych_well ~ depression + emot_intel + resilience + life_sat,
-                             task = "regression"
-                             )
+     df = sim_data,
+     formula = psych_well ~ depression + emot_intel + resilience + life_sat,
+     task = "regression"
+     )
 
 tidy_object <- build_model(
                analysis_object = tidy_object,
