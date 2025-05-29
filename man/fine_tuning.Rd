@@ -115,11 +115,10 @@ tidy_object <- preprocessing(
 
 tidy_object <- build_model(
                analysis_object = tidy_object,
-               model_name = "Neural Network",
+               model_name = "Random Forest",
                hyperparameters = list(
-                     hidden_units = c(10,15),
-                     activation = "relu",
-                     learn_rate = c(1e-3, 1e-1)
+                     mtry = 3,
+                     trees = 100
                      )
                  )
 

@@ -103,7 +103,7 @@ A single value, a vector with range values \code{c(min_val, max_val)} or NULL fo
 }
 
 \examples{
-# Example 1: Neural Network for regression task
+# Example 1: Random Forest for regression task
 
 library(TidyML)
 
@@ -117,11 +117,10 @@ tidy_object <- preprocessing(
 
 tidy_object <- build_model(
                analysis_object = tidy_object,
-               model_name = "Neural Network",
+               model_name = "Random Forest",
                hyperparameters = list(
-                                 hidden_units = 10,
-                                 activation = "relu",
-                                 learn_rate = 0.01
+                                 mtry = 3,
+                                 trees = 100
                                  )
                            )
 # It is safe to reuse the same object name (e.g., tidy_object, or whatever) step by step,

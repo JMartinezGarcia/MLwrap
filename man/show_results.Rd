@@ -118,10 +118,10 @@ tidy_object <- preprocessing(
 
 tidy_object <- build_model(
                analysis_object = tidy_object,
-               model_name = "Neural Network",
+               model_name = "XGBOOST",
                hyperparameters = list(
-                  hidden_units = 10,
-                  activation = "relu",
+                  mtry = c(2,3),
+                  trees = 100,
                   learn_rate = 0.01
                 )
         )
