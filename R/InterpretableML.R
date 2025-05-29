@@ -608,7 +608,7 @@ plot2 <- function(X, test, func = NULL, func_se = stats::sd, title, x_label) {
     ggplot2::labs(
       title = title,
       x = "Feature",
-      y = "Olden Feature Importance"
+      y = "Feature Importance"
     ) +
     ggplot2::theme_grey() +
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
