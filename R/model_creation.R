@@ -159,7 +159,9 @@ build_model <- function(analysis_object, model_name, hyperparameters = NULL){
                     if (model_name == "Neural Network"){
 
                       if (!requireNamespace("torch", quietly = TRUE)) {
-                        message("The 'torch' package is not installed. Please run:\n  install.packages('torch')\n  torch::install_torch()")
+                        #message("The 'torch' package is not installed. Please run:\n  install.packages('torch')\n  torch::install_torch()")
+                        utils::install.packages("torch", quiet = T)
+                        torch::install_torch()
                       }
 
                       if (!requireNamespace("brulee", quietly = TRUE)) {

@@ -57,10 +57,10 @@ Imports:
     dplyr,
     rlang,
     tibble,
-    tidyverse,
-    torch
+    tidyverse
 Suggests: 
     testthat (>= 3.0.0),
+    torch,
     brulee,
     ranger,
     kernlab,
