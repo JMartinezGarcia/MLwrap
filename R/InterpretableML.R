@@ -69,11 +69,10 @@
 #'
 #' tidy_object <- build_model(
 #'                analysis_object = tidy_object,
-#'                model_name = "Neural Network",
+#'                model_name = "Random Forest",
 #'                hyperparameters = list(
-#'                                  hidden_units = 10,
-#'                                  activation = "relu",
-#'                                  learn_rate = 0.01
+#'                                  mtry = 3,
+#'                                  trees = 100
 #'                                  )
 #'                            )
 #'

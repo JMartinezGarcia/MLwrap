@@ -97,7 +97,7 @@
 #' model-building process, ensuring a coherent and reproducible workflow for subsequent training,
 #' evaluation, or prediction tasks.
 #' @examples
-#' # Example 1: Neural Network for regression task
+#' # Example 1: Random Forest for regression task
 #'
 #' library(TidyML)
 #'
@@ -111,11 +111,10 @@
 #'
 #' tidy_object <- build_model(
 #'                analysis_object = tidy_object,
-#'                model_name = "Neural Network",
+#'                model_name = "Random Forest",
 #'                hyperparameters = list(
-#'                                  hidden_units = 10,
-#'                                  activation = "relu",
-#'                                  learn_rate = 0.01
+#'                                  mtry = 3,
+#'                                  trees = 100
 #'                                  )
 #'                            )
 #' # It is safe to reuse the same object name (e.g., tidy_object, or whatever) step by step,
@@ -159,9 +158,7 @@ build_model <- function(analysis_object, model_name, hyperparameters = NULL){
                     if (model_name == "Neural Network"){
 
                       if (!requireNamespace("torch", quietly = TRUE)) {
-                        #message("The 'torch' package is not installed. Please run:\n  install.packages('torch')\n  torch::install_torch()")
-                        utils::install.packages("torch", quiet = T)
-                        torch::install_torch()
+                        message("The 'torch' package is not installed. Please run:\n  install.packages('torch')\n  torch::install_torch()")
                       }
 
                       if (!requireNamespace("brulee", quietly = TRUE)) {
