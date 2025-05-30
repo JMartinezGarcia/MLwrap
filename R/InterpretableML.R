@@ -55,7 +55,7 @@
 #' box plots, beeswarm plots) for visual interpretation of feature importance, tailored to the task type
 #' and number of outcome levels, completing the TidyML workflow with actionable model insights.
 #' @examples
-#' # Example 1: Using SHAP
+#' # Example 1: Using PFI
 #'
 #' library(TidyML)
 #'
@@ -77,14 +77,11 @@
 #'                            )
 #'
 #' tidy_object <- fine_tuning(tidy_object,
-#'                 tuner = "Bayesian Optimization",
+#'                 tuner = "Grid Search CV",
 #'                 metrics = c("rmse", "mape"),
 #'                 plot_results = FALSE
 #'                 )
 #'
-#' tidy_object <- sensitivity_analysis(tidy_object, methods = "SHAP")
-#'
-#' # Example 2: using PFI
 #'
 #' tidy_object <- sensitivity_analysis(tidy_object, methods = "PFI", metric = "mape")
 #'
