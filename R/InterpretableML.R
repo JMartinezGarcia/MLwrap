@@ -72,13 +72,13 @@
 #'                model_name = "Random Forest",
 #'                hyperparameters = list(
 #'                                  mtry = 3,
-#'                                  trees = 100
+#'                                  trees = 20
 #'                                  )
 #'                            )
 #'
 #' tidy_object <- fine_tuning(tidy_object,
 #'                 tuner = "Grid Search CV",
-#'                 metrics = c("rmse", "mape"),
+#'                 metrics = c("rmse"),
 #'                 plot_results = FALSE
 #'                 )
 #'
