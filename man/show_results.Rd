@@ -69,7 +69,8 @@ understanding of model robustness and behavior (Molnar, 2025).
 }
 \examples{
 # Example 1: Classification Task
-# Display summary metrics, ROC curve, and confusion matrix for a classification model with test partition
+# Display summary metrics, ROC curve, and confusion matrix for
+# a classification model with test partition
 
 library(TidyML)
 
@@ -104,39 +105,6 @@ tidy_object<-show_results(tidy_object,
          confusion_matrix = TRUE,
          new_data = "test")
 
-# Example 2: Regression Task
-# Display summary metrics, scatter plot of predictions, and residuals distribution for a regression model
-# with train partition
-
-data(sim_data) # sim_data is a simulated dataset wtih psychological variables
-
-tidy_object <- preprocessing(
-      df = sim_data,
-      formula = psych_well ~ depression + emot_intel + resilience + life_sat,
-      task = "regression"
-      )
-
-tidy_object <- build_model(
-               analysis_object = tidy_object,
-               model_name = "XGBOOST",
-               hyperparameters = list(
-                  mtry = c(2,3),
-                  trees = 100,
-                  learn_rate = 0.01
-                )
-        )
-
-tidy_object <- fine_tuning(tidy_object,
-           tuner = "Bayesian Optimization",
-           metrics = c("rmse", "mape"),
-           plot_results = FALSE
-          )
-
-tidy_object<-show_results(tidy_object,
-              summary = TRUE,
-              scatter_predictions = TRUE,
-              residuals_dist = TRUE,
-              new_data = "train")
 }
 \references{
 Molnar, C. (2025). \emph{Interpretable Machine Learning: A Guide for Making Black Box Models Explainable (3rd. ed.)}.

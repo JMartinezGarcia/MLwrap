@@ -67,7 +67,7 @@ and beeswarm plots for detailed feature impact across observations. All results 
 under the \code{sensitivity_analysis} slot, finalizing the TidyML pipeline with a deep understanding of model drivers.
 }
 \examples{
-# Example 1: Using SHAP
+# Example 1: Using PFI
 
 library(TidyML)
 
@@ -89,14 +89,11 @@ tidy_object <- build_model(
                            )
 
 tidy_object <- fine_tuning(tidy_object,
-                tuner = "Bayesian Optimization",
+                tuner = "Grid Search CV",
                 metrics = c("rmse", "mape"),
                 plot_results = FALSE
                 )
 
-tidy_object <- sensitivity_analysis(tidy_object, methods = "SHAP")
-
-# Example 2: using PFI
 
 tidy_object <- sensitivity_analysis(tidy_object, methods = "PFI", metric = "mape")
 

@@ -131,10 +131,10 @@ tidy_object <- build_model(
 data(sim_data) # sim_data is a simulated dataset wtih psychological variables
 
 tidy_object <- preprocessing(
-                             df = sim_data,
-                             formula = psych_well_bin ~ depression + emot_intel + resilience + life_sat,
-                             task = "classification"
-                             )
+         df = sim_data,
+         formula = psych_well_bin ~ depression + emot_intel + resilience + life_sat,
+         task = "classification"
+         )
 
 tidy_object <- build_model(
                analysis_object = tidy_object,

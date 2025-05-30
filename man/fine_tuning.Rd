@@ -123,37 +123,11 @@ tidy_object <- build_model(
                  )
 
 tidy_object <- fine_tuning(tidy_object,
-                tuner = "Bayesian Optimization",
-                metrics = c("rmse", "mape"),
+                tuner = "Grid Search CV",
+                metrics = c("rmse"),
                 plot_results = TRUE
                )
 
-# Example 2: Fine tuning function applied to a classification task
-
-data(sim_data) # sim_data is a simulated dataset wtih psychological variables
-
-tidy_object <- preprocessing(
-                             df = sim_data,
-                             formula = psych_well_bin ~ depression + emot_intel + resilience + life_sat,
-                             task = "classification"
-                             )
-
-tidy_object <- build_model(
-               analysis_object = tidy_object,
-               model_name = "SVM",
-               hyperparameters = list(
-                                 type = "rbf",
-                                 cost = c(1e-3,1),
-                                 margin = 0.1,
-                                 rbf_sigma = 0.05
-                                 )
-                           )
-
-tidy_object <- fine_tuning(tidy_object,
-                             tuner = "Bayesian Optimization",
-                             metrics = c("roc_auc", "f_meas"),
-                             plot_results = TRUE
-                             )
 }
 \references{
 Bartz, E., Bartz-Beielstein, T., Zaefferer, M., & Mersmann, O. (2023). \emph{Hyperparameter tuner
