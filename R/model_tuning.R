@@ -88,7 +88,7 @@
 #'                model_name = "Random Forest",
 #'                hyperparameters = list(
 #'                      mtry = 3,
-#'                      trees = 100
+#'                      trees = 50
 #'                      )
 #'                  )
 #'
