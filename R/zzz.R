@@ -23,5 +23,5 @@ utils::globalVariables(c(
   "Class", "Importance", "Probability", "data_set", "label",
   "type", "density", "se", "S1", "ST", "prob_pred", "prob_observed",
   "truth", "estimate", "prob_estimate", "search_res", "sym",
-  "tidy_object", "all_of", ".pred_class"
+  "tidy_object", "all_of", ".pred_class", "importance", "Variable", "StDev", "val_color"
 ))
