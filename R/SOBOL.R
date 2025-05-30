@@ -2,8 +2,8 @@ sobol_calc <- function(model, train, task, feature_names){
 
   ncols = ncol(train) - 1
 
-  X1 <- as.data.frame(matrix(rnorm(1000 * ncols * ncols), ncol = ncols))
-  X2 <- as.data.frame(matrix(rnorm(1000 * ncols * ncols), ncol = ncols))
+  X1 <- as.data.frame(matrix(stats::rnorm(1000 * ncols * ncols), ncol = ncols))
+  X2 <- as.data.frame(matrix(stats::rnorm(1000 * ncols * ncols), ncol = ncols))
 
   names(X1) <- feature_names
   names(X2) <- feature_names

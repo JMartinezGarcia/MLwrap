@@ -17,3 +17,11 @@
   TidyML v", version, ": **Start simple, scale smart**
   ")
 }
+
+utils::globalVariables(c(
+  ".", "x", "y", ".pred", "error", "value", "variable",
+  "Class", "Importance", "Probability", "data_set", "label",
+  "type", "density", "se", "S1", "ST", "prob_pred", "prob_observed",
+  "truth", "estimate", "prob_estimate", "search_res", "sym",
+  "tidy_object", "all_of", ".pred_class"
+))
