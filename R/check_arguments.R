@@ -195,7 +195,9 @@ check_args_sensitivity_analysis <- function(analysis_object, methods, metric){
       }
   }
 
-  features_names <- all.vars(analysis_object$formula)[-1]
+  y = all.vars(analysis_object$formula)[1]
+
+  features_names <- names(analysis_object$full_data)[which(names(analysis_object$full_data) != y)]
 
   if ((!all(sapply(analysis_object$train_data[features_names], is.numeric))) && ("Sobol_Jansen" %in% methods)) {
 
