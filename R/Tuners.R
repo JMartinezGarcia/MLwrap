@@ -11,11 +11,17 @@ split_data <- function(analysis_object, prop_train = 0.6, prop_val = 0.2){
 
   model_name = analysis_object$model_name
 
+  y = all.vars(analysis_object$formula)[1]
+
+  tuner = analysis_object$tuner
+
   set.seed(123)
 
-  if (model_name == "Neural Network"){
+  if (tuner == "Bayesian Optimization"){
 
-  validation_split = rsample::initial_validation_split(analysis_object$full_data, prop = c(prop_train, prop_val))
+  validation_split = rsample::initial_validation_split(analysis_object$full_data,
+                                                       strata = !!y,
+                                                       prop = c(prop_train, prop_val))
 
   analysis_object$modify("train_data", rsample::training(validation_split))
   analysis_object$modify("validation_data", rsample::validation(validation_split))
@@ -29,7 +35,8 @@ split_data <- function(analysis_object, prop_train = 0.6, prop_val = 0.2){
 
   else{
 
-    train_test_split = rsample::initial_split(analysis_object$full_data, prop = 0.75)
+    train_test_split = rsample::initial_split(analysis_object$full_data, prop = 0.75,
+                                              strata = !!y)
 
     analysis_object$modify("train_data", rsample::training(train_test_split))
     analysis_object$modify("test_data", rsample::testing(train_test_split))
