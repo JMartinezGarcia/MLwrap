@@ -52,13 +52,14 @@ IntGrad_bin <- function(model, train, test, y){
       )
 
     set.seed(123)
-    intgrads <- innsight::run_intgrad(converted_model, data = test, verbose = F)
+    intgrads <- innsight::run_intgrad(converted_model, data = test, verbose = F, n = 100,
+                                      output_idx = 2)
 
     intgrads = as.data.frame(intgrads$get_result())
 
-    idx <- seq(ncol(test) + 1, ncol(test) * 2)
+    #idx <- seq(ncol(test) + 1, ncol(test) * 2)
 
-    intgrads <- as.data.frame(intgrads[idx])
+    #∫intgrads <- as.data.frame(intgrads[idx])
 
     names(intgrads) = names(test)
 
