@@ -19,9 +19,17 @@ split_data <- function(analysis_object, prop_train = 0.6, prop_val = 0.2){
 
   if (tuner == "Bayesian Optimization"){
 
-  validation_split = rsample::initial_validation_split(analysis_object$full_data,
+    if (analysis_object$task == "classification"){
+
+          validation_split = rsample::initial_validation_split(analysis_object$full_data,
                                                        strata = !!y,
                                                        prop = c(prop_train, prop_val))
+    } else {
+
+      validation_split = rsample::initial_validation_split(analysis_object$full_data,
+                                                           prop = c(prop_train, prop_val))
+
+    }
 
   analysis_object$modify("train_data", rsample::training(validation_split))
   analysis_object$modify("validation_data", rsample::validation(validation_split))
@@ -35,8 +43,18 @@ split_data <- function(analysis_object, prop_train = 0.6, prop_val = 0.2){
 
   else{
 
+    if (analysis_object$task == "classification"){
+
     train_test_split = rsample::initial_split(analysis_object$full_data, prop = 0.75,
                                               strata = !!y)
+
+    }
+
+    else {
+
+      train_test_split = rsample::initial_split(analysis_object$full_data, prop = 0.75)
+
+    }
 
     analysis_object$modify("train_data", rsample::training(train_test_split))
     analysis_object$modify("test_data", rsample::testing(train_test_split))

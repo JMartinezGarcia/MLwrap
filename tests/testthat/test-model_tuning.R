@@ -1,19 +1,19 @@
 # test_that("fine_tuning Bayesian Optimization works properly classification", {
-#
-#   formula = "psych_well_bin ~ gender + age + socioec_status + depression"
-#
-#   hyper_nn_tune_list = list(
-#     learn_rate = c(-2, -1),
-#     hidden_units = c(3,10)
-#   )
-#
-#   set.seed(123)
-#
-#   analysis_object <- preprocessing(df = sim_data, formula = formula, task = "classification")
-#
-#   analysis_object <- build_model(analysis_object = analysis_object,
-#                                model_name = "Neural Network",
-#                                hyperparameters = hyper_nn_tune_list)
+
+  formula = "psych_well_bin ~ gender + age + socioec_status + depression"
+
+  hyper_nn_tune_list = list(
+    learn_rate = c(-2, -1),
+    hidden_units = c(3,10)
+  )
+
+  set.seed(123)
+
+  analysis_object <- preprocessing(df = sim_data, formula = formula, task = "classification")
+
+  analysis_object <- build_model(analysis_object = analysis_object,
+                               model_name = "Neural Network",
+                               hyperparameters = hyper_nn_tune_list)
 #
 #   analysis_object <- fine_tuning(analysis_object = analysis_object,
 #                              tuner = "Bayesian Optimization",
