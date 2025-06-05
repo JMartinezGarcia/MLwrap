@@ -8,12 +8,13 @@ create_nn <- function(hyperparams, task, epochs){
     hidden_units = !!hidden_units,
     epochs = !!epochs,
     learn_rate = !!learn_rate,
-    activation = !!activation,
+    activation = !!activation
   ) %>%
     parsnip::set_engine(
       "brulee",
-      stop_iter = 10,
-      early_stopping = TRUE
+      stop_iter = 5,
+      early_stopping = TRUE,
+      batch_size = 32
     ) %>%
     parsnip::set_mode(task)
 

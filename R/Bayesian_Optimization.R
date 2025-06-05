@@ -13,7 +13,6 @@ tune_models_bayesian <- function(analysis_object, sampling_method, metrics, seed
 
   extracted_hyperparams <- extract_hyperparams(analysis_object)
 
-
   set.seed(seed)
   tuner_object <- tune::tune_bayes(
 
