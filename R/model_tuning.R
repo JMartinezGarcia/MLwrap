@@ -193,7 +193,6 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, plot_results = F
 
             final_model <-  tune::finalize_workflow(analysis_object$workflow ,final_hyperparams)
 
-            set.seed(123)
             final_model <- workflows::fit(final_model, final_data)
 
             analysis_object$modify("final_model", final_model)
