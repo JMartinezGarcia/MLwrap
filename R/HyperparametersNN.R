@@ -8,7 +8,7 @@ HyperparamsNN <- R6::R6Class("Neural Network Hyperparameters",
                                epochs = 10,
 
                                default_hyperparams = function() {
-                                 list(learn_rate = dials::learn_rate(range = c(-3, -1)),
+                                 list(learn_rate = dials::learn_rate(range = c(-3, -1.5)),
                                       hidden_units = dials::hidden_units(range = c(5, 20)),
                                       activation = dials::activation(values = c("relu", "tanh", "sigmoid"))
                                  )

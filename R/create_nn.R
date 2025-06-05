@@ -1,7 +1,7 @@
 create_nn <- function(hyperparams, task, epochs){
 
   hidden_units <- if (hyperparams$hidden_units_tune) tune::tune() else as.integer(hyperparams$hyperparams_constant$hidden_units)
-  learn_rate <- if (hyperparams$learn_rate_tune) tune::tune() else hyperparams$hyperparams_constant$learn_rate
+  learn_rate <- if (hyperparams$learn_rate_tune) tune::tune() else 10^hyperparams$hyperparams_constant$learn_rate
   activation <- if (hyperparams$activation_tune) tune::tune() else hyperparams$hyperparams_constant$activation
 
   model = parsnip::mlp(
@@ -10,7 +10,11 @@ create_nn <- function(hyperparams, task, epochs){
     learn_rate = !!learn_rate,
     activation = !!activation,
   ) %>%
-    parsnip::set_engine("brulee") %>%
+    parsnip::set_engine(
+      "brulee",
+      stop_iter = 10,
+      early_stopping = TRUE
+    ) %>%
     parsnip::set_mode(task)
 
   return(model)
