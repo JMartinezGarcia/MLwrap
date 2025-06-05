@@ -133,8 +133,6 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, plot_results = F
 
             set_metrics <- create_metric_set(analysis_object$metrics)
 
-            set.seed(123)
-
             split_final_data <- split_data(analysis_object)
 
             sampling_method = split_final_data$sampling_method
@@ -181,6 +179,8 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, plot_results = F
             if (analysis_object$model_name == "Neural Network"){
 
               new_hyperparams_nn = HyperparamsNN$new(final_hyperparams[!names(final_hyperparams) %in% ".config"])
+
+              torch::torch_manual_seed(123)
 
               new_mlp_model = create_nn(hyperparams = new_hyperparams_nn, task = analysis_object$task, epochs = 100)
 

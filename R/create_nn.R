@@ -4,8 +4,6 @@ create_nn <- function(hyperparams, task, epochs){
   learn_rate <- if (hyperparams$learn_rate_tune) tune::tune() else 10^hyperparams$hyperparams_constant$learn_rate
   activation <- if (hyperparams$activation_tune) tune::tune() else hyperparams$hyperparams_constant$activation
 
-  torch::torch_manual_seed(123)
-
   model = parsnip::mlp(
     hidden_units = !!hidden_units,
     epochs = !!epochs,
