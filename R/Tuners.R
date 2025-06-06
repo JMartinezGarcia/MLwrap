@@ -72,6 +72,10 @@ create_metric_set <- function(metrics){
 
   set_metrics <- yardstick::metric_set(!!!rlang::syms(metrics))
 
+
+
+  #set_metrics <- yardstick::metric_set("")
+
   return(set_metrics)
 
 }

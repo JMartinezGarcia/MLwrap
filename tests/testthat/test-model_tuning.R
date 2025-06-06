@@ -15,10 +15,10 @@
                                model_name = "Neural Network",
                                hyperparameters = hyper_nn_tune_list)
 #
-#   analysis_object <- fine_tuning(analysis_object = analysis_object,
-#                              tuner = "Bayesian Optimization",
-#                              metric = "roc_auc",
-#                              verbose = F)
+  analysis_object <- fine_tuning(analysis_object = analysis_object,
+                             tuner = "Bayesian Optimization",
+                             metric = "roc_auc",
+                             verbose = F)
 #
 #   fit <- analysis_object$tuner_fit
 #
