@@ -11,8 +11,6 @@ tune_models_grid_search_cv <- function(analysis_object, sampling_method, metrics
 
   )
 
-  set.seed(seed)
-
   tuner_object <- tune::tune_grid(
 
     object = analysis_object$workflow,

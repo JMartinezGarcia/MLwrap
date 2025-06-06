@@ -15,8 +15,6 @@ split_data <- function(analysis_object, prop_train = 0.6, prop_val = 0.2){
 
   tuner = analysis_object$tuner
 
-  set.seed(123)
-
   if (tuner == "Bayesian Optimization"){
 
     if (analysis_object$task == "classification"){

@@ -8,7 +8,7 @@ sobol_calc <- function(model, train, task, feature_names){
   names(X1) <- feature_names
   names(X2) <- feature_names
 
-  set.seed(123)
+
 
   if (task == "regression"){
 

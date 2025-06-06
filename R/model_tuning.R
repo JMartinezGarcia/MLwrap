@@ -180,7 +180,7 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, plot_results = F
 
               new_hyperparams_nn = HyperparamsNN$new(final_hyperparams[!names(final_hyperparams) %in% ".config"])
 
-              torch::torch_manual_seed(123)
+              #torch::torch_manual_seed(123)
 
               new_mlp_model = create_nn(hyperparams = new_hyperparams_nn, task = analysis_object$task, epochs = 100)
 
