@@ -175,8 +175,8 @@ build_model <- function(analysis_object, model_name, hyperparameters = NULL){
 
                     } else if (model_name == "XGBOOST"){
 
-                      if (!requireNamespace("xgboost", quietly = TRUE)) {
-                        utils::install.packages("xgboost")
+                      if (!base::requireNamespace("xgboost", quietly = TRUE)) {
+                        message("The 'xgboost' package is not installed. Please run:\n install.packages('xgboost')\n")
                       }
 
                       hyperparams_xgboost = HyperparamsXGBoost$new(hyperparameters)
@@ -188,7 +188,8 @@ build_model <- function(analysis_object, model_name, hyperparameters = NULL){
                     } else if (model_name == "Random Forest"){
 
                       if (!requireNamespace("ranger", quietly = TRUE)) {
-                        utils::install.packages("ranger")
+                        message("The 'ranger' package is not installed. Please run:\n install.packages('ranger')\n")
+
                       }
 
                       hyperparams_rf = HyperparamsRF$new(hyperparameters)
@@ -201,7 +202,8 @@ build_model <- function(analysis_object, model_name, hyperparameters = NULL){
                     } else if (model_name == "SVM"){
 
                       if (!requireNamespace("kernlab", quietly = TRUE)) {
-                        utils::install.packages("kernlab")
+                        message("The 'kernlab' package is not installed. Please run:\n install.packages('kernlab')\n")
+
                       }
 
                       if (is.null(hyperparameters$type)){hyperparameters$type = "linear"}

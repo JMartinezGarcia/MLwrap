@@ -39,7 +39,7 @@ metrics_info <- list(
 # Función para crear las funciones de métricas
 create_metric_function <- function(metric_name, metric_info) {
 
-  func_name <- sub("_mul$", "", metric_name)
+  func_name <- base::sub("_mul$", "", metric_name)
   metric_type = metric_info[1]
   metric_direction = metric_info[2]
 
@@ -85,12 +85,12 @@ create_metric_function <- function(metric_name, metric_info) {
    ")
     }
 
-  pkg_env <- getNamespace("TidyML")
+  pkg_env <- base::getNamespace("TidyML")
 
   # Evaluar la expresión para crear la función en el entorno pkg_env
   parsed_expr <- rlang::parse_expr(expr_text)
   eval_func <- rlang::eval_tidy(parsed_expr, env = pkg_env)
-  assign(metric_name, eval_func, envir = pkg_env)
+  base::assign(metric_name, eval_func, envir = pkg_env)
 
 }
 
@@ -105,17 +105,17 @@ convert_to_metric <- function(metrics_info) {
     metric_type <- metric_info[1]
     metric_direction <- metric_info[2]
 
-    metric_func <- get(metric_name, envir = pkg_env)
+    metric_func <- base::get(metric_name, envir = pkg_env)
 
     # Convertir la función en una métrica de yardstick usando la función almacenada
-    new_metric <- switch(metric_type,
+    new_metric <- base::switch(metric_type,
                          "prob" = yardstick::new_prob_metric(metric_func, metric_direction),
                          "class" = yardstick::new_class_metric(metric_func, metric_direction),
                          "numeric" = yardstick::new_numeric_metric(metric_func, metric_direction))
 
     # Asignar la nueva métrica al entorno
 
-    assign(metric_name, new_metric, envir = pkg_env)
+    base::assign(metric_name, new_metric, envir = pkg_env)
 
   })
 }
@@ -126,7 +126,7 @@ generate_all_metrics <- function(metrics_info) {
 
 
   # Primero crear las funciones usando eval y almacenarlas en el entorno
-  lapply(names(metrics_info), function(m) create_metric_function(m, metrics_info[[m]]))
+  base::lapply(names(metrics_info), function(m) create_metric_function(m, metrics_info[[m]]))
 
   # Luego convertirlas en métricas pasando metrics_info a convert_to_metric
   convert_to_metric(metrics_info)
