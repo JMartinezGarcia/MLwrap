@@ -19,9 +19,9 @@ sensitivity_analysis(
 (Neural Network only).}
 
 \item{metric}{Metric used for "PFI" method (Permutation Feature Importance).
-A string of the name of metric (see Metrics).
+A string of the name of metric (see Metrics).}
 
-@param verbose Boolean. Whether to print results to console.}
+\item{verbose}{Boolean. Whether to print results to console.}
 }
 \value{
 An updated \code{analysis_object} with the results of the sensitivity analysis stored in the
