@@ -1,5 +1,5 @@
-formula_bin <- "psych_well ~ age + gender + depression"
-formula_reg <- "psych_well_bin ~ age + gender + depression"
+formula_bin <- "psych_well_bin ~ age + gender + depression"
+formula_reg <- "psych_well ~ age + gender + depression"
 
 analysis_object_reg = preprocessing(df = sim_data, formula_reg, task = "regression")
 
@@ -42,6 +42,9 @@ test_that("Check create_workflow works properly", {
 ###### split_data
 
 test_that("Check split_data works properly", {
+
+  model_object_bin$modify("tuner", "Bayesian Optimization")
+  model_object_reg$modify("tuner", "Grid Search CV")
 
   split_data_bin <- split_data(model_object_bin)
   split_data_reg <- split_data(model_object_reg)

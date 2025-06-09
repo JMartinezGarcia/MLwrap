@@ -25,7 +25,8 @@
 #' @param  metric Metric used for "PFI" method (Permutation Feature Importance).
 #'  A string of the name of metric (see Metrics).
 #'
-#'  @param verbose Boolean. Whether to print results to console.
+#' @param verbose Boolean. Whether to print results to console.
+#'
 #' @details
 #' As the concluding phase of the TidyML workflow—after data preparation, model training, and evaluation—this
 #' function enables users to interpret their models by quantifying and visualizing feature importance. It first
