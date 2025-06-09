@@ -24,6 +24,8 @@
 #'     (Neural Network only).
 #' @param  metric Metric used for "PFI" method (Permutation Feature Importance).
 #'  A string of the name of metric (see Metrics).
+#'
+#'  @param verbose Boolean. Whether to print results to console.
 #' @details
 #' As the concluding phase of the TidyML workflow—after data preparation, model training, and evaluation—this
 #' function enables users to interpret their models by quantifying and visualizing feature importance. It first
@@ -93,7 +95,7 @@
 #' Jansen, M. J. W. (1999). Analysis of variance designs for model output. Computer Physics Communications,
 #' 117(1-2), 35–43. https://doi.org/10.1016/S0010-4655(98)00154-4
 #' @export
-sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = NULL){
+sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = NULL, verbose = TRUE){
 
   check_args_sensitivity_analysis(analysis_object = analysis_object, methods = methods, metric = metric)
 
@@ -152,14 +154,22 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     y_classes <- levels(bake_train[[y]])
 
-    cat("######### PFI Method Results ############## \n")
+    if (verbose == T){
+
+        cat("######### PFI Method Results ############## \n")
+
+    }
 
     for (target_class in y_classes){
 
-      cat("\n")
-      print(paste0("PFI for class ", target_class))
-      print(results[[target_class]])
-      cat("\n")
+      if (verbose == T){
+
+          cat("\n")
+          print(paste0("PFI for class ", target_class))
+          print(results[[target_class]])
+          cat("\n")
+
+      }
 
       p <- plot_barplot(results[[target_class]], func = NULL, title = paste0("Permutation Feature Importance for class ",
                                                         target_class), x_label = "Importance")
@@ -174,10 +184,14 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     } else{
 
-      cat("######### PFI Method Results ############## \n")
-      cat("\n")
-      print(results)
-      cat("\n")
+      if (verbose == T){
+
+          cat("######### PFI Method Results ############## \n")
+          cat("\n")
+          print(results)
+          cat("\n")
+
+      }
 
       p <- plot_barplot(results, func = NULL, title = "Permutation Feature Importance", x_label = "Importance")
 
@@ -206,14 +220,23 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       y_classes = levels(bake_train[[y]])
 
-      cat("######### SHAP Method Results ############## \n")
+      if (verbose == T){
+
+          cat("######### SHAP Method Results ############## \n")
+
+      }
 
       for (target_class in y_classes){
 
-        cat("\n")
-        print(paste0("abs(SHAP) for class ", target_class))
-        print(summarize_importance(abs(results[[target_class]]), feature_names))
-        cat("\n")
+
+        if (verbose == T){
+
+            cat("\n")
+            print(paste0("abs(SHAP) for class ", target_class))
+            print(summarize_importance(abs(results[[target_class]]), feature_names))
+            cat("\n")
+
+        }
 
         p <- plot_barplot(results[[target_class]], func = function(x) mean(abs(x)),
                      func_se = function(x) sd(abs(x)) / sqrt(length(x)),
@@ -263,10 +286,14 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     } else{
 
-      cat("######### SHAP Method Results ############## \n")
-      cat("\n")
-      print(summarize_importance(abs(results), feature_names))
-      cat("\n")
+      if (verbose == T){
+
+          cat("######### SHAP Method Results ############## \n")
+          cat("\n")
+          print(summarize_importance(abs(results), feature_names))
+          cat("\n")
+
+      }
 
     p <- plot_barplot(results, func = function(x) mean(abs(x)),
                  func_se = function(x) sd(abs(x)) / sqrt(length(x)),
@@ -325,14 +352,22 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       y_classes = levels(bake_train[[y]])
 
-      cat("######### Integrated Gradients Method Results ############## \n")
+      if (verbose == T){
+
+          cat("######### Integrated Gradients Method Results ############## \n")
+
+      }
 
       for (target_class in y_classes){
 
-        cat("\n")
-        print(paste0("abs(Integrated Gradients) for class ", target_class))
-        print(summarize_importance(abs(results[[target_class]]), feature_names))
-        cat("\n")
+        if (verbose == T){
+
+            cat("\n")
+            print(paste0("abs(Integrated Gradients) for class ", target_class))
+            print(summarize_importance(abs(results[[target_class]]), feature_names))
+            cat("\n")
+
+        }
 
         p <- plot_barplot(results[[target_class]], func = function(x) mean(abs(x)),
                      func_se = function(x) sd(abs(x)) / sqrt(length(x)),
@@ -381,10 +416,14 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     } else{
 
-      cat("######### Integrated Gradients Method Results ############## \n")
-      cat("\n")
-      print(summarize_importance(abs(results), feature_names))
-      cat("\n")
+      if (verbose == T){
+
+          cat("######### Integrated Gradients Method Results ############## \n")
+          cat("\n")
+          print(summarize_importance(abs(results), feature_names))
+          cat("\n")
+
+      }
 
       p <- plot_barplot(results, func = function(x) mean(abs(x)),
                    func_se = function(x) sd(abs(x)) / sqrt(length(x)),
@@ -450,10 +489,14 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       rownames(df_results) <- y_classes
 
-      cat("######### Olden's Method Results ############## \n")
-      cat("\n")
-      print(df_results)
-      cat("\n")
+      if (verbose == T){
+
+          cat("######### Olden's Method Results ############## \n")
+          cat("\n")
+          print(df_results)
+          cat("\n")
+
+      }
 
       for (i in 1:length(y_classes)){
 
@@ -474,10 +517,14 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     } else{
 
-      cat("######### Olden's Method Results ############## \n")
-      cat("\n")
-      print(df_results)
-      cat("\n")
+      if (verbose == TRUE){
+
+          cat("######### Olden's Method Results ############## \n")
+          cat("\n")
+          print(df_results)
+          cat("\n")
+
+      }
 
       p <- olden_barplot(results, feature_names)
 
@@ -496,12 +543,16 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       sensitivity_analysis_list[["Sobol_Jansen"]] <- results
 
-      cat("######### Sobol_Jansen's Method Results ############## \n")
-      cat("\n")
-      print(results)
-      cat("\n")
-      print("##############################################")
-      cat("\n")
+      if (verbose == TRUE){
+
+          cat("######### Sobol_Jansen's Method Results ############## \n")
+          cat("\n")
+          print(results)
+          cat("\n")
+          print("##############################################")
+          cat("\n")
+
+      }
 
       p <- sobol_plot(results)
 
