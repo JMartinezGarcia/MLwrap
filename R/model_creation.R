@@ -162,7 +162,8 @@ build_model <- function(analysis_object, model_name, hyperparameters = NULL){
                       }
 
                       if (!requireNamespace("brulee", quietly = TRUE)) {
-                        utils::install.packages("brulee")
+                        message("The 'brulee' package is not installed. Please run:\n install.packages('brulee')\n")
+
                       }
 
                       hyperparams_nn = HyperparamsNN$new(hyperparameters)
