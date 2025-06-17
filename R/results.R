@@ -353,7 +353,7 @@ show_results <- function(analysis_object,
 
     plot_ob = analysis_object$plots
 
-    plot_ob$scatter_predicitons = p
+    plot_ob$scatter_predictions = p
 
     analysis_object$modify("plots", plot_ob)
 
