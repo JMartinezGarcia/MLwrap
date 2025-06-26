@@ -6,3 +6,4 @@
 ^README\.html$
 ^CRAN-SUBMISSION$
 ^revdep$
+^\.github$
