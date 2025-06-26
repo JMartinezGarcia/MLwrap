@@ -62,7 +62,7 @@
 #'
 #' library(TidyML)
 #'
-#' data(sim_data) # sim_data is a simulated dataset wtih psychological variables
+#' data(sim_data) # sim_data is a simulated dataset with psychological variables
 #'
 #' tidy_object <- preprocessing(
 #'        df = sim_data,
