@@ -254,7 +254,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
         p <- plot2(results[[target_class]], test, func = function(x) mean(x),
               func_se = function(x) sd(x),
               x_label = "Mean (SHAP * sign(X))",
-              title = paste0("Mean (SHAP * sign(X)) value for class ", target_class)
+              title = paste0("Directional Sensitivity of SHAP Values for class ", target_class)
               )
 
         plot_name <- paste0(method_name,"_",target_class,"_barplot2")
@@ -310,7 +310,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
     p <- plot2(results, test, func = function(x) mean(x),
             func_se = function(x) sd(x),
             x_label = "Mean (SHAP * sign(X))",
-            title = "Mean (SHAP * sign(X)) value")
+            title = "Directional Sensitivity of SHAP Values")
 
     plot_name <- paste0(method_name, "_barplot2")
 
@@ -385,7 +385,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
         p <- plot2(results[[target_class]], test, func = function(x) mean(x),
               func_se = function(x) sd(x),
               x_label = "Mean (Integrated Gradient * sign(X))",
-              title = paste0("Mean (Integrated Gradient * sign(X)) value for class ", target_class)
+              title = paste0("Directional Sensitivity of Integrated Gradients Values for class ", target_class)
               )
 
         plot_name <- paste0(method_name,"_",target_class,"_barplot2")
@@ -440,8 +440,8 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       p <- plot2(results, test, func = function(x) mean(x),
             func_se = function(x) sd(x),
-            x_label = "Mean (Integrated Gradient * sign(X))",
-            title = "Mean (Integrated Gradient * sign(X)) value")
+            x_label = "Integradient Gradient Correlation",
+            title = "Directional Sensitivity of Integrated Gradients Values")
 
       plot_name <- paste0(method_name,"_barplot2")
 
@@ -620,28 +620,44 @@ plot2 <- function(X, test, func = NULL, func_se = stats::sd, title, x_label) {
 
   X <- base::as.data.frame(X)
 
-  #sign_results = as.data.frame(as.matrix(X) * sign(as.matrix(test)))
+  test <- base::as.data.frame(test)
 
-  X_mat <- as.matrix(X)
-  test_mat <- as.matrix(test)
+  N = base::ncol(test)
 
-  # Paso 1: multiplicación elemento a elemento
-  product <- X_mat * test_mat
+  feat_names <- names(test)
 
-  # Paso 2: divisor por columna = media del valor absoluto de test
-  denominator <- base::colMeans(base::abs(test_mat))
+  collapse_imp <- list()
 
-  # Paso 3: dividir cada columna por su media
-  sign_results <- base::sweep(product, 2, denominator, "/")
+  for (i in 1:N){
 
-  # Si quieres data.frame al final:
-  sign_results <- as.data.frame(sign_results)
+    collapse_imp[[feat_names[i]]] <- stats::cov(X[[i]], test[[i]]) / stats::var(test[[i]])
 
-  names(sign_results) <- names(X)
+  }
+
+  collapse_imp <- base::as.data.frame(collapse_imp)
+
+  # #sign_results = as.data.frame(as.matrix(X) * sign(as.matrix(test)))
+  #
+  # X_mat <- as.matrix(X)
+  # test_mat <- as.matrix(test)
+  #
+  # # Paso 1: multiplicación elemento a elemento
+  # product <- X_mat * test_mat
+  #
+  # # Paso 2: divisor por columna = media del valor absoluto de test
+  # denominator <- base::colMeans(base::abs(test_mat))
+  #
+  # # Paso 3: dividir cada columna por su media
+  # sign_results <- base::sweep(product, 2, denominator, "/")
+  #
+  # # Si quieres data.frame al final:
+  # sign_results <- as.data.frame(sign_results)
+  #
+  # names(sign_results) <- names(X)
 
    df <- tibble::tibble(
-    variable = base::colnames(sign_results),
-    importance = as.numeric(base::sapply(sign_results, func))
+    variable = base::colnames(collapse_imp),
+    importance = base::unlist(collapse_imp, use.names = FALSE)
   )
 
   # Order decreasing

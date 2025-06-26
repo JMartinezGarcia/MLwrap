@@ -176,7 +176,7 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, plot_results = F
 
             }
 
-            if (analysis_object$model_name == "Neural Network"){
+            if ((analysis_object$model_name == "Neural Network") && (analysis_object$model$engine == "brulee")){
 
               new_hyperparams_nn = HyperparamsNN$new(final_hyperparams[!names(final_hyperparams) %in% ".config"])
 
