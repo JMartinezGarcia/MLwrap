@@ -197,7 +197,7 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, plot_results = F
 
             analysis_object$modify("final_model", final_model)
 
-            if (analysis_object$model_name == "Neural Network"){
+            if ((analysis_object$model_name == "Neural Network") && (analysis_object$model$engine == "brulee")){
 
                 model_parsnip <- tune::extract_fit_parsnip(final_model)
 

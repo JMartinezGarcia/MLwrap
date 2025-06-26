@@ -5,7 +5,7 @@ HyperparamsNN <- R6::R6Class("Neural Network Hyperparameters",
                                hidden_units_tune = TRUE,
                                learn_rate_tune = TRUE,
                                activation_tune = TRUE,
-                               epochs = 10,
+                               epochs = 25,
 
                                default_hyperparams = function() {
                                  list(learn_rate = dials::learn_rate(range = c(-3, -1.5)),
