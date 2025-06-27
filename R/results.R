@@ -33,7 +33,7 @@
 #' @returns An updated analysis_object containing the generated predictions, summary statistics, and any
 #' visualizations or diagnostic outputs selected by the user. This object reflects the results of model
 #' evaluation and can be further used for reporting, interpretation, or additional analyses within the
-#' ML tidyML workflow.
+#' ML TidyML workflow.
 #' @examples
 #' # Example 1: Classification Task
 #' # Display summary metrics, ROC curve, and confusion matrix for

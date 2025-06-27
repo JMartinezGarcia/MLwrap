@@ -636,24 +636,6 @@ plot2 <- function(X, test, func = NULL, func_se = stats::sd, title, x_label) {
 
   collapse_imp <- base::as.data.frame(collapse_imp)
 
-  # #sign_results = as.data.frame(as.matrix(X) * sign(as.matrix(test)))
-  #
-  # X_mat <- as.matrix(X)
-  # test_mat <- as.matrix(test)
-  #
-  # # Paso 1: multiplicación elemento a elemento
-  # product <- X_mat * test_mat
-  #
-  # # Paso 2: divisor por columna = media del valor absoluto de test
-  # denominator <- base::colMeans(base::abs(test_mat))
-  #
-  # # Paso 3: dividir cada columna por su media
-  # sign_results <- base::sweep(product, 2, denominator, "/")
-  #
-  # # Si quieres data.frame al final:
-  # sign_results <- as.data.frame(sign_results)
-  #
-  # names(sign_results) <- names(X)
 
    df <- tibble::tibble(
     variable = base::colnames(collapse_imp),

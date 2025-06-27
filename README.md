@@ -19,7 +19,7 @@ TidyML workflow is organized into five core steps; preprocessing(),
 build_model(), fine_tuning(), show_results(), and
 sensitivity_analysis(). These steps correspond, respectively, to data
 preparation and transformation, model construction, hyperparameter
-optimization, resuresults presentation, and sensitivity analysis. By
+optimization, results presentation, and sensitivity analysis. By
 streamlining these phases, TidyML aims to simplify the implementation of
 ML techniques, allowing analysts and data scientists to focus on
 extracting actionable insights and meaningful patterns from large

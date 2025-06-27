@@ -54,7 +54,7 @@ A string with the name of the data_set: "train", "validation", "test" (default) 
 An updated analysis_object containing the generated predictions, summary statistics, and any
 visualizations or diagnostic outputs selected by the user. This object reflects the results of model
 evaluation and can be further used for reporting, interpretation, or additional analyses within the
-ML tidyML workflow.
+ML TidyML workflow.
 }
 \description{
 The \strong{show_results()} function is a central component of the ML workflow established by the package,
@@ -74,7 +74,7 @@ understanding of model robustness and behavior (Molnar, 2025).
 
 library(TidyML)
 
-data(sim_data) # sim_data is a simulated dataset wtih psychological variables
+data(sim_data) # sim_data is a simulated dataset with psychological variables
 
 tidy_object <- preprocessing(
        df = sim_data,

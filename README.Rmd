@@ -15,9 +15,6 @@ knitr::opts_chunk$set(
 
 # TidyML
 
-<!-- badges: start -->
-<!-- badges: end -->
-
 TidyML is a minimalistic library specifically designed to make the estimation of Machine
 Learning (ML) techniques as easy and accessible as possible, particularly within the framework
 of the Knowledge Discovery in Databases (KDD) process in data mining. The package provides
@@ -27,7 +24,7 @@ methodology, from data selection and preparation, through model building and tun
 interpretation and evaluation of results using Sensitivity Analysis. The TidyML workflow is
 organized into five core steps; preprocessing(), build_model(), fine_tuning(), show_results(),
 and sensitivity_analysis(). These steps correspond, respectively, to data preparation and
-transformation, model construction, hyperparameter optimization, resuresults presentation, and
+transformation, model construction, hyperparameter optimization, results presentation, and
 sensitivity analysis. By streamlining these phases, TidyML aims to simplify the implementation
 of ML techniques, allowing analysts and data scientists to focus on extracting actionable insights
 and meaningful patterns from large datasets, in line with the objectives of the KDD process.
