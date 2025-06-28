@@ -170,8 +170,6 @@ build_model <- function(analysis_object, model_name, hyperparameters = NULL){
 
                       analysis_object$modify("hyperparameters", hyperparams_nn)
 
-                      #torch::torch_manual_seed(seed)
-
                       model = create_nn(hyperparams = hyperparams_nn, task = task, epochs = 25)
 
                     } else if (model_name == "XGBOOST"){

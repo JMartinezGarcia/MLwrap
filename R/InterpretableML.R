@@ -21,7 +21,7 @@
 #' @param analysis_object analysis_object created from fine_tuning function.
 #' @param methods Method to be used. A string of the method name: "PFI" (Permutation Feature Importance),
 #'     "SHAP" (SHapley Additive exPlanations), "Integrated Gradients" (Neural Network only), "Olden"
-#'     (Neural Network only).
+#'     (Neural Network only), "Sobol_Jansen" (only when all input features are continuous).
 #' @param  metric Metric used for "PFI" method (Permutation Feature Importance).
 #'  A string of the name of metric (see Metrics).
 #'

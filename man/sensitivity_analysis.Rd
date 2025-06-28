@@ -16,7 +16,7 @@ sensitivity_analysis(
 
 \item{methods}{Method to be used. A string of the method name: "PFI" (Permutation Feature Importance),
 "SHAP" (SHapley Additive exPlanations), "Integrated Gradients" (Neural Network only), "Olden"
-(Neural Network only).}
+(Neural Network only), "Sobol_Jansen" (only when all input features are continuous).}
 
 \item{metric}{Metric used for "PFI" method (Permutation Feature Importance).
 A string of the name of metric (see Metrics).}

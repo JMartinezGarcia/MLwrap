@@ -103,7 +103,7 @@
 #' for Machine and Deep Learning with R. A Practical Guide*. Springer, Singapore.
 #' https://doi.org/10.1007/978-981-19-5170-1
 #' @export
-fine_tuning <- function(analysis_object, tuner, metrics = NULL, plot_results = F, verbose = FALSE){
+fine_tuning <- function(analysis_object, tuner, metrics = NULL, plot_results = FALSE, verbose = FALSE){
 
             check_args_fine_tuning(analysis_object = analysis_object, tuner = tuner, metrics = metrics,
                                    plot_results = plot_results, verbose = verbose)

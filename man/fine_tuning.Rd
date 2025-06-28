@@ -8,7 +8,7 @@ fine_tuning(
   analysis_object,
   tuner,
   metrics = NULL,
-  plot_results = F,
+  plot_results = FALSE,
   verbose = FALSE
 )
 }
