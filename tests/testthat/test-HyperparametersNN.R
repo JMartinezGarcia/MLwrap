@@ -29,7 +29,7 @@ test_that("NN Default Hyperparams works", {
   expect_equal(hyperparams_nn$tuning, T)
 
   expect_equal(hyperparams_nn$hyperparams_ranges$hidden_units$range, list(lower = 5, upper = 20))
-  expect_equal(hyperparams_nn$hyperparams_ranges$learn_rate$range, list(lower = -3, upper = -1.5))
+  expect_equal(hyperparams_nn$hyperparams_ranges$learn_rate$range, list(lower = -3, upper = -1.))
   expect_equal(hyperparams_nn$hyperparams_ranges$activation$value, c("relu", "tanh", "sigmoid"))
 
   expect_equal(hyperparams_nn$hidden_units_tune, T)
