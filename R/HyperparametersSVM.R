@@ -101,6 +101,8 @@ HyperparamsSVM <- R6::R6Class("Neural Network Hyperparameters",
 
                                      if (length(value) > 1) {
 
+                                       if (name == "margin"){name = "svm_margin"}
+
                                        func <- get(name, envir = asNamespace("dials"))
                                        func(range = value)
 
