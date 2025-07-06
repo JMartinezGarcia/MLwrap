@@ -168,6 +168,14 @@ AnalysisObject <- R6::R6Class("AnalysisObject",
       } else {
         stop("`$plots` is read only", call. = FALSE)
       }
+    },
+
+    tables = function(value) {
+      if (missing(value)) {
+        private$.tables
+      } else {
+        stop("`$tables` is read only", call. = FALSE)
+      }
     }
 
   ),
@@ -194,6 +202,7 @@ AnalysisObject <- R6::R6Class("AnalysisObject",
     .outcome_levels = NULL,
     .sensitivity_analysis = NULL,
     .plots = NULL,
+    .tables = NULL,
 
     add_stage = function(stage){
 
@@ -307,7 +316,14 @@ AnalysisObject <- R6::R6Class("AnalysisObject",
 
       private$.plots = plot_object
 
+    },
+
+    add_tables = function(table_object){
+
+      private$.tables = table_object
+
     }
+
   ),
 
   public = list(

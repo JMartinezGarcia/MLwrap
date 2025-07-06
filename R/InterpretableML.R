@@ -155,7 +155,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     y_classes <- levels(bake_train[[y]])
 
-    if (verbose == T){
+    if (verbose == TRUE){
 
         cat("######### PFI Method Results ############## \n")
 
@@ -163,7 +163,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     for (target_class in y_classes){
 
-      if (verbose == T){
+      if (verbose == TRUE){
 
           cat("\n")
           print(paste0("PFI for class ", target_class))
@@ -185,7 +185,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     } else{
 
-      if (verbose == T){
+      if (verbose == TRUE){
 
           cat("######### PFI Method Results ############## \n")
           cat("\n")
@@ -221,7 +221,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       y_classes = levels(bake_train[[y]])
 
-      if (verbose == T){
+      if (verbose == TRUE){
 
           cat("######### SHAP Method Results ############## \n")
 
@@ -230,7 +230,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
       for (target_class in y_classes){
 
 
-        if (verbose == T){
+        if (verbose == TRUE){
 
             cat("\n")
             print(paste0("abs(SHAP) for class ", target_class))
@@ -239,6 +239,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
         }
 
+        message("pepe")
         p <- plot_barplot(results[[target_class]], func = function(x) mean(abs(x)),
                      func_se = function(x) sd(abs(x)) / sqrt(length(x)),
                      x_label = "Mean |SHAP|",
@@ -287,7 +288,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     } else{
 
-      if (verbose == T){
+      if (verbose == TRUE){
 
           cat("######### SHAP Method Results ############## \n")
           cat("\n")
@@ -353,7 +354,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       y_classes = levels(bake_train[[y]])
 
-      if (verbose == T){
+      if (verbose == TRUE){
 
           cat("######### Integrated Gradients Method Results ############## \n")
 
@@ -361,7 +362,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       for (target_class in y_classes){
 
-        if (verbose == T){
+        if (verbose == TRUE){
 
             cat("\n")
             print(paste0("abs(Integrated Gradients) for class ", target_class))
@@ -417,7 +418,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     } else{
 
-      if (verbose == T){
+      if (verbose == TRUE){
 
           cat("######### Integrated Gradients Method Results ############## \n")
           cat("\n")
@@ -490,7 +491,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       rownames(df_results) <- y_classes
 
-      if (verbose == T){
+      if (verbose == TRUE){
 
           cat("######### Olden's Method Results ############## \n")
           cat("\n")

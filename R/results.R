@@ -97,13 +97,35 @@ show_results <- function(analysis_object,
 
   analysis_object$modify("predictions", predictions)
 
+  pred_train = predictions %>% dplyr::filter(data_set == "train")
+
   pred_test = predictions %>% dplyr::filter(data_set == "test")
 
-  summary_results = summary_results(analysis_object, pred_test)
+  summary_train = summary_results(analysis_object, pred_train, new_data = "Train")
 
-  analysis_object$modify("fit_summary",summary_results)
+  summary_test = summary_results(analysis_object, pred_test, new_data = "Test")
 
-  cat("############# Showing Results ############# \n")
+  tables <- analysis_object$tables
+
+  if (analysis_object$outcome_levels > 2){
+
+    tables$summary_train <- summary_train
+
+    tables$summary_test <- summary_test
+
+  } else {
+
+    summary_total <- bind_rows(summary_train, summary_test)
+
+    #rownames(summary_total) <- c("Train", "Test")
+
+    tables$summary_results <- summary_total
+
+  }
+
+  analysis_object$modify("tables", tables)
+
+  #analysis_object$modify("fit_summary",summary_test)
 
   if (summary == T){
 

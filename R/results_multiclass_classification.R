@@ -110,6 +110,8 @@ summary_multiclass_per_class <- function(predictions, new_data = "test"){
   results_df["Class"] = y_classes
   results_df <- dplyr::relocate(results_df, "Class", .before = 1)
 
+  rownames(results_df) <- NULL
+
   return(results_df)
 
 }

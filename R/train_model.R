@@ -1,4 +1,4 @@
-#' Fine Tune ML Model
+#' Fine Tune ML Model2
 #'
 #' The **fine_tuning()** function performs automated hyperparameter optimization for ML workflows encapsulated
 #' within an AnalysisObject. It supports different tuning strategies, such as **Bayesian Optimization** and
@@ -103,127 +103,130 @@
 #' for Machine and Deep Learning with R. A Practical Guide*. Springer, Singapore.
 #' https://doi.org/10.1007/978-981-19-5170-1
 #' @export
-fine_tuning <- function(analysis_object, tuner, metrics = NULL, plot_results = FALSE, verbose = FALSE){
+train_model <- function(analysis_object, tuner, metrics = NULL, plot_results = FALSE, verbose = FALSE){
 
-            check_args_fine_tuning(analysis_object = analysis_object, tuner = tuner, metrics = metrics,
-                                   plot_results = plot_results, verbose = verbose)
+  check_args_fine_tuning(analysis_object = analysis_object, tuner = tuner, metrics = metrics,
+                         plot_results = plot_results, verbose = verbose)
 
-            analysis_object = analysis_object$clone()
+  analysis_object = analysis_object$clone()
 
-            if (is.null(metrics)){
+  if (is.null(metrics)){
 
-              if (analysis_object$task == "regression"){metrics = "rmse"}
-              else {metrics = "roc_auc"}
+    if (analysis_object$task == "regression"){metrics = "rmse"}
+    else {metrics = "roc_auc"}
 
-            }
+  }
 
-            analysis_object$modify("workflow", create_workflow(analysis_object))
+  analysis_object$modify("workflow", create_workflow(analysis_object))
 
-            if (!all(metrics %in% names(metrics_info))) {
-              invalid_metrics <- metrics[!(metrics %in% names(metrics_info))]
-              stop(paste0(
-                "Unrecognized metric(s):\n ", paste(invalid_metrics, collapse = ", "),
-                ". \n\nChoose from:\n ", paste(names(metrics_info), collapse = ", ")
-              ))
-            }
+  if (!all(metrics %in% names(metrics_info))) {
+    invalid_metrics <- metrics[!(metrics %in% names(metrics_info))]
+    stop(paste0(
+      "Unrecognized metric(s):\n ", paste(invalid_metrics, collapse = ", "),
+      ". \n\nChoose from:\n ", paste(names(metrics_info), collapse = ", ")
+    ))
+  }
 
-            analysis_object$modify("metrics", metrics)
+  analysis_object$modify("metrics", metrics)
 
-            analysis_object$modify("tuner", tuner)
+  analysis_object$modify("tuner", tuner)
 
-            set_metrics <- create_metric_set(analysis_object$metrics)
+  set_metrics <- create_metric_set(analysis_object$metrics)
 
-            split_final_data <- split_data(analysis_object)
+  split_final_data <- split_data(analysis_object)
 
-            sampling_method = split_final_data$sampling_method
+  sampling_method = split_final_data$sampling_method
 
-            final_data = split_final_data$final_split
+  final_data = split_final_data$final_split
 
-            if (analysis_object$hyperparameters$tuning == TRUE){
+  if (analysis_object$hyperparameters$tuning == TRUE){
 
 
-                cli::cli_alert_info("Commencing Tuning...")
+    cli::cli_alert_info("Commencing Tuning...")
 
-                tuner_fit = tune_models(analysis_object,
-                                        tuner,
-                                        sampling_method,
-                                        metrics = set_metrics,
-                                        verbose = verbose)
+    tuner_fit = tune_models(analysis_object,
+                            tuner,
+                            sampling_method,
+                            metrics = set_metrics,
+                            verbose = verbose)
 
-                cli::cli_alert_success("Tuning Finalized!")
+    cli::cli_alert_success("Tuning Finalized!")
 
-                analysis_object$modify("tuner_fit", tuner_fit)
+    analysis_object$modify("tuner_fit", tuner_fit)
 
-                if (plot_results == T){
+    # FINAL TRAINING
+    # ============================================================================
 
-                  plot_tuning_results(analysis_object)
+    best_hyper <- tune::select_best(tuner_fit, metric = analysis_object$metrics[1])
 
-                }
+    final_hyperparams <- c(as.list(best_hyper),
+                           analysis_object$hyperparameters$hyperparams_constant
+    )
 
-                # FINAL TRAINING
-                # ============================================================================
+  } else{
 
-                best_hyper <- tune::select_best(tuner_fit, metric = analysis_object$metrics[1])
+    ### NO TUNING
 
-                final_hyperparams <- c(as.list(best_hyper),
-                                       analysis_object$hyperparameters$hyperparams_constant
-                                       )
+    final_hyperparams <- analysis_object$hyperparameters$hyperparams_constant
 
-            } else{
+  }
 
-                ### NO TUNING
+  if ((analysis_object$model_name == "Neural Network") && (analysis_object$model$engine == "brulee")){
 
-                final_hyperparams <- analysis_object$hyperparameters$hyperparams_constant
+    new_hyperparams_nn = HyperparamsNN$new(final_hyperparams[!names(final_hyperparams) %in% ".config"])
 
-            }
+    #torch::torch_manual_seed(123)
 
-            if ((analysis_object$model_name == "Neural Network") && (analysis_object$model$engine == "brulee")){
+    new_mlp_model = create_nn(hyperparams = new_hyperparams_nn, task = analysis_object$task, epochs = 100)
 
-              new_hyperparams_nn = HyperparamsNN$new(final_hyperparams[!names(final_hyperparams) %in% ".config"])
+    new_workflow <- analysis_object$workflow %>%
+      workflows::update_model(new_mlp_model)
 
-              #torch::torch_manual_seed(123)
+    analysis_object$modify("workflow", new_workflow)
 
-              new_mlp_model = create_nn(hyperparams = new_hyperparams_nn, task = analysis_object$task, epochs = 100)
+  }
 
-              new_workflow <- analysis_object$workflow %>%
-                workflows::update_model(new_mlp_model)
+  final_model <-  tune::finalize_workflow(analysis_object$workflow ,final_hyperparams)
 
-              analysis_object$modify("workflow", new_workflow)
+  final_model <- parsnip::fit(final_model, final_data)
 
-            }
+  analysis_object$modify("final_model", final_model)
 
-            final_model <-  tune::finalize_workflow(analysis_object$workflow ,final_hyperparams)
+  #### Predictions ######
 
-            final_model <- parsnip::fit(final_model, final_data)
+  predictions = get_predictions(analysis_object, "all")
 
-            analysis_object$modify("final_model", final_model)
+  analysis_object$modify("predictions", predictions)
 
-            if ((analysis_object$model_name == "Neural Network") && (analysis_object$model$engine == "brulee")){
+  pred_train = predictions %>% dplyr::filter(data_set == "train")
 
-                model_parsnip <- tune::extract_fit_parsnip(final_model)
+  pred_test = predictions %>% dplyr::filter(data_set == "test")
 
-                message("###### Loss Curve ######\n")
+  summary_train = summary_results(analysis_object, pred_train, new_data = "Train")
 
-                p <- brulee::autoplot(model_parsnip) +
-                     ggplot2::labs(title = "Neural Network Loss Curve")
+  summary_test = summary_results(analysis_object, pred_test, new_data = "Test")
 
-                plot_ob = analysis_object$plots
+  tables <- analysis_object$tables
 
-                plot_ob$nn_loss_curve = p
+  if (analysis_object$outcome_levels > 2){
 
-                analysis_object$modify("plots", plot_ob)
+    tables$summary_train <- summary_train
 
-                print(p)
+    tables$summary_test <- summary_test
 
-                p <- graph_nn(model_parsnip)
+  } else {
 
-                print(p)
+    summary_total <- bind_rows(summary_train, summary_test)
 
-            }
+    tables$summary_results <- summary_total
 
-            analysis_object$modify("stage", "fit_model")
+  }
 
-            return(analysis_object)
+  analysis_object$modify("tables", tables)
+
+  analysis_object$modify("stage", "fit_model")
+
+  return(analysis_object)
 
 }
 
@@ -250,5 +253,3 @@ tune_models <- function(analysis_object, tuner, sampling_method, metrics, verbos
   return(tuner_object)
 
 }
-
-

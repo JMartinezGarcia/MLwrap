@@ -94,6 +94,30 @@ check_args_fine_tuning <- function(analysis_object, tuner, metrics, plot_results
 
 }
 
+############ Check Results Plots
+
+check_args_regression_plot <- function(analysis_object, data_set){
+
+  if (analysis_object$task != "regression"){
+
+    stop("Residuals Distribution is for regression task only!")
+
+  }
+
+  if (analysis_object$stage != "fit_model"){
+
+    stop("Please train a model first with train_model!")
+
+  }
+
+  if (data_set != "test" || data_set != "train"){
+
+    stop("data_set must be 'train' or 'test'!")
+
+  }
+
+}
+
 ############ Check Results
 
 check_args_show_results <- function(analysis_object,

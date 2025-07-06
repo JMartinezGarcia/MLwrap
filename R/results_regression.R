@@ -65,6 +65,8 @@ summary_regression <- function(predictions, new_data = "test"){
 
   results <- as.data.frame(results)
 
+  rownames(results) <- new_data
+
   return(results)
 
 
