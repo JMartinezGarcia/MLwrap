@@ -66,11 +66,11 @@ plot_residuals_distribution <- function(analysis_object){
 
   check_args_regression_plot(analysis_object)
 
-  p1 <- plots$residuals_dist_train
+  p_train <- plots$residuals_dist_train
 
-  p2 <- plots$residuals_dist_test
+  p_test <- plots$residuals_dist_test
 
-  plot(p1 / p2)
+  plot(patchwork::wrap_plots(p_train, p_test, nrow = 2))
 
   invisible(analysis_object)
 
@@ -83,12 +83,11 @@ plot_scatter_residuals <- function(analysis_object){
 
   check_args_regression_plot(analysis_object)
 
-  p1 <- plots$scatter_residuals_train
+  p_train <- plots$scatter_residuals_train
 
-  p2 <- plots$scatter_residuals_test
+  p_test <- plots$scatter_residuals_test
 
-  plot(p1 / p2)
-
+  plot(patchwork::wrap_plots(p_train, p_test, nrow = 2))
   invisible(analysis_object)
 
 }
@@ -100,11 +99,11 @@ plot_scatter_predicitions <- function(analysis_object){
 
   check_args_regression_plot(analysis_object)
 
-  p1 <- plots$scatter_predictions_train
+  p_train <- plots$scatter_predictions_train
 
-  p2 <- plots$scatter_predictions_test
+  p_test <- plots$scatter_predictions_test
 
-  plot(p1 + p2)
+  plot(patchwork::wrap_plots(p_train, p_test, ncol = 2))
 
   invisible(analysis_object)
 
@@ -123,7 +122,7 @@ plot_confusion_matrix <- function(analysis_object){
 
   p_test <- plots$confusion_matrix_test
 
-  plot(p_train / p_test)
+  plot(patchwork::wrap_plots(p_train, p_test, nrow = 2))
 
   invisible(analysis_object)
 
@@ -200,7 +199,7 @@ plot_distribution_by_class <- function(analysis_object){
 
   p_test <- plots$dist_by_class_test
 
-  plot(p_train / p_test)
+  plot(patchwork::wrap_plots(p_train, p_test, nrow = 2))
 
   invisible(analysis_object)
 
@@ -223,7 +222,7 @@ plot_calibration_curve <- function(analysis_object){
 
   p_test <- plots$reliability_plot_test
 
-  plot(p_train / p_test)
+  plot(patchwork::wrap_plots(p_train, p_test, nrow = 2))
 
   invisible(analysis_object)
 
