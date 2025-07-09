@@ -112,6 +112,9 @@ summary_multiclass_per_class <- function(predictions, new_data = "test"){
 
   rownames(results_df) <- NULL
 
+  results_df <- results_df %>%
+    dplyr::mutate(dplyr::across(where(is.numeric), ~ base::signif(.x, 3)))
+
   return(results_df)
 
 }
@@ -227,20 +230,20 @@ plot_lift_curve_multiclass <- function(predictions, new_data = "all"){
   }
 }
 
-plot_dist_probs_multiclass <- function(predictions, new_data = "all"){
+plot_dist_probs_multiclass <- function(predictions, data_set = "all"){
 
   df_long <- predictions %>%
-    dplyr::filter(data_set == "test") %>%
+    dplyr::filter(data_set == data_set) %>%
     dplyr::select(-c(.pred_class)) %>%
     tidyr::pivot_longer(cols = dplyr::starts_with(".pred_"),
                  names_to = "Class",
                  values_to = "Probability") %>%
-    dplyr::mutate(Class = stringr::str_replace(Class, "^.pred_", "output_"))
+    dplyr::mutate(Class = stringr::str_replace(Class, "^.pred_", "Output "))
 
   p <- ggplot2::ggplot(df_long, ggplot2::aes(x = Probability, fill = y, color = y)) +
     ggplot2::geom_density(alpha = 0.5, bw = 0.1) +
     ggplot2::facet_wrap(~Class) +  # Facet por clase verdadera
-    ggplot2::labs(title = "Probability Density for each Class",
+    ggplot2::labs(title = paste0("Probability Density for each Class (", data_set, " data)"),
          x = "Output", y = "Density") +
     ggplot2::theme_minimal()
 

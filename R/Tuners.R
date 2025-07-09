@@ -100,9 +100,7 @@ hyperparams_grid <- function(hyperparams, levels = 10){
 
 }
 
-plot_tuning_results <- function(analysis_object){
-
-  cat("######## Hyperparameter Tuning Results ########## \n")
+tuning_results <- function(analysis_object){
 
   if (analysis_object$tuner == "Bayesian Optimization"){
 
@@ -116,8 +114,6 @@ plot_tuning_results <- function(analysis_object){
 
     analysis_object$modify("plots", plot_ob)
 
-    print(p)
-
     p <- analysis_object$tuner_fit %>%
       tune::autoplot(., search_res, type = "parameters") +
       ggplot2::labs(x = "Iterations", y = NULL, title = "Bayesian Optimization Iteration Results")
@@ -127,9 +123,6 @@ plot_tuning_results <- function(analysis_object){
     plot_ob$bayesian_opt_iter_results = p
 
     analysis_object$modify("plots", plot_ob)
-
-    print(p)
-
 
   }
 
@@ -143,15 +136,6 @@ plot_tuning_results <- function(analysis_object){
 
   analysis_object$modify("plots", plot_ob)
 
-  print(p)
-
-  cat("####### Best Hyperparameters Found #######")
-  cat("\n")
-
-  analysis_object$tuner_fit %>%
-    tune::show_best(metric = analysis_object$metrics[1], n = 1) %>%
-    print()
-
-  cat("\n")
+  return(analysis_object)
 
 }

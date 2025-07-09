@@ -90,7 +90,8 @@ olden_barplot <- function(net_importance, names_predictor, title = "Olden Featur
       y = "Olden Feature Importance"
     ) +
     ggplot2::theme_grey() +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
+    ggplot2::coord_cartesian(clip="off")
 
   return(p)
 

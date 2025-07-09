@@ -79,6 +79,9 @@ summary_binary <- function(predictions, new_data = "test"){
 
   rownames(results) <- new_data
 
+  results <- results %>%
+    dplyr::mutate(dplyr::across(where(is.numeric), ~ base::signif(.x, 3)))
+
   return(results)
 
 }
@@ -173,7 +176,7 @@ plot_dist_probs_binary <- function(predictions, new_data = "test"){
     dplyr::group_by(y) %>%
     ggplot2::ggplot(ggplot2::aes_string(x = predicted, fill = "y")) +
     ggplot2::geom_density(alpha = 0.5) +
-    ggplot2::labs(title = "Probability Distribution by Class",
+    ggplot2::labs(title = paste0("Probability Distribution by Class (",new_data, " data)") ,
                   x = "Predicted Probability",
                   y = "Density",
                   fill = "Class") +
@@ -213,10 +216,6 @@ plot_calibration_curve_binary <- function(predictions, new_data = "test"){
 plot_conf_mat <- function(predictions, new_data = "test"){
 
   confusion_matrix = yardstick::conf_mat(predictions, truth = y, estimate = .pred_class)
-
-  cat("###### Confusion Matrix ###### \n")
-  print(confusion_matrix)
-  cat("\n")
 
   return(confusion_matrix)
 

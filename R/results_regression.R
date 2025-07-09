@@ -67,6 +67,9 @@ summary_regression <- function(predictions, new_data = "test"){
 
   rownames(results) <- new_data
 
+  results <- results %>%
+    dplyr::mutate(dplyr::across(where(is.numeric), ~ base::signif(.x, 3)))
+
   return(results)
 
 
@@ -86,7 +89,7 @@ plot_scatter <- function(predictions, new_data = "test", error = F){
 
       ggplot2::ggplot(ggplot2::aes(x = .pred, y = error)) +
       ggplot2::geom_point() +
-      ggplot2::labs(title = "Residuals vs Predictions", x = "Predictions", y = "Residuals") +
+      ggplot2::labs(title = paste0("Residuals vs Predictions (", new_data, " set)"), , x = "Predictions", y = "Residuals") +
       ggplot2::theme_minimal()
 
   } else {
@@ -94,7 +97,7 @@ plot_scatter <- function(predictions, new_data = "test", error = F){
     predictions %>%
       ggplot2::ggplot(ggplot2::aes(x = .pred, y = y)) +
       ggplot2::geom_point() +
-      ggplot2::labs(title = "Observed vs Predictions", x = "Predictions", y = "Observed") +
+      ggplot2::labs(title = paste0("Observed vs Predictions (", new_data, " set)"), x = "Predictions", y = "Observed") +
       ggplot2::theme_minimal()
   }
 
@@ -107,7 +110,7 @@ plot_residuals_density <- function(predictions, new_data = "test") {
     ggplot2::geom_histogram(ggplot2::aes(y = ggplot2::after_stat(density)),
                             bins = 30, fill = "lightgray", color = "white", alpha = 0.5) +
     ggplot2::geom_density(color = "steelblue", size = 1.2, alpha = 0.6) +
-    ggplot2::labs(title = paste("Residual Density -", new_data, "set"),
+    ggplot2::labs(title = paste0("Residual Density (", new_data, " set)"),
                   x = "Residuals", y = "Density") +
     ggplot2::theme_minimal()
 }

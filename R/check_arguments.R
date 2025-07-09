@@ -83,14 +83,23 @@ check_args_fine_tuning <- function(analysis_object, tuner, metrics, plot_results
 
   check_args_list(arg = metrics, arg_list = names(metrics_info), arg_name = "metrics", null_valid = T)
 
-  ## Check plot_results
-
-  check_boolean(arg = plot_results, arg_name = "plot_results")
 
   ## Check verbose
 
   check_boolean(arg = verbose, arg_name = "verbose")
 
+
+}
+
+############ Check Evaluate Model
+
+check_args_evaluate_model <- function(analysis_object){
+
+  if (analysis_object$stage != "fit_model"){
+
+    stop("You must first fit a model with 'fine_tuning()'!!")
+
+  }
 
 }
 
@@ -100,93 +109,105 @@ check_args_regression_plot <- function(analysis_object, data_set){
 
   if (analysis_object$task != "regression"){
 
-    stop("Residuals Distribution is for regression task only!")
+    stop("This plot is for regression task only!")
 
   }
 
-  if (analysis_object$stage != "fit_model"){
+  if (analysis_object$stage != "evaluated_model"){
 
-    stop("Please train a model first with train_model!")
-
-  }
-
-  if (data_set != "test" || data_set != "train"){
-
-    stop("data_set must be 'train' or 'test'!")
+    stop("Please evaluate a model first with evaluate_model()!")
 
   }
 
 }
+
+check_args_classification_plot <- function(analysis_object, data_set){
+
+  if (analysis_object$task != "classification"){
+
+    stop("This plot is for classification task only!")
+
+  }
+
+  if (analysis_object$stage != "evaluated_model"){
+
+    stop("Please evaluate a model first with evaluate_model()!")
+
+  }
+
+}
+
+
 
 ############ Check Results
 
-check_args_show_results <- function(analysis_object,
-                                    summary, roc_curve, pr_curve,
-                                    gain_curve, lift_curve,
-                                    dist_by_class, reliability_plot, confusion_matrix,
-                                    scatter_residuals, scatter_predictions, residuals_dist,
-                                    new_data){
-
-  ## Check tidy_object stage
-
-  if (!(analysis_object$stage == "fit_model")){
-
-    stop("You must first fit a model with fine_tuning() !!")
-
-  }
-
-  ## Check new_data
-
-  check_args_list(arg = new_data, arg_list = c("train", "test"), arg_name = "new_data", null_valid = F)
-
-  ## Check booleans
-
-  check_boolean(arg = summary, arg_name = "summary")
-
-  check_boolean(arg = roc_curve, arg_name = "roc_curve")
-
-  check_boolean(arg = pr_curve, arg_name = "pr_curve")
-
-  check_boolean(arg = gain_curve, arg_name = "gain_curve")
-
-  check_boolean(arg = lift_curve, arg_name = "lift_curve")
-
-  check_boolean(arg = dist_by_class, arg_name = "dist_by_class")
-
-  check_boolean(arg = reliability_plot, arg_name = "reliability_plot")
-
-  check_boolean(arg = confusion_matrix, arg_name = "confusion_matrix")
-
-  check_boolean(arg = scatter_residuals, arg_name = "scatter_residuals")
-
-  check_boolean(arg = scatter_predictions, arg_name = "scatter_predictions")
-
-  check_boolean(arg = residuals_dist, arg_name = "residuals_dist")
-
-  ## Check classification plots
-
-  regression_plots = c(scatter_residuals, scatter_predictions, residuals_dist)
-
-  if (any(regression_plots) && analysis_object$task == "classification"){
-
-    stop("scatter_residuals, scatter_predictions and residuals_dist are for regression taks only!")
-
-  }
-
-  ## Check regression plot
-
-  classification_plots = c(roc_curve, pr_curve, gain_curve, lift_curve,
-                           dist_by_class, reliability_plot, confusion_matrix)
-
-  if(any(classification_plots) && analysis_object$task == "regression"){
-
-    stop("roc_curve, pr_curve, gain_curve, lift_curve, dist_by_class, reliability_plot and confusion
-         matrix are for classification task only!")
-
-  }
-
-
-}
+# check_args_show_results <- function(analysis_object,
+#                                     summary, roc_curve, pr_curve,
+#                                     gain_curve, lift_curve,
+#                                     dist_by_class, reliability_plot, confusion_matrix,
+#                                     scatter_residuals, scatter_predictions, residuals_dist,
+#                                     new_data){
+#
+#   ## Check tidy_object stage
+#
+#   if (!(analysis_object$stage == "fit_model")){
+#
+#     stop("You must first fit a model with fine_tuning() !!")
+#
+#   }
+#
+#   ## Check new_data
+#
+#   check_args_list(arg = new_data, arg_list = c("train", "test"), arg_name = "new_data", null_valid = F)
+#
+#   ## Check booleans
+#
+#   check_boolean(arg = summary, arg_name = "summary")
+#
+#   check_boolean(arg = roc_curve, arg_name = "roc_curve")
+#
+#   check_boolean(arg = pr_curve, arg_name = "pr_curve")
+#
+#   check_boolean(arg = gain_curve, arg_name = "gain_curve")
+#
+#   check_boolean(arg = lift_curve, arg_name = "lift_curve")
+#
+#   check_boolean(arg = dist_by_class, arg_name = "dist_by_class")
+#
+#   check_boolean(arg = reliability_plot, arg_name = "reliability_plot")
+#
+#   check_boolean(arg = confusion_matrix, arg_name = "confusion_matrix")
+#
+#   check_boolean(arg = scatter_residuals, arg_name = "scatter_residuals")
+#
+#   check_boolean(arg = scatter_predictions, arg_name = "scatter_predictions")
+#
+#   check_boolean(arg = residuals_dist, arg_name = "residuals_dist")
+#
+#   ## Check classification plots
+#
+#   regression_plots = c(scatter_residuals, scatter_predictions, residuals_dist)
+#
+#   if (any(regression_plots) && analysis_object$task == "classification"){
+#
+#     stop("scatter_residuals, scatter_predictions and residuals_dist are for regression taks only!")
+#
+#   }
+#
+#   ## Check regression plot
+#
+#   classification_plots = c(roc_curve, pr_curve, gain_curve, lift_curve,
+#                            dist_by_class, reliability_plot, confusion_matrix)
+#
+#   if(any(classification_plots) && analysis_object$task == "regression"){
+#
+#     stop("roc_curve, pr_curve, gain_curve, lift_curve, dist_by_class, reliability_plot and confusion
+#          matrix are for classification task only!")
+#
+#   }
+#
+#
+# }
 
 ############ Check sensitivity_analysis
 
@@ -194,7 +215,7 @@ check_args_sensitivity_analysis <- function(analysis_object, methods, metric){
 
   ## Check tidy_object stage
 
-  if (!(analysis_object$stage == "fit_model")){
+  if (!(analysis_object$stage == "fit_model") && (analysis_object$stage != "evaluated_model")){
 
     stop("You must first fit a model with fine_tuning() !!")
 

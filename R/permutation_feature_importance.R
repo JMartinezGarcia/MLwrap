@@ -53,6 +53,8 @@ pfi_reg <- function(model, new_data, y, metric){
                  target = y,
                  pred_wrapper = pred_reg)
 
+  colnames(vis)[1] <- "Feature"
+
   return(vis)
 
 
@@ -83,6 +85,8 @@ pfi_bin <- function(model, new_data, y, metric){
                  target = y,
                  pred_wrapper = pred_func,
                  event_level = "second")
+
+  colnames(vis)[1] <- "Feature"
 
   return(vis)
 
@@ -134,6 +138,8 @@ pfi_multiclass <- function(model, new_data, y, metric){
                                                 target = new_y,
                                                 pred_wrapper = pred_func,
                                                 event_level = "second")
+
+    colnames(vis)[1] <- "Feature"
 
     results[[target_class]] <- vis
   }

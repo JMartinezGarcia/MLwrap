@@ -129,6 +129,8 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
   plot_ob = analysis_object$plots
 
+  table_ob = analysis_object$tables
+
   if ("PFI" %in% methods){
 
     method_name = "PFI"
@@ -141,7 +143,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       } else{
 
-        metric = "roc_auc"
+        metric = "bal_accuracy"
 
       }
     }
@@ -155,44 +157,22 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     y_classes <- levels(bake_train[[y]])
 
-    if (verbose == TRUE){
-
-        cat("######### PFI Method Results ############## \n")
-
-    }
-
     for (target_class in y_classes){
 
-      if (verbose == TRUE){
-
-          cat("\n")
-          print(paste0("PFI for class ", target_class))
-          print(results[[target_class]])
-          cat("\n")
-
-      }
-
-      p <- plot_barplot(results[[target_class]], func = NULL, title = paste0("Permutation Feature Importance for class ",
-                                                        target_class), x_label = "Importance")
+      p <- plot_barplot(results[[target_class]], func = NULL, title = paste0("Permutation Feature Importance (",
+                                                        target_class, ")"), x_label = "Importance")
 
       plot_name <- paste0(method_name,"_",target_class,"_barplot")
 
-      plot_ob[[plot_name]] = p
+      table_name <- paste0(method_name, "_", target_class)
 
-      print(p)
+      plot_ob[[plot_name]] <- p
+
+      table_ob[[table_name]] <- results[[target_class]]
 
       }
 
     } else{
-
-      if (verbose == TRUE){
-
-          cat("######### PFI Method Results ############## \n")
-          cat("\n")
-          print(results)
-          cat("\n")
-
-      }
 
       p <- plot_barplot(results, func = NULL, title = "Permutation Feature Importance", x_label = "Importance")
 
@@ -200,7 +180,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       plot_ob[[plot_name]] = p
 
-      print(p)
+      table_ob[["PFI"]] <- results
 
     }
 
@@ -221,81 +201,51 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       y_classes = levels(bake_train[[y]])
 
-      if (verbose == TRUE){
-
-          cat("######### SHAP Method Results ############## \n")
-
-      }
-
       for (target_class in y_classes){
 
-
-        if (verbose == TRUE){
-
-            cat("\n")
-            print(paste0("abs(SHAP) for class ", target_class))
-            print(summarize_importance(abs(results[[target_class]]), feature_names))
-            cat("\n")
-
-        }
-
-        message("pepe")
         p <- plot_barplot(results[[target_class]], func = function(x) mean(abs(x)),
                      func_se = function(x) sd(abs(x)) / sqrt(length(x)),
                      x_label = "Mean |SHAP|",
-                     title = paste0("Mean |SHAP| value for class ", target_class)
+                     title = paste0("Mean |SHAP| (", target_class, ")")
                      )
 
         plot_name <- paste0(method_name,"_",target_class,"_barplot")
 
         plot_ob[[plot_name]] = p
 
-        print(p)
-
         p <- plot2(results[[target_class]], test, func = function(x) mean(x),
               func_se = function(x) sd(x),
               x_label = "Mean (SHAP * sign(X))",
-              title = paste0("Directional Sensitivity of SHAP Values for class ", target_class)
+              title = paste0("Directional SHAP (", target_class, ")")
               )
 
-        plot_name <- paste0(method_name,"_",target_class,"_barplot2")
+        plot_name <- paste0(method_name,"_",target_class,"_directional")
 
         plot_ob[[plot_name]] = p
 
-        print(p)
-
         p <- plot_boxplot(results[[target_class]], y_label = "SHAP value",
-                     title = paste0("SHAP Value Distribution for class ", target_class)
+                     title = paste0("SHAP Value Distribution (", target_class, ")")
                      )
 
         plot_name <- paste0(method_name,"_",target_class,"_boxplot")
 
         plot_ob[[plot_name]] = p
 
-        print(p)
-
         p <- plot_beeswarm(results[[target_class]], X_orig = test, x_label = "SHAP value",
-                      title = paste0("SHAP Swarm Plot for class ", target_class)
+                      title = paste0("SHAP Swarm Plot (", target_class, ")")
                       )
 
         plot_name <- paste0(method_name,"_",target_class,"_swarmplot")
 
         plot_ob[[plot_name]] = p
 
-        print(p)
+        table_name <- paste0(method_name, "_", target_class)
+
+        table_ob[[table_name]] <- summarize_importance(results[[target_class]], bake_test, feature_names)
 
       }
 
     } else{
-
-      if (verbose == TRUE){
-
-          cat("######### SHAP Method Results ############## \n")
-          cat("\n")
-          print(summarize_importance(abs(results), feature_names))
-          cat("\n")
-
-      }
 
     p <- plot_barplot(results, func = function(x) mean(abs(x)),
                  func_se = function(x) sd(abs(x)) / sqrt(length(x)),
@@ -306,18 +256,14 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     plot_ob[[plot_name]] = p
 
-    print(p)
-
     p <- plot2(results, test, func = function(x) mean(x),
             func_se = function(x) sd(x),
             x_label = "Mean (SHAP * sign(X))",
-            title = "Directional Sensitivity of SHAP Values")
+            title = "Directional SHAP Values")
 
-    plot_name <- paste0(method_name, "_barplot2")
+    plot_name <- paste0(method_name, "_directional")
 
     plot_ob[[plot_name]] = p
-
-    print(p)
 
     p <- plot_boxplot(results, y_label = "SHAP value", title = "SHAP Value Distribution")
 
@@ -325,15 +271,15 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     plot_ob[[plot_name]] = p
 
-    print(p)
-
     p <- plot_beeswarm(results, X_orig = test, x_label = "SHAP value", title = "SHAP Swarm Plot")
 
     plot_name <- paste0(method_name, "_swarmplot")
 
     plot_ob[[plot_name]] = p
 
-    print(p)
+    table_name <- paste0(method_name)
+
+    table_ob[[table_name]] <- summarize_importance(results, bake_test, feature_names)
 
     }
 
@@ -354,118 +300,86 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       y_classes = levels(bake_train[[y]])
 
-      if (verbose == TRUE){
-
-          cat("######### Integrated Gradients Method Results ############## \n")
-
-      }
-
       for (target_class in y_classes){
-
-        if (verbose == TRUE){
-
-            cat("\n")
-            print(paste0("abs(Integrated Gradients) for class ", target_class))
-            print(summarize_importance(abs(results[[target_class]]), feature_names))
-            cat("\n")
-
-        }
 
         p <- plot_barplot(results[[target_class]], func = function(x) mean(abs(x)),
                      func_se = function(x) sd(abs(x)) / sqrt(length(x)),
                      x_label = "Mean |Integrated Gradient|",
-                     title = paste0("Mean |Integrated Gradient| value for class ", target_class)
+                     title = paste0("Mean |Integrated Gradients| (", target_class, ")")
         )
 
         plot_name <- paste0(method_name,"_",target_class,"_barplot")
 
         plot_ob[[plot_name]] = p
 
-        print(p)
-
         p <- plot2(results[[target_class]], test, func = function(x) mean(x),
               func_se = function(x) sd(x),
               x_label = "Mean (Integrated Gradient * sign(X))",
-              title = paste0("Directional Sensitivity of Integrated Gradients Values for class ", target_class)
+              title = paste0("Directional Integrated Gradients (", target_class, ")")
               )
 
-        plot_name <- paste0(method_name,"_",target_class,"_barplot2")
+        plot_name <- paste0(method_name,"_",target_class,"_directional")
 
         plot_ob[[plot_name]] = p
 
-        print(p)
-
         p <- plot_boxplot(results[[target_class]], y_label = "Integrated Gradient value",
-                     title = paste0("Integrated Gradient Value Distribution for class ", target_class)
+                     title = paste0("Integrated Gradients Value Distribution (", target_class, ")")
                      )
 
         plot_name <- paste0(method_name,"_",target_class,"_boxplot")
 
         plot_ob[[plot_name]] = p
 
-        print(p)
-
         p <- plot_beeswarm(results[[target_class]], X_orig = test, x_label = "SHAP value",
-                      title = paste0("Integrated Gradient Swarm Plot for class ", target_class))
+                      title = paste0("Integrated Gradient Swarm Plot (", target_class, ")"))
 
         plot_name <- paste0(method_name,"_",target_class,"_swarmplot")
 
         plot_ob[[plot_name]] = p
 
-        print(p)
+        table_name <- paste0(method_name, "_", target_class)
+
+        table_ob[[table_name]] <- summarize_importance(results[[target_class]], bake_test, feature_names)
 
       }
 
     } else{
 
-      if (verbose == TRUE){
-
-          cat("######### Integrated Gradients Method Results ############## \n")
-          cat("\n")
-          print(summarize_importance(abs(results), feature_names))
-          cat("\n")
-
-      }
-
       p <- plot_barplot(results, func = function(x) mean(abs(x)),
                    func_se = function(x) sd(abs(x)) / sqrt(length(x)),
                    x_label = "Mean |Integrated Gradient|",
-                   title = "Mean |Integrated Gradient| value"
+                   title = "Mean |Integrated Gradients| "
                    )
 
       plot_name <- paste0(method_name,"_barplot")
 
       plot_ob[[plot_name]] = p
 
-      print(p)
-
       p <- plot2(results, test, func = function(x) mean(x),
             func_se = function(x) sd(x),
             x_label = "Integradient Gradient Correlation",
-            title = "Directional Sensitivity of Integrated Gradients Values")
+            title = "Directional Sensitivity of Integrated Gradients")
 
-      plot_name <- paste0(method_name,"_barplot2")
+      plot_name <- paste0(method_name,"_directional")
 
       plot_ob[[plot_name]] = p
 
-      print(p)
-
-      p <- plot_boxplot(results, y_label = "Integrated Gradient value", title = "Integrated Gradient Distribution")
+      p <- plot_boxplot(results, y_label = "Integrated Gradient value", title = "Integrated Gradients Distribution")
 
       plot_name <- paste0(method_name,"_boxplot")
 
       plot_ob[[plot_name]] = p
 
-      print(p)
-
       p <- plot_beeswarm(results, X_orig = test, x_label = "Integrated Gradient value",
-                    title = "Integrated Gradient Swarm Plot")
+                    title = "Integrated Gradients Swarm Plot")
 
       plot_name <- paste0(method_name,"_swarmplot")
 
       plot_ob[[plot_name]] = p
 
-      print(p)
+      table_name <- paste0(method_name)
+
+      table_ob[[table_name]] <- summarize_importance(results, bake_test, feature_names)
 
     }
 
@@ -480,31 +394,19 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
     results = olden_calc(model = model_parsnip, task,
                          outcome_levels = analysis_object$outcome_levels, y_classes = y_classes)
 
-    df_results <- as.data.frame(t(results))
+    df_results <- tibble::as_tibble(t(results))
 
-    names(df_results) <- feature_names
+    colnames(df_results) <- feature_names
 
     sensitivity_analysis_list[["Olden"]] <- df_results
 
-
     if (analysis_object$outcome_levels > 2){
-
-      rownames(df_results) <- y_classes
-
-      if (verbose == TRUE){
-
-          cat("######### Olden's Method Results ############## \n")
-          cat("\n")
-          print(df_results)
-          cat("\n")
-
-      }
 
       for (i in 1:length(y_classes)){
 
         net_importance = results[,i]
 
-        title = paste0("Olden Feature Importance for class ", y_classes[i])
+        title = paste0("Olden Feature Importance (", y_classes[i], ")")
 
         plot_name = paste0("Olden_", y_classes[i])
 
@@ -514,19 +416,17 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
         plot_ob[[plot_name]] = p
 
-        print(p)
+        table_olden <- df_results %>%
+          dplyr::mutate(iter = dplyr::row_number()) %>%
+          tidyr::pivot_longer(-iter, names_to = "Feature", values_to = "Importance") %>%
+          dplyr::mutate(iter = paste0("Importance (", y_classes[iter], ")")) %>%
+          tidyr::pivot_wider(names_from = iter, values_from = Importance)
+
+        table_ob[["Olden"]] <- table_olden
+
       }
 
     } else{
-
-      if (verbose == TRUE){
-
-          cat("######### Olden's Method Results ############## \n")
-          cat("\n")
-          print(df_results)
-          cat("\n")
-
-      }
 
       p <- olden_barplot(results, feature_names)
 
@@ -534,33 +434,41 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       plot_ob[[plot_name]] = p
 
-      print(p)
+      table_olden <- df_results %>%
+        dplyr::mutate(iter = dplyr::row_number()) %>%
+        tidyr::pivot_longer(-iter, names_to = "Feature", values_to = "Importance") %>%
+        dplyr::mutate(iter = paste0("Importance")) %>%
+        tidyr::pivot_wider(names_from = iter, values_from = Importance)
+
+      table_ob[["Olden"]] <- table_olden
 
     }
   }
 
     if ("Sobol_Jansen" %in% methods){
 
-      results <- sobol_calc(model_parsnip, bake_train, task, feature_names)
+      sobol <- sobol_calc(model_parsnip, bake_train, task, feature_names)
 
-      sensitivity_analysis_list[["Sobol_Jansen"]] <- results
-
-      if (verbose == TRUE){
-
-          cat("######### Sobol_Jansen's Method Results ############## \n")
-          cat("\n")
-          print(results)
-          cat("\n")
-          print("##############################################")
-          cat("\n")
-
-      }
-
-      p <- sobol_plot(results)
+      sensitivity_analysis_list[["Sobol_Jansen"]] <- sobol
+      p <- sobol_plot(sobol)
 
       plot_ob[["Sobol_Jansen"]] = p
 
-      print(p)
+      results_table <- tibble::tibble(
+
+        "Feature" = base::rownames(sobol$S),
+        "First Order (S)" = sobol$S$original,
+        "S StErr" = sobol$S$`std. error`,
+        "S Order Min CI" = sobol$S$`min. c.i.`,
+        "S Order Max CI" = sobol$S$`max. c.i.`,
+        "Total Order (T)" = sobol$T$original,
+        "T StErr" = sobol$T$`std. error`,
+        "T Order Min CI" = sobol$T$`min. c.i.`,
+        "T Max CI" = sobol$T$`max. c.i.`
+
+      )
+
+      table_ob[["Sobol_Jansen"]] <- results_table
 
 
     }
@@ -569,6 +477,8 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
   analysis_object$modify("sensitivity_analysis", sensitivity_analysis_list)
 
   analysis_object$modify("plots", plot_ob)
+
+  analysis_object$modify("tables", table_ob)
 
   return(analysis_object)
 
@@ -587,7 +497,7 @@ plot_barplot <- function(X, func = NULL, func_se = stats::sd, title, x_label) {
   if (!is.null(func)){
 
   summary_df <- tibble::tibble(
-      Variable = base::colnames(X),
+      Feature = base::colnames(X),
       Importance = base::sapply(X, func),
       StDev = base::sapply(X, func_se)
     )
@@ -596,13 +506,13 @@ plot_barplot <- function(X, func = NULL, func_se = stats::sd, title, x_label) {
 
 
 
-  summary_df$Variable <- factor(summary_df$Variable,
-                                levels = summary_df$Variable[order(summary_df$Importance, decreasing = F)])
+  summary_df$Feature <- factor(summary_df$Feature,
+                                levels = summary_df$Feature[order(summary_df$Importance, decreasing = F)])
 
-    p <- ggplot2::ggplot(summary_df, ggplot2::aes(x = Importance, y = Variable)) +
+    p <- ggplot2::ggplot(summary_df, ggplot2::aes(x = Importance, y = Feature)) +
       ggplot2::geom_col(fill = "steelblue", width = 0.7) +
       ggplot2::geom_errorbar(ggplot2::aes(xmin = Importance - StDev, xmax = Importance + StDev), width = 0.2) +
-      ggplot2::geom_text(ggplot2::aes(label = paste0(round(Importance, 3), " +/- ", round(StDev, 3))),
+      ggplot2::geom_text(ggplot2::aes(label = paste0(round(Importance, 3), " (", round(StDev, 3), ")")),
                 vjust =  -0.5,
                 hjust = -0.2) +
       ggplot2::labs(
@@ -610,7 +520,8 @@ plot_barplot <- function(X, func = NULL, func_se = stats::sd, title, x_label) {
         y = "Feature",
         title = title
         ) +
-      ggplot2::theme_grey()
+      ggplot2::theme_grey() +
+      ggplot2::coord_cartesian(clip="off")
 
   return(p)
 
@@ -659,7 +570,8 @@ plot2 <- function(X, test, func = NULL, func_se = stats::sd, title, x_label) {
       y = "Feature Importance"
     ) +
     ggplot2::theme_grey() +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1))
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1)) +
+    ggplot2::coord_cartesian(clip="off")
 
   return(p)
 
@@ -755,25 +667,52 @@ pred_bin_class <- function(object, newdata){
 
 }
 
-summarize_importance <- function(importance_matrix, feature_names) {
+summarize_importance <- function(importance_matrix, original_df,  feature_names) {
 
   # Calcular media y error estandar para cada variable
-  mean_importance <- colMeans(importance_matrix, na.rm = TRUE)
-  std_error <- apply(importance_matrix, 2, function(x) sd(x, na.rm = TRUE) / sqrt(length(x)))
+  mean_importance <- colMeans(abs(importance_matrix), na.rm = TRUE)
+  std_error <- apply(abs(importance_matrix), 2, function(x) sd(x, na.rm = TRUE) / sqrt(length(x)))
+  directional_list = c()
+
+  for (i in 1:length(feature_names)){
+
+    name = feature_names[i]
+
+    directional_list[i] <- stats::cov(importance_matrix[name], original_df[name]) / stats::var(original_df[name])
+
+  }
 
   # Crear resumen ordenado
-  summary_df <- data.frame(
-    Importance = signif(mean_importance,3),
-    StDev = signif(std_error,2)
+  summary_df <- tibble::tibble(
+    "Feature" = feature_names,
+    "Mean_Abs_Importance" = mean_importance,
+    "StDev" = std_error,
+    "Directional_Importance" = directional_list
   )
-
-  rownames(summary_df) <- feature_names
 
   # Ordenar de mayor a menor importancia
 
-  summary_df <- summary_df[order(-summary_df$Importance), ]
+  summary_df <- summary_df[order(-summary_df[["Mean_Abs_Importance"]]), ]
 
   return(summary_df)
+}
+
+summarize_directional <- function(importance_matrix, original_df, feature_names){
+
+  directional_list = list()
+
+  for (i in 1:length(feature_names)){
+
+    name = feat_names[i]
+
+    directional_list[name] <- stats::cov(importance_matrix[name], original_df[name]) / stats::var(original_df[name])
+
+  }
+
+  directional_list <- base::as.data.frame(directional_list)
+
+  return(directional_list)
+
 }
 
 
