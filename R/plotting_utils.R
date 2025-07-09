@@ -1,5 +1,6 @@
 ### Tuner Plots ###
 
+#' @export
 plot_tuning_results <- function(analysis_object){
 
   if ((analysis_object$stage != "fit_model") && (analysis_object$stage != "evaluated_model")){
@@ -30,6 +31,7 @@ plot_tuning_results <- function(analysis_object){
 
 }
 
+#' @export
 plot_loss_curve <- function(analysis_object){
 
   if ((analysis_object$stage != "fit_model") && (analysis_object$stage != "evaluated_model")){
@@ -57,6 +59,7 @@ plot_loss_curve <- function(analysis_object){
 
 ### Regression Plots ###
 
+#' @export
 plot_residuals_distribution <- function(analysis_object){
 
   plots <- analysis_object$plots
@@ -73,6 +76,7 @@ plot_residuals_distribution <- function(analysis_object){
 
   }
 
+#' @export
 plot_scatter_residuals <- function(analysis_object){
 
   plots <- analysis_object$plots
@@ -89,6 +93,7 @@ plot_scatter_residuals <- function(analysis_object){
 
 }
 
+#' @export
 plot_scatter_predicitions <- function(analysis_object){
 
   plots <- analysis_object$plots
@@ -107,6 +112,7 @@ plot_scatter_predicitions <- function(analysis_object){
 
 ### Classification Plots ###
 
+#' @export
 plot_confusion_matrix <- function(analysis_object){
 
   plots <- analysis_object$plots
@@ -123,6 +129,7 @@ plot_confusion_matrix <- function(analysis_object){
 
 }
 
+#' @export
 plot_roc_curve <- function(analysis_object){
 
   plots <- analysis_object$plots
@@ -137,6 +144,7 @@ plot_roc_curve <- function(analysis_object){
 
 }
 
+#' @export
 plot_pr_curve <- function(analysis_object){
 
   plots <- analysis_object$plots
@@ -151,6 +159,7 @@ plot_pr_curve <- function(analysis_object){
 
 }
 
+#' @export
 plot_gain_curve <- function(analysis_object){
 
   plots <- analysis_object$plots
@@ -165,6 +174,7 @@ plot_gain_curve <- function(analysis_object){
 
 }
 
+#' @export
 plot_lift_curve <- function(analysis_object){
 
   plots <- analysis_object$plots
@@ -179,6 +189,7 @@ plot_lift_curve <- function(analysis_object){
 
 }
 
+#' @export
 plot_distribution_by_class <- function(analysis_object){
 
   plots <- analysis_object$plots
@@ -195,6 +206,7 @@ plot_distribution_by_class <- function(analysis_object){
 
 }
 
+#' @export
 plot_calibration_curve <- function(analysis_object){
 
   plots <- analysis_object$plots
@@ -219,6 +231,7 @@ plot_calibration_curve <- function(analysis_object){
 
 ### Sensitivity Analysis
 
+#' @export
 plot_pfi <- function(analysis_object, show_table = FALSE){
 
   plots <- analysis_object$plots
@@ -251,6 +264,7 @@ plot_pfi <- function(analysis_object, show_table = FALSE){
 
 }
 
+#' @export
 plot_shap <- function(analysis_object, show_table = FALSE){
 
   plots <- analysis_object$plots
@@ -303,6 +317,7 @@ plot_shap <- function(analysis_object, show_table = FALSE){
 
 }
 
+#' @export
 plot_integrated_gradients <- function(analysis_object, show_table = FALSE){
 
   plots <- analysis_object$plots
@@ -355,6 +370,7 @@ plot_integrated_gradients <- function(analysis_object, show_table = FALSE){
 
 }
 
+#' @export
 plot_olden <- function(analysis_object, show_table = FALSE){
 
   plots <- analysis_object$plots
@@ -387,6 +403,7 @@ plot_olden <- function(analysis_object, show_table = FALSE){
 
 }
 
+#' @export
 plot_sobol_jansen <- function(analysis_object, show_table = FALSE){
 
   plots <- analysis_object$plots

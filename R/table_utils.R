@@ -1,6 +1,6 @@
 ### Tuning Results
 
-
+#' @export
 show_best_hyperparameters <- function(analysis_object){
   analysis_object$tuner_fit %>%
     tune::show_best(metric = analysis_object$metrics[1], n = 1) %>%
@@ -10,6 +10,7 @@ show_best_hyperparameters <- function(analysis_object){
 
 ### Results
 
+#' @export
 table_evaluation_results <- function(analysis_object, show_table = FALSE){
 
   if (analysis_object$stage != "evaluated_model"){
@@ -65,6 +66,7 @@ table_evaluation_results <- function(analysis_object, show_table = FALSE){
 
 #### Sensitivity Analysis
 
+#' @export
 table_pfi_results <- function(analysis_object, show_table = FALSE){
 
   ##check args
@@ -107,6 +109,7 @@ table_pfi_results <- function(analysis_object, show_table = FALSE){
 
 }
 
+#' @export
 table_shap_results <- function(analysis_object, show_table = FALSE){
 
   ##check_args
@@ -149,6 +152,7 @@ table_shap_results <- function(analysis_object, show_table = FALSE){
 
 }
 
+#' @export
 table_integrated_gradients_results <- function(analysis_object, show_table = FALSE){
 
   tables <- analysis_object$tables
@@ -189,6 +193,7 @@ table_integrated_gradients_results <- function(analysis_object, show_table = FAL
 
 }
 
+#' @export
 table_olden_results <- function(analysis_object, show_table = FALSE){
 
   olden <- analysis_object$tables$Olden
@@ -209,6 +214,7 @@ table_olden_results <- function(analysis_object, show_table = FALSE){
 
 }
 
+#' @export
 table_sobol_jansen_results <- function(analysis_object, show_table = FALSE){
 
   ### Check_args
