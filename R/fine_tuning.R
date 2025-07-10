@@ -1,4 +1,4 @@
-#' Fine Tune ML Model2
+#' Fine Tune ML Model
 #'
 #' The **fine_tuning()** function performs automated hyperparameter optimization for ML workflows encapsulated
 #' within an AnalysisObject. It supports different tuning strategies, such as **Bayesian Optimization** and
@@ -97,6 +97,18 @@
 #'                 metrics = c("rmse"),
 #'                 plot_results = TRUE
 #'                )
+#'
+#' # Extracting Evaluation Results
+#'
+#' table_best_hyp <- table_best_hyperparameters(tidy_object)
+#' table_results <- table_evaluation_results(tidy_object)
+#'
+#' # Plotting Results
+#'
+#' tidy_object |>
+#'   plot_tuning_results() |>
+#'   plot_residuals_distribution() |>
+#'   plot_scatter_residuals()
 #'
 #' @references
 #' Bartz, E., Bartz-Beielstein, T., Zaefferer, M., & Mersmann, O. (2023). *Hyperparameter tuner
@@ -206,6 +218,8 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, verbose = FALSE)
     analysis_object$modify("plots", plot_ob)
 
   }
+
+  analysis_object <- evaluate_model(analysis_object)
 
   analysis_object$modify("stage", "fit_model")
 

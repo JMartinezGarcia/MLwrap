@@ -2,7 +2,7 @@
 % Please edit documentation in R/fine_tuning.R
 \name{fine_tuning}
 \alias{fine_tuning}
-\title{Fine Tune ML Model2}
+\title{Fine Tune ML Model}
 \usage{
 fine_tuning(analysis_object, tuner, metrics = NULL, verbose = FALSE)
 }
@@ -121,6 +121,18 @@ tidy_object <- fine_tuning(tidy_object,
                 metrics = c("rmse"),
                 plot_results = TRUE
                )
+
+# Extracting Evaluation Results
+
+table_best_hyp <- table_best_hyperparameters(tidy_object)
+table_results <- table_evaluation_results(tidy_object)
+
+# Plotting Results
+
+tidy_object |>
+  plot_tuning_results() |>
+  plot_residuals_distribution() |>
+  plot_scatter_residuals()
 
 }
 \references{

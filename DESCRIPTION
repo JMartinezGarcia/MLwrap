@@ -1,4 +1,4 @@
-Package: TidyML
+Package: MLwrap
 Title: Machine Learning Modelling for Everyone
 Version: 0.1.0
 Authors@R: c(person(given   = "Javier", family = "Martínez García",

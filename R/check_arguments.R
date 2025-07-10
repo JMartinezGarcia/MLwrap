@@ -113,9 +113,9 @@ check_args_regression_plot <- function(analysis_object, data_set){
 
   }
 
-  if (analysis_object$stage != "evaluated_model"){
+  if (analysis_object$stage != "fit_model"){
 
-    stop("Please evaluate a model first with evaluate_model()!")
+    stop("Please fit a model first with train_model()!")
 
   }
 
@@ -131,7 +131,7 @@ check_args_classification_plot <- function(analysis_object, data_set){
 
   if (analysis_object$stage != "evaluated_model"){
 
-    stop("Please evaluate a model first with evaluate_model()!")
+    stop("Please fit a model first with train_model()!")
 
   }
 
