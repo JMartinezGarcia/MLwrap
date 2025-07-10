@@ -85,7 +85,7 @@ create_metric_function <- function(metric_name, metric_info) {
    ")
     }
 
-  pkg_env <- base::getNamespace("TidyML")
+  pkg_env <- base::getNamespace("MLwrap")
 
   # Evaluar la expresión para crear la función en el entorno pkg_env
   parsed_expr <- rlang::parse_expr(expr_text)
@@ -97,7 +97,7 @@ create_metric_function <- function(metric_name, metric_info) {
 # Función para convertir la función en una métrica de yardstick utilizando las funciones almacenadas en metric_funcs
 convert_to_metric <- function(metrics_info) {
 
-    pkg_env <- getNamespace("TidyML")
+    pkg_env <- getNamespace("MLwrap")
 
     lapply(names(metrics_info), function(metric) {
     metric_name <- metric

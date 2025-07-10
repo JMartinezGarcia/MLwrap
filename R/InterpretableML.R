@@ -58,7 +58,7 @@
 #' box plots, beeswarm plots) for visual interpretation of feature importance, tailored to the task type
 #' and number of outcome levels, completing the TidyML workflow with actionable model insights.
 #' @examples
-#' # Example 1: Using PFI
+#' # Example: Using PFI and SHAP
 #'
 #' library(TidyML)
 #'
@@ -81,12 +81,22 @@
 #'
 #' tidy_object <- fine_tuning(tidy_object,
 #'                 tuner = "Grid Search CV",
-#'                 metrics = c("rmse"),
-#'                 plot_results = FALSE
+#'                 metrics = c("rmse")
 #'                 )
 #'
 #'
-#' tidy_object <- sensitivity_analysis(tidy_object, methods = "PFI", metric = "mape")
+#' tidy_object <- sensitivity_analysis(tidy_object, methods = c("PFI", "SHAP"), metric = "mape")
+#'
+#' # Extracting Results
+#'
+#' table_pfi <- table_pfi_results(tidy_object)
+#' table_shap <- table_shap_results(tidy_object)
+#'
+#' # Plotting PFI Barplot
+#'
+#' tidy_object |>
+#'     plot_pfi() |>
+#'     plot_shap()
 #'
 #' @references
 #' Iooss, B., & Lemaître, P. (2015). A review on global sensitivity analysis methods. In C. Meloni & G. Dellino
@@ -521,7 +531,7 @@ plot_barplot <- function(X, func = NULL, func_se = stats::sd, title, x_label) {
         title = title
         ) +
       ggplot2::theme_grey() +
-      ggplot2::coord_cartesian(clip="off")
+      ggplot2::expand_limits(x = max(summary_df$Importance) * 1.2)
 
   return(p)
 

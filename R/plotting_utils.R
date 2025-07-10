@@ -1,5 +1,11 @@
 ### Tuner Plots ###
 
+#' Plotting Tuner Search Results
+#'
+#' @param analysis_object Fitted analysis_object with 'fine_tuning()'.
+#'
+#' @returns analysis_object
+#'
 #' @export
 plot_tuning_results <- function(analysis_object){
 
@@ -31,6 +37,7 @@ plot_tuning_results <- function(analysis_object){
 
 }
 
+
 #' @export
 plot_loss_curve <- function(analysis_object){
 
@@ -59,6 +66,12 @@ plot_loss_curve <- function(analysis_object){
 
 ### Regression Plots ###
 
+#' Plotting Residuals Distribution
+#'
+#' @param analysis_object Fitted analysis_object with 'fine_tuning()'.
+#'
+#' @returns analysis_object
+#'
 #' @export
 plot_residuals_distribution <- function(analysis_object){
 
@@ -76,6 +89,12 @@ plot_residuals_distribution <- function(analysis_object){
 
   }
 
+#' Plotting Residuals vs Predictions
+#'
+#' @param analysis_object Fitted analysis_object with 'fine_tuning()'.
+#'
+#' @returns analysis_object
+#'
 #' @export
 plot_scatter_residuals <- function(analysis_object){
 
@@ -92,6 +111,12 @@ plot_scatter_residuals <- function(analysis_object){
 
 }
 
+#' Plotting Observed vs Predictions
+#'
+#' @param analysis_object Fitted analysis_object with 'fine_tuning()'.
+#'
+#' @returns analysis_object
+#'
 #' @export
 plot_scatter_predicitions <- function(analysis_object){
 
@@ -111,6 +136,12 @@ plot_scatter_predicitions <- function(analysis_object){
 
 ### Classification Plots ###
 
+#' Plotting Confusion Matrix
+#'
+#' @param analysis_object Fitted analysis_object with 'fine_tuning()'.
+#'
+#' @returns analysis_object
+#'
 #' @export
 plot_confusion_matrix <- function(analysis_object){
 
@@ -128,6 +159,12 @@ plot_confusion_matrix <- function(analysis_object){
 
 }
 
+#' Plotting ROC Curve
+#'
+#' @param analysis_object Fitted analysis_object with 'fine_tuning()'.
+#'
+#' @returns analysis_object
+#'
 #' @export
 plot_roc_curve <- function(analysis_object){
 
@@ -143,6 +180,12 @@ plot_roc_curve <- function(analysis_object){
 
 }
 
+#' Plotting Precision-Recall Curve
+#'
+#' @param analysis_object Fitted analysis_object with 'fine_tuning()'.
+#'
+#' @returns analysis_object
+#'
 #' @export
 plot_pr_curve <- function(analysis_object){
 
@@ -158,6 +201,12 @@ plot_pr_curve <- function(analysis_object){
 
 }
 
+#' Plotting Gain Curve
+#'
+#' @param analysis_object Fitted analysis_object with 'fine_tuning()'.
+#'
+#' @returns analysis_object
+#'
 #' @export
 plot_gain_curve <- function(analysis_object){
 
@@ -173,6 +222,12 @@ plot_gain_curve <- function(analysis_object){
 
 }
 
+#' Plotting Lift Curve
+#'
+#' @param analysis_object Fitted analysis_object with 'fine_tuning()'.
+#'
+#' @returns analysis_object
+#'
 #' @export
 plot_lift_curve <- function(analysis_object){
 
@@ -188,6 +243,12 @@ plot_lift_curve <- function(analysis_object){
 
 }
 
+#' Plotting Output Distribution By Class
+#'
+#' @param analysis_object Fitted analysis_object with 'fine_tuning()'.
+#'
+#' @returns analysis_object
+#'
 #' @export
 plot_distribution_by_class <- function(analysis_object){
 
@@ -205,6 +266,14 @@ plot_distribution_by_class <- function(analysis_object){
 
 }
 
+#' Plotting Calibration Curve
+#'
+#' Binary Classification Only
+#'
+#' @param analysis_object Fitted analysis_object with 'fine_tuning()'.
+#'
+#' @returns analysis_object
+#'
 #' @export
 plot_calibration_curve <- function(analysis_object){
 
@@ -230,6 +299,14 @@ plot_calibration_curve <- function(analysis_object){
 
 ### Sensitivity Analysis
 
+#' Plotting Permutation Feature Importance Barplot
+#'
+#' @param analysis_object Fitted analysis_object with 'sensitivity_analysis(methods = "PFI")'.
+#'
+#' @param show_table Boolean. Whether to print PFI results table.
+#'
+#' @returns analysis_object
+#'
 #' @export
 plot_pfi <- function(analysis_object, show_table = FALSE){
 
@@ -263,6 +340,16 @@ plot_pfi <- function(analysis_object, show_table = FALSE){
 
 }
 
+#' Plotting SHAP Plots
+#'
+#' Mean Abs Barplot, Directional Barplot, Boxplot, Swarmplot
+#'
+#' @param analysis_object Fitted analysis_object with 'sensitivity_analysis(methods = "SHAP")'.
+#'
+#' @param show_table Boolean. Whether to print SHAP summarized results table.
+#'
+#' @returns analysis_object
+#'
 #' @export
 plot_shap <- function(analysis_object, show_table = FALSE){
 
@@ -316,6 +403,16 @@ plot_shap <- function(analysis_object, show_table = FALSE){
 
 }
 
+#' Plotting Integrated Gradients Plots
+#'
+#' Mean Abs Barplot, Directional Barplot, Boxplot, Swarmplot
+#'
+#' @param analysis_object Fitted analysis_object with 'sensitivity_analysis(methods = "Integrated Gradients")'.
+#'
+#' @param show_table Boolean. Whether to print Integrated Gradients summarized results table.
+#'
+#' @returns analysis_object
+#'
 #' @export
 plot_integrated_gradients <- function(analysis_object, show_table = FALSE){
 
@@ -369,6 +466,14 @@ plot_integrated_gradients <- function(analysis_object, show_table = FALSE){
 
 }
 
+#' Plotting Olden Values Barplot
+#'
+#' @param analysis_object Fitted analysis_object with 'sensitivity_analysis(methods = "Olden")'.
+#'
+#' @param show_table Boolean. Whether to print Olden results table.
+#'
+#' @returns analysis_object
+#'
 #' @export
 plot_olden <- function(analysis_object, show_table = FALSE){
 
@@ -402,6 +507,14 @@ plot_olden <- function(analysis_object, show_table = FALSE){
 
 }
 
+#' Plotting Sobol-Jansen Values Barplot
+#'
+#' @param analysis_object Fitted analysis_object with 'sensitivity_analysis(methods = "Sobol_Jansen")'.
+#'
+#' @param show_table Boolean. Whether to print Sobol-Jansen results table.
+#'
+#' @returns analysis_object
+#'
 #' @export
 plot_sobol_jansen <- function(analysis_object, show_table = FALSE){
 

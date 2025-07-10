@@ -176,6 +176,14 @@ AnalysisObject <- R6::R6Class("AnalysisObject",
       } else {
         stop("`$tables` is read only", call. = FALSE)
       }
+    },
+
+    best_hyperparameters = function(value) {
+      if (missing(value)) {
+        private$.best_hyperparameters
+      } else {
+        stop("`$best_hyperparameters` is read only", call. = FALSE)
+      }
     }
 
   ),
@@ -203,6 +211,7 @@ AnalysisObject <- R6::R6Class("AnalysisObject",
     .sensitivity_analysis = NULL,
     .plots = NULL,
     .tables = NULL,
+    .best_hyperparameters = NULL,
 
     add_stage = function(stage){
 
@@ -321,6 +330,12 @@ AnalysisObject <- R6::R6Class("AnalysisObject",
     add_tables = function(table_object){
 
       private$.tables = table_object
+
+    },
+
+    add_best_hyperparameters = function(best_hyperparameters){
+
+      private$.best_hyperparameters = best_hyperparameters
 
     }
 

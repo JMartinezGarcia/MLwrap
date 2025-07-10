@@ -4,17 +4,21 @@
     fields = "Version"
   )
   packageStartupMessage("
-  **************************************************
-  *                                                *
-  *   TTTTTT        dd         MM     MM  LL       *
-  *     TT   ii     dd  yy  yy MM M M MM  LL       *
-  *     TT   ii  dd dd   y y   MM  M  MM  LL       *
-  *     TT   ii d   dd   yy    MM     MM  LL       *
-  *     TT   ii  dd dd  yy     MM     MM  LLLLLL   *
-  *                                                *
-  **************************************************
+*****************************************************************************
 
-  TidyML v", version, ": **Start simple, scale smart**
+ooo        ooooo ooooo
+ 88.       .888   888
+ 888b     d 888   888         oooo oooo    ooo oooo d8b  .oooo.   oo.ooooo.
+ 8 Y88. .P  888   888           88.  88.  .8    888 8P  P  )88b   888   88b
+ 8   888    888   888            88..]88..8     888      .oP 888   888   888
+ 8    Y     888   888       o     888  888      888     d8(  888   888   888
+o8o        o888o o888ooooood8      8    8      d888b     Y888  8o  888bod8P
+                                                                   888
+                                                                  o888o
+
+*****************************************************************************
+
+      MLwrap v", version, ": **Start simple, scale smart**
   ")
 }
 
