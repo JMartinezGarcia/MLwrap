@@ -72,7 +72,7 @@ one_hot_predictors <- function(rec, encode_cat_vars, one_hot = T){
 #' # In this case, internal options for variable types are not needed since categorical features
 #' # are already formatted as factors.
 #'
-#' library(TidyML)
+#' library(MLwrap)
 #'
 #' data(sim_data) # sim_data is a simulated dataset wtih psychological variables
 #'

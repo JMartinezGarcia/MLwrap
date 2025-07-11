@@ -16,8 +16,6 @@ fine_tuning(analysis_object, tuner, metrics = NULL, verbose = FALSE)
 either "rmse" (regression) or "roc_auc" (classification).}
 
 \item{verbose}{Whether to show tuning process. Boolean TRUE or FALSE (default).}
-
-\item{plot_results}{Whether to plot the tuning results. Boolean TRUE or FALSE (default).}
 }
 \value{
 An updated analysis_object containing the fitted model with optimized hyperparameters,
@@ -97,7 +95,7 @@ the training data and updates the AnalysisObject, ensuring a reproducible and ef
 \examples{
 # Example 1: Fine tuning function applied to a regression task
 
-library(TidyML)
+library(MLwrap)
 
 data(sim_data) # sim_data is a simulated dataset wtih psychological variables
 
@@ -118,8 +116,7 @@ tidy_object <- build_model(
 
 tidy_object <- fine_tuning(tidy_object,
                 tuner = "Grid Search CV",
-                metrics = c("rmse"),
-                plot_results = TRUE
+                metrics = c("rmse")
                )
 
 # Extracting Evaluation Results

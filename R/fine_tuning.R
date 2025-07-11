@@ -16,7 +16,6 @@
 #'     "Grid Search CV".
 #' @param metrics Metric used for Model Selection. A string of the name of metric (see Metrics). By default
 #'    either "rmse" (regression) or "roc_auc" (classification).
-#' @param plot_results Whether to plot the tuning results. Boolean TRUE or FALSE (default).
 #' @param verbose Whether to show tuning process. Boolean TRUE or FALSE (default).
 #'
 #' @section Tuners:
@@ -73,7 +72,7 @@
 #' @examples
 #' # Example 1: Fine tuning function applied to a regression task
 #'
-#' library(TidyML)
+#' library(MLwrap)
 #'
 #' data(sim_data) # sim_data is a simulated dataset wtih psychological variables
 #'
@@ -94,8 +93,7 @@
 #'
 #' tidy_object <- fine_tuning(tidy_object,
 #'                 tuner = "Grid Search CV",
-#'                 metrics = c("rmse"),
-#'                 plot_results = TRUE
+#'                 metrics = c("rmse")
 #'                )
 #'
 #' # Extracting Evaluation Results
@@ -117,8 +115,7 @@
 #' @export
 fine_tuning <- function(analysis_object, tuner, metrics = NULL, verbose = FALSE){
 
-  check_args_fine_tuning(analysis_object = analysis_object, tuner = tuner, metrics = metrics,
-                         plot_results = plot_results, verbose = verbose)
+  check_args_fine_tuning(analysis_object = analysis_object, tuner = tuner, metrics = metrics, verbose = verbose)
 
   analysis_object = analysis_object$clone()
 

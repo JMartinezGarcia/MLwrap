@@ -25,8 +25,6 @@
 #' @param  metric Metric used for "PFI" method (Permutation Feature Importance).
 #'  A string of the name of metric (see Metrics).
 #'
-#' @param verbose Boolean. Whether to print results to console.
-#'
 #' @details
 #' As the concluding phase of the TidyML workflow—after data preparation, model training, and evaluation—this
 #' function enables users to interpret their models by quantifying and visualizing feature importance. It first
@@ -60,7 +58,7 @@
 #' @examples
 #' # Example: Using PFI and SHAP
 #'
-#' library(TidyML)
+#' library(MLwrap)
 #'
 #' data(sim_data) # sim_data is a simulated dataset with psychological variables
 #'
@@ -106,7 +104,7 @@
 #' Jansen, M. J. W. (1999). Analysis of variance designs for model output. Computer Physics Communications,
 #' 117(1-2), 35–43. https://doi.org/10.1016/S0010-4655(98)00154-4
 #' @export
-sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = NULL, verbose = TRUE){
+sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = NULL){
 
   check_args_sensitivity_analysis(analysis_object = analysis_object, methods = methods, metric = metric)
 
@@ -430,7 +428,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
           dplyr::mutate(iter = dplyr::row_number()) %>%
           tidyr::pivot_longer(-iter, names_to = "Feature", values_to = "Importance") %>%
           dplyr::mutate(iter = paste0("Importance (", y_classes[iter], ")")) %>%
-          tidyr::pivot_wider(names_from = iter, values_from = Importance)
+          tidyr::pivot_wider(names_from = "iter", values_from = "Importance")
 
         table_ob[["Olden"]] <- table_olden
 
@@ -519,7 +517,7 @@ plot_barplot <- function(X, func = NULL, func_se = stats::sd, title, x_label) {
   summary_df$Feature <- factor(summary_df$Feature,
                                 levels = summary_df$Feature[order(summary_df$Importance, decreasing = F)])
 
-    p <- ggplot2::ggplot(summary_df, ggplot2::aes(x = Importance, y = Feature)) +
+    p <- ggplot2::ggplot(summary_df, ggplot2::aes(x = "Importance", y = "Feature")) +
       ggplot2::geom_col(fill = "steelblue", width = 0.7) +
       ggplot2::geom_errorbar(ggplot2::aes(xmin = Importance - StDev, xmax = Importance + StDev), width = 0.2) +
       ggplot2::geom_text(ggplot2::aes(label = paste0(round(Importance, 3), " (", round(StDev, 3), ")")),
@@ -598,7 +596,7 @@ plot_boxplot <- function(X, title, y_label){
 
     X_long <- tidyr::pivot_longer(
       data = X,
-      cols = tidyselect::everything(),
+      cols = tidyr::everything(),
       names_to = "variable",
       values_to = "value"
     )
@@ -705,24 +703,6 @@ summarize_importance <- function(importance_matrix, original_df,  feature_names)
   summary_df <- summary_df[order(-summary_df[["Mean_Abs_Importance"]]), ]
 
   return(summary_df)
-}
-
-summarize_directional <- function(importance_matrix, original_df, feature_names){
-
-  directional_list = list()
-
-  for (i in 1:length(feature_names)){
-
-    name = feat_names[i]
-
-    directional_list[name] <- stats::cov(importance_matrix[name], original_df[name]) / stats::var(original_df[name])
-
-  }
-
-  directional_list <- base::as.data.frame(directional_list)
-
-  return(directional_list)
-
 }
 
 

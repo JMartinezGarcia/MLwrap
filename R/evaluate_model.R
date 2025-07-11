@@ -104,7 +104,7 @@ evaluate_model <- function(analysis_object){
 
   } else {
 
-    summary_total <- bind_rows(summary_train, summary_test)
+    summary_total <- dplyr::bind_rows(summary_train, summary_test)
 
     tables$summary_results <- summary_total
 
@@ -477,15 +477,6 @@ graph_nn <- function(){
 
   }
 
-}
-
-plot_results <- function(){
-
-  if (plot_results == T){
-
-    plot_tuning_results(analysis_object)
-
-  }
 }
 
 

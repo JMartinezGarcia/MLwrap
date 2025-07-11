@@ -3,7 +3,7 @@ summary.AnalysisObject <- function(object, ...) {
 
   y = all.vars(object$formula)[1]
 
-  full_data <- analysis_object$full_data
+  full_data <- object$full_data
 
   features_names <- names(full_data)[which(names(full_data) != y)]
 
@@ -38,7 +38,7 @@ summary.AnalysisObject <- function(object, ...) {
     cli::cat_line()
 
     cli::cli_h2("Summary Results")
-    print(table_evaluation_results(analysis_object))
+    print(table_evaluation_results(object))
 
   }
 

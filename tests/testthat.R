@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(TidyML)
+library(MLwrap)
 
-test_check("TidyML")
+test_check("MLwrap")

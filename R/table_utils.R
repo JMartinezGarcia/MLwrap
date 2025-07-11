@@ -347,7 +347,7 @@ table_sobol_jansen_results <- function(analysis_object, show_table = FALSE){
 
   sobol <- analysis_object$tables$Sobol_Jansen
 
-  if (is.null(pfi_names)){
+  if (is.null(sobol)){
 
     stop("You first need to compute sobol_jansen values using 'sensitivity_analysis()'!")
 

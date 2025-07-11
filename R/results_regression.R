@@ -68,7 +68,7 @@ summary_regression <- function(predictions, new_data = "test"){
   rownames(results) <- new_data
 
   results <- results %>%
-    dplyr::mutate(dplyr::across(where(is.numeric), ~ base::signif(.x, 3)))
+    dplyr::mutate(dplyr::across(dplyr::where(is.numeric), ~ base::signif(.x, 3)))
 
   return(results)
 

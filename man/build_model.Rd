@@ -105,7 +105,7 @@ A single value, a vector with range values \code{c(min_val, max_val)} or NULL fo
 \examples{
 # Example 1: Random Forest for regression task
 
-library(TidyML)
+library(MLwrap)
 
 data(sim_data) # sim_data is a simulated dataset wtih psychological variables
 

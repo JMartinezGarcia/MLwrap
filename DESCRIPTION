@@ -35,7 +35,6 @@ Depends:
 Imports: 
     R6,
     tidyr,
-    tidyselect,
     magrittr,
     dials,
     parsnip,
@@ -46,19 +45,17 @@ Imports:
     yardstick,
     vip,
     glue,
-    ggpubr,
     innsight,
     fastshap,
     DiagrammeR,
     ggbeeswarm,
     ggplot2,
-    stringr,
     sensitivity,
     dplyr,
     rlang,
     tibble,
-    tidyverse,
-    patchwork
+    patchwork,
+    cli
 Suggests: 
     testthat (>= 3.0.0),
     torch,

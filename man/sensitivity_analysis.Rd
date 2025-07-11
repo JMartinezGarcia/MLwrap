@@ -4,12 +4,7 @@
 \alias{sensitivity_analysis}
 \title{Perform Sensitivity Analysis and Interpretable ML methods}
 \usage{
-sensitivity_analysis(
-  analysis_object,
-  methods = c("PFI"),
-  metric = NULL,
-  verbose = TRUE
-)
+sensitivity_analysis(analysis_object, methods = c("PFI"), metric = NULL)
 }
 \arguments{
 \item{analysis_object}{analysis_object created from fine_tuning function.}
@@ -20,8 +15,6 @@ sensitivity_analysis(
 
 \item{metric}{Metric used for "PFI" method (Permutation Feature Importance).
 A string of the name of metric (see Metrics).}
-
-\item{verbose}{Boolean. Whether to print results to console.}
 }
 \value{
 An updated \code{analysis_object} with the results of the sensitivity analysis stored in the
@@ -76,7 +69,7 @@ under the \code{sensitivity_analysis} slot, finalizing the TidyML pipeline with 
 \examples{
 # Example: Using PFI and SHAP
 
-library(TidyML)
+library(MLwrap)
 
 data(sim_data) # sim_data is a simulated dataset with psychological variables
 

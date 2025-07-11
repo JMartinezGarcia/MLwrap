@@ -64,7 +64,7 @@ check_args_build_model <- function(analysis_object, model_name, hyperparameters)
 
 ########## Check fine_tuning
 
-check_args_fine_tuning <- function(analysis_object, tuner, metrics, plot_results = F, verbose = FALSE){
+check_args_fine_tuning <- function(analysis_object, tuner, metrics, verbose = FALSE){
 
   ## Check tidy_object stage
 

@@ -38,6 +38,12 @@ plot_tuning_results <- function(analysis_object){
 }
 
 
+#' Plot Neural Network Loss Curve
+#'
+#' @param analysis_object Fitted analysis_object with 'fine_tuning()'.
+#'
+#' @returns analysis_object
+#'
 #' @export
 plot_loss_curve <- function(analysis_object){
 

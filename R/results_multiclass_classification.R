@@ -113,7 +113,7 @@ summary_multiclass_per_class <- function(predictions, new_data = "test"){
   rownames(results_df) <- NULL
 
   results_df <- results_df %>%
-    dplyr::mutate(dplyr::across(where(is.numeric), ~ base::signif(.x, 3)))
+    dplyr::mutate(dplyr::across(dplyr::where(is.numeric), ~ base::signif(.x, 3)))
 
   return(results_df)
 
@@ -238,7 +238,7 @@ plot_dist_probs_multiclass <- function(predictions, data_set = "all"){
     tidyr::pivot_longer(cols = dplyr::starts_with(".pred_"),
                  names_to = "Class",
                  values_to = "Probability") %>%
-    dplyr::mutate(Class = stringr::str_replace(Class, "^.pred_", "Output "))
+    dplyr::mutate(Class = base::sub("^\\.pred_", "Output ", Class))
 
   p <- ggplot2::ggplot(df_long, ggplot2::aes(x = Probability, fill = y, color = y)) +
     ggplot2::geom_density(alpha = 0.5, bw = 0.1) +
