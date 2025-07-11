@@ -517,14 +517,14 @@ plot_barplot <- function(X, func = NULL, func_se = stats::sd, title, x_label) {
   summary_df$Feature <- factor(summary_df$Feature,
                                 levels = summary_df$Feature[order(summary_df$Importance, decreasing = F)])
 
-    p <- ggplot2::ggplot(summary_df, ggplot2::aes(x = "Importance", y = "Feature")) +
-      ggplot2::geom_col(fill = "steelblue", width = 0.7) +
+    p <- ggplot2::ggplot(summary_df, ggplot2::aes(x = Importance, y = Feature)) +
+      ggplot2::geom_col(fill = "steelblue") +
       ggplot2::geom_errorbar(ggplot2::aes(xmin = Importance - StDev, xmax = Importance + StDev), width = 0.2) +
       ggplot2::geom_text(ggplot2::aes(label = paste0(round(Importance, 3), " (", round(StDev, 3), ")")),
                 vjust =  -0.5,
                 hjust = -0.2) +
       ggplot2::labs(
-        x_label = x_label,
+        x = x_label,
         y = "Feature",
         title = title
         ) +
