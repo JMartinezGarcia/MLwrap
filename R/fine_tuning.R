@@ -150,8 +150,7 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, verbose = FALSE)
 
   if (analysis_object$hyperparameters$tuning == TRUE){
 
-
-    cli::cli_alert_info("Commencing Tuning...")
+    if (base::interactive()){cli::cli_alert_info("Commencing Tuning...")}
 
     tuner_fit = tune_models(analysis_object,
                             tuner,
@@ -159,7 +158,7 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, verbose = FALSE)
                             metrics = set_metrics,
                             verbose = verbose)
 
-    cli::cli_alert_success("Tuning Finalized!")
+    if (base::interactive()){cli::cli_alert_success("Tuning Finalized!")}
 
     analysis_object$modify("tuner_fit", tuner_fit)
 

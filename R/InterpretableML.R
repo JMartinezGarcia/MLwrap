@@ -402,9 +402,11 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
     results = olden_calc(model = model_parsnip, task,
                          outcome_levels = analysis_object$outcome_levels, y_classes = y_classes)
 
-    df_results <- tibble::as_tibble(t(results))
+    df_results <- dplyr::as_data_frame(t(results))
 
     colnames(df_results) <- feature_names
+
+    df_results <- tibble::as_tibble(df_results)
 
     sensitivity_analysis_list[["Olden"]] <- df_results
 
