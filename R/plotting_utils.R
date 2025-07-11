@@ -68,6 +68,40 @@ plot_loss_curve <- function(analysis_object){
 }
 
 
+#' Plot Neural Network Architecture
+#'
+#' @param analysis_object Fitted analysis_object with 'fine_tuning()'.
+#'
+#' @returns analysis_object
+#'
+#' @export
+plot_graph_nn <- function(analysis_object){
+
+  if (analysis_object$model_name != "Neural Network"){
+
+    stop("Model should be 'Neural Network'!")
+
+  }
+
+  if (analysis_object$stage != "fit_model"){
+
+    stop("You first need to fit a model with 'fine_tuning()'!")
+
+  }
+
+  final_model <- analysis_object$final_model
+
+  model_parsnip <- tune::extract_fit_parsnip(final_model)
+
+  p <- graph_nn(model_parsnip)
+
+  print(p)
+
+  invisible(analysis_object)
+
+}
+
+
 
 
 ### Regression Plots ###

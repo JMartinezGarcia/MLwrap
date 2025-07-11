@@ -445,39 +445,6 @@ summary_results <- function(analysis_object, predictions, new_data = "test"){
 }
 
 
-#############################
-#                           #
-#      Plot Functions       #
-#                           #
-#############################
-
-
-graph_nn <- function(){
-
-  if ((analysis_object$model_name == "Neural Network") && (analysis_object$model$engine == "brulee")){
-
-  model_parsnip <- tune::extract_fit_parsnip(final_model)
-
-  message("###### Loss Curve ######\n")
-
-  p <- brulee::autoplot(model_parsnip) +
-    ggplot2::labs(title = "Neural Network Loss Curve")
-
-  plot_ob = analysis_object$plots
-
-  plot_ob$nn_loss_curve = p
-
-  analysis_object$modify("plots", plot_ob)
-
-  print(p)
-
-  p <- graph_nn(model_parsnip)
-
-  print(p)
-
-  }
-
-}
 
 
 
