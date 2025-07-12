@@ -20,8 +20,9 @@ technique that evaluates variable importance through performance degradation whe
 each feature's values.
 }
 \examples{
-# Note: For obtaining the table with PFI method results the user needs to complete till sensitivity_analysis()
-function of the MLwrap pipeline using PFI method.
+# Note: For obtaining the table with PFI method results the user needs to
+# complete till sensitivity_analysis() function of the
+# MLwrap pipeline using PFI method.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,

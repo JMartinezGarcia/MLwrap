@@ -21,8 +21,9 @@ neural networks. This function is particularly valuable for understanding featur
 architectures where gradients provide direct information about model sensitivity.
 }
 \examples{
-# Note: For obtaining the Integrated Gradients plot the user needs to complete till sensitivity_analysis( )
-function of the MLwrap pipeline using the Integrated Gradients method.
+# Note: For obtaining the Integrated Gradients plot the user needs to
+# complete till sensitivity_analysis( ) function of the MLwrap pipeline
+# using the Integrated Gradients method.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,

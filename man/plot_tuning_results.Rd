@@ -21,7 +21,7 @@ tuning was actually performed before attempting to display results.
 }
 \examples{
 # Note: For obtaining the plot with tuning results the user needs to complete till
-fine_tuning( ) function of the MLwrap pipeline.
+# fine_tuning( ) function of the MLwrap pipeline.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,

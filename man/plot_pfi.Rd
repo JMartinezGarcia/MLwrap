@@ -22,7 +22,7 @@ interpretation.
 }
 \examples{
 # Note: For obtaining the PFI plot results the user needs to complete till
-sensitivity_analysis( ) function of the MLwrap pipeline using the PFI method.
+# sensitivity_analysis( ) function of the MLwrap pipeline using the PFI method.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,

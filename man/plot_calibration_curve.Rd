@@ -19,8 +19,9 @@ This function is restricted to binary classification problems and provides cruci
 reliability of the model's probabilistic estimates.
 }
 \examples{
-# Note: For obtaining the calibration curve plot the user needs to complete till fine_tuning( ) function
-of the MLwrap pipeline and only with binary outcome.
+# Note: For obtaining the calibration curve plot the user needs to
+# complete till fine_tuning( ) function of the MLwrap pipeline and
+# only with binary outcome.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well_bin ~ depression + emot_intel + resilience,

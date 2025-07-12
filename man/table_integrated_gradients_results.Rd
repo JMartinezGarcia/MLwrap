@@ -26,8 +26,9 @@ summarize the Integrated Gradients values calculated, three different metrics ar
 }
 }
 \examples{
-# Note: For obtaining the table with Integrated Gradients method results the user needs to complete till
-sensitivity_analysis() function of the MLwrap pipeline using the Integrated Gradient method.
+# Note: For obtaining the table with Integrated Gradients method results
+# the user needs to complete till sensitivity_analysis() function of the
+# MLwrap pipeline using the Integrated Gradient method.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,

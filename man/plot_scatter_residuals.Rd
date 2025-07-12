@@ -18,8 +18,8 @@ identification of heteroscedasticity and non-linear patterns in model errors. Th
 for validating regression model assumptions and detecting potential issues with model specification or data quality.
 }
 \examples{
-# Note: For obtaining the residuals vs. predicted values plot the user needs to complete till
-fine_tuning( ) function of the MLwrap pipeline.
+# Note: For obtaining the residuals vs. predicted values plot the user needs to
+# complete till fine_tuning( ) function of the MLwrap pipeline.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,

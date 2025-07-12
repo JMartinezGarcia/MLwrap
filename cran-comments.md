@@ -1,6 +1,8 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 2 notes
+0 errors | 0 warnings | 1 notes
+
+* Previously names as 'TidyML'
 
 * This is a new release.
 
@@ -12,3 +14,4 @@
 
 * added verbose to console results in sensitivity_analysis()
 
+* changed plots and prints to console to table_* and plot_* functions

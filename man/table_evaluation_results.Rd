@@ -21,7 +21,8 @@ table with performance metrics, while for multiclass classification it generates
 and test data, enabling comparative performance evaluation and detection of potential overfitting.
 }
 \examples{
-# Note: For obtaining the evaluation table the user needs to complete till fine_tuning( ) function.
+# Note: For obtaining the evaluation table the user needs to
+# complete till fine_tuning( ) function.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,

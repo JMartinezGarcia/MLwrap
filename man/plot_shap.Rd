@@ -23,7 +23,7 @@ predictions.
 }
 \examples{
 # Note: For obtaining the SHAP plots the user needs to complete till sensitivity_analysis( )
-function of the MLwrap pipeline using the SHAP method.
+# function of the MLwrap pipeline using the SHAP method.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,

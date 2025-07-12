@@ -18,8 +18,9 @@ visual metrics for evaluating binary and multiclass classifier performance. The 
 trade-off between true positive rate and false positive rate across different classification thresholds.
 }
 \examples{
-# Note: For obtaining roc curve plot the user needs to complete till fine_tuning( ) function
-of the MLwrap pipeline and only with categorical outcome.
+# Note: For obtaining roc curve plot the user needs to
+# complete till fine_tuning( ) function of the MLwrap pipeline and
+# only with categorical outcome.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well_bin ~ depression + emot_intel + resilience,

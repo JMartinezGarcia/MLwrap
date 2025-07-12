@@ -18,8 +18,8 @@ for underfitting / overfitting diagnostics.
 }
 \examples{
 
-# Note: For obtaining the loss curve plot the user needs to complete till the fine_tuning( ) function
-# of the MLwrap pipeline.
+# Note: For obtaining the loss curve plot the user needs to
+# complete till the fine_tuning( ) function of the MLwrap pipeline.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,

@@ -22,8 +22,8 @@ on the magnitude and direction of synaptic connections.
 }
 \examples{
 # Note: For obtaining the table with Olden method results the user needs to complete till
-sensitivity_analysis() function of the MLwrap pipeline using the Olden method. Remember Olden method only
-can be used with all input variables are continuous.
+# sensitivity_analysis() function of the MLwrap pipeline using the Olden method.
+# Remember Olden method only can be used with neural network model.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,

@@ -15,7 +15,7 @@
 #' @returns analysis_object
 #' @examples
 #' # Note: For obtaining the plot with tuning results the user needs to complete till
-#' fine_tuning( ) function of the MLwrap pipeline.
+#' # fine_tuning( ) function of the MLwrap pipeline.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
@@ -71,8 +71,8 @@ plot_tuning_results <- function(analysis_object){
 #'
 #' @examples
 #'
-#' # Note: For obtaining the loss curve plot the user needs to complete till the fine_tuning( ) function
-#' # of the MLwrap pipeline.
+#' # Note: For obtaining the loss curve plot the user needs to
+#' # complete till the fine_tuning( ) function of the MLwrap pipeline.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
@@ -120,8 +120,8 @@ plot_loss_curve <- function(analysis_object){
 #' @returns analysis_object
 #'
 #' @examples
-#' # Note: For obtaining the Neural Network architecture graph plot the user needs to complete till the fine_tuning( ) function
-#' # of the MLwrap pipeline.
+#' # Note: For obtaining the Neural Network architecture graph plot the user needs to
+#' # complete till the fine_tuning( ) function of the MLwrap pipeline.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
@@ -178,8 +178,8 @@ plot_graph_nn <- function(analysis_object){
 #'
 #' @returns analysis_object
 #' @examples
-#' # Note: For obtaining the residuals distribution plot the user needs to complete till fine_tuning( ) function
-#' # of the MLwrap pipeline.
+#' # Note: For obtaining the residuals distribution plot the user needs to
+#' # complete till fine_tuning( ) function of the MLwrap pipeline.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
@@ -219,8 +219,8 @@ plot_residuals_distribution <- function(analysis_object){
 #'
 #' @returns analysis_object
 #' @examples
-#' # Note: For obtaining the residuals vs. predicted values plot the user needs to complete till
-#' fine_tuning( ) function of the MLwrap pipeline.
+#' # Note: For obtaining the residuals vs. predicted values plot the user needs to
+#' # complete till fine_tuning( ) function of the MLwrap pipeline.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
@@ -260,8 +260,8 @@ plot_scatter_residuals <- function(analysis_object){
 #'
 #' @returns analysis_object
 #' @examples
-#' # Note: For obtaining the observed vs. predicted values plot the user needs to complete till
-#' fine_tuning( ) function of the MLwrap pipeline.
+#' # Note: For obtaining the observed vs. predicted values plot the user needs to
+#' # complete till fine_tuning( ) function of the MLwrap pipeline.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
@@ -273,7 +273,7 @@ plot_scatter_residuals <- function(analysis_object){
 #'
 #' plot_scatter_predictions(wrap_object)
 #' @export
-plot_scatter_predicitions <- function(analysis_object){
+plot_scatter_predictions <- function(analysis_object){
 
   plots <- analysis_object$plots
 
@@ -304,8 +304,9 @@ plot_scatter_predicitions <- function(analysis_object){
 #'
 #' @returns analysis_object
 #' @examples
-#' # Note: For obtaining confusion matrix plot the user needs to complete till fine_tuning( ) function
-#' of the MLwrap pipeline and only with categorical outcome.
+#' # Note: For obtaining confusion matrix plot the user needs to
+#' # complete till fine_tuning( ) function of the MLwrap pipeline and
+#' # only with categorical outcome.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
@@ -345,8 +346,9 @@ plot_confusion_matrix <- function(analysis_object){
 #'
 #' @returns analysis_object
 #' @examples
-#' # Note: For obtaining roc curve plot the user needs to complete till fine_tuning( ) function
-#' of the MLwrap pipeline and only with categorical outcome.
+#' # Note: For obtaining roc curve plot the user needs to
+#' # complete till fine_tuning( ) function of the MLwrap pipeline and
+#' # only with categorical outcome.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
@@ -412,7 +414,7 @@ plot_pr_curve <- function(analysis_object){
 #' @returns analysis_object
 #' @examples
 #' # Note: For obtaining the gain curve plot the user needs to complete till fine_tuning( ) function
-#' of the MLwrap pipeline and only with categorical outcome.
+#' # of the MLwrap pipeline and only with categorical outcome.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
@@ -451,7 +453,7 @@ plot_gain_curve <- function(analysis_object){
 #' @returns analysis_object
 #' @examples
 #' # Note: For obtaining the lift curve plot the user needs to complete till fine_tuning( ) function
-#' of the MLwrap pipeline and only with categorical outcome.
+#' # of the MLwrap pipeline and only with categorical outcome.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
@@ -490,8 +492,9 @@ plot_lift_curve <- function(analysis_object){
 #'
 #' @returns analysis_object
 #' @examples
-#' # Note: For obtaining the distribution by class plot the user needs to complete till fine_tuning( ) function
-#' of the MLwrap pipeline and only with categorical outcome.
+#' # Note: For obtaining the distribution by class plot the user needs to
+#' # complete till fine_tuning( ) function of the MLwrap pipeline
+#' # and only with categorical outcome.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
@@ -532,8 +535,9 @@ plot_distribution_by_class <- function(analysis_object){
 #'
 #' @returns analysis_object
 #' @examples
-#' # Note: For obtaining the calibration curve plot the user needs to complete till fine_tuning( ) function
-#' of the MLwrap pipeline and only with binary outcome.
+#' # Note: For obtaining the calibration curve plot the user needs to
+#' # complete till fine_tuning( ) function of the MLwrap pipeline and
+#' # only with binary outcome.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
@@ -583,7 +587,7 @@ plot_calibration_curve <- function(analysis_object){
 #' @returns analysis_object
 #' @examples
 #' # Note: For obtaining the PFI plot results the user needs to complete till
-#' sensitivity_analysis( ) function of the MLwrap pipeline using the PFI method.
+#' # sensitivity_analysis( ) function of the MLwrap pipeline using the PFI method.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
@@ -645,7 +649,7 @@ plot_pfi <- function(analysis_object, show_table = FALSE){
 #' @returns analysis_object
 #' @examples
 #' # Note: For obtaining the SHAP plots the user needs to complete till sensitivity_analysis( )
-#' function of the MLwrap pipeline using the SHAP method.
+#' # function of the MLwrap pipeline using the SHAP method.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
@@ -725,8 +729,9 @@ plot_shap <- function(analysis_object, show_table = FALSE){
 #'
 #' @returns analysis_object
 #' @examples
-#' # Note: For obtaining the Integrated Gradients plot the user needs to complete till sensitivity_analysis( )
-#' function of the MLwrap pipeline using the Integrated Gradients method.
+#' # Note: For obtaining the Integrated Gradients plot the user needs to
+#' # complete till sensitivity_analysis( ) function of the MLwrap pipeline
+#' # using the Integrated Gradients method.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
@@ -806,7 +811,7 @@ plot_integrated_gradients <- function(analysis_object, show_table = FALSE){
 #' @returns analysis_object
 #' @examples
 #' # Note: For obtaining the Olden plot the user needs to complete till sensitivity_analysis( )
-#' function of the MLwrap pipeline using the Olden method.
+#' # function of the MLwrap pipeline using the Olden method.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
@@ -866,7 +871,7 @@ plot_olden <- function(analysis_object, show_table = FALSE){
 #' @returns analysis_object
 #' @examples
 #' # Note: For obtaining the Sobol_Jansen plot the user needs to complete till sensitivity_analysis( )
-#' function of the MLwrap pipeline using the Sobol_Jansen method.
+#' # function of the MLwrap pipeline using the Sobol_Jansen method.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,

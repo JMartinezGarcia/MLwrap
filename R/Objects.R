@@ -1,3 +1,5 @@
+#' @importFrom R6 R6Class
+
 AnalysisObject <- R6::R6Class("AnalysisObject",
 
   active = list(

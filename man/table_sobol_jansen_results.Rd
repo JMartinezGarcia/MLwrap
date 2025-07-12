@@ -21,8 +21,10 @@ to the total variability of model predictions. This technique is particularly va
 higher-order effects and complex interactions between variables.
 }
 \examples{
-# Note: For obtaining the table with Sobol_Jansen method results the user needs to complete till
-sensitivity_analysis() function of the MLwrap pipeline using the Sobol_Jansen method.
+# Note: For obtaining the table with Sobol_Jansen method results
+# the user needs to complete till sensitivity_analysis() function of the
+# MLwrap pipeline using the Sobol_Jansen method.
+# Sobol_Jansen method only works when all input features are continuous.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,

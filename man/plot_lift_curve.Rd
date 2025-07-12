@@ -19,7 +19,7 @@ better the model performs compared to random selection at different population s
 }
 \examples{
 # Note: For obtaining the lift curve plot the user needs to complete till fine_tuning( ) function
-of the MLwrap pipeline and only with categorical outcome.
+# of the MLwrap pipeline and only with categorical outcome.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well_bin ~ depression + emot_intel + resilience,

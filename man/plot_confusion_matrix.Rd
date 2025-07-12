@@ -19,8 +19,9 @@ and identification of confusion patterns between classes, providing insights int
 frequently misclassified.
 }
 \examples{
-# Note: For obtaining confusion matrix plot the user needs to complete till fine_tuning( ) function
-of the MLwrap pipeline and only with categorical outcome.
+# Note: For obtaining confusion matrix plot the user needs to
+# complete till fine_tuning( ) function of the MLwrap pipeline and
+# only with categorical outcome.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well_bin ~ depression + emot_intel + resilience,

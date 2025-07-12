@@ -73,14 +73,14 @@ library(MLwrap)
 
 data(sim_data) # sim_data is a simulated dataset with psychological variables
 
-tidy_object <- preprocessing(
+wrap_object <- preprocessing(
        df = sim_data,
        formula = psych_well ~ depression + emot_intel + resilience + life_sat,
        task = "regression"
        )
 
-tidy_object <- build_model(
-               analysis_object = tidy_object,
+wrap_object <- build_model(
+               analysis_object = wrap_object,
                model_name = "Random Forest",
                hyperparameters = list(
                                  mtry = 3,
@@ -88,22 +88,22 @@ tidy_object <- build_model(
                                  )
                            )
 
-tidy_object <- fine_tuning(tidy_object,
+wrap_object <- fine_tuning(wrap_object,
                 tuner = "Grid Search CV",
                 metrics = c("rmse")
                 )
 
 
-tidy_object <- sensitivity_analysis(tidy_object, methods = c("PFI", "SHAP"), metric = "mape")
+wrap_object <- sensitivity_analysis(wrap_object, methods = c("PFI", "SHAP"), metric = "rmse")
 
 # Extracting Results
 
-table_pfi <- table_pfi_results(tidy_object)
-table_shap <- table_shap_results(tidy_object)
+table_pfi <- table_pfi_results(wrap_object)
+table_shap <- table_shap_results(wrap_object)
 
 # Plotting PFI Barplot
 
-tidy_object |>
+wrap_object |>
     plot_pfi() |>
     plot_shap()
 

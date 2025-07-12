@@ -16,7 +16,8 @@
 #'
 #' @returns Tibble with best hyperparameter configuration.
 #' @examples
-#' # Note: For obtaining hyoperparameters table the user needs to complete till fine_tuning( ) function.
+#' # Note: For obtaining hyoperparameters table the user needs to
+#' # complete till fine_tuning( ) function.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
@@ -84,7 +85,8 @@ table_best_hyperparameters <- function(analysis_object, show_table = FALSE){
 #'
 #' @returns Tibble or list of tibbles (multiclass classification) with evaluation results.
 #' @examples
-#' # Note: For obtaining the evaluation table the user needs to complete till fine_tuning( ) function.
+#' # Note: For obtaining the evaluation table the user needs to
+#' # complete till fine_tuning( ) function.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
@@ -168,8 +170,9 @@ table_evaluation_results <- function(analysis_object, show_table = FALSE){
 #'
 #' @returns Tibble or list of tibbles (multiclass classification) with PFI results.
 #' @examples
-#' # Note: For obtaining the table with PFI method results the user needs to complete till sensitivity_analysis()
-#' function of the MLwrap pipeline using PFI method.
+#' # Note: For obtaining the table with PFI method results the user needs to
+#' # complete till sensitivity_analysis() function of the
+#' # MLwrap pipeline using PFI method.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
@@ -250,8 +253,9 @@ table_pfi_results <- function(analysis_object, show_table = FALSE){
 #'
 #' @returns Tibble or list of tibbles (multiclass classification) with SHAP summarized results.
 #' @examples
-#' # Note: For obtaining the table with SHAP method results the user needs to complete till sensitivity_analysis()
-#' function of the MLwrap pipeline using the SHAP method.
+#' # Note: For obtaining the table with SHAP method results the user needs
+#' # to complete till sensitivity_analysis() function of the
+#' # MLwrap pipeline using the SHAP method.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
@@ -331,8 +335,9 @@ table_shap_results <- function(analysis_object, show_table = FALSE){
 #'
 #' @returns Tibble or list of tibbles (multiclass classification) with Integrated Gradient summarized results.
 #' @examples
-#' # Note: For obtaining the table with Integrated Gradients method results the user needs to complete till
-#' sensitivity_analysis() function of the MLwrap pipeline using the Integrated Gradient method.
+#' # Note: For obtaining the table with Integrated Gradients method results
+#' # the user needs to complete till sensitivity_analysis() function of the
+#' # MLwrap pipeline using the Integrated Gradient method.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
@@ -408,8 +413,8 @@ table_integrated_gradients_results <- function(analysis_object, show_table = FAL
 #' @returns Tibble or list of tibbles (multiclass classification) with Olden results.
 #' @examples
 #' # Note: For obtaining the table with Olden method results the user needs to complete till
-#' sensitivity_analysis() function of the MLwrap pipeline using the Olden method. Remember Olden method only
-#' can be used with all input variables are continuous.
+#' # sensitivity_analysis() function of the MLwrap pipeline using the Olden method.
+#' # Remember Olden method only can be used with neural network model.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
@@ -463,8 +468,10 @@ table_olden_results <- function(analysis_object, show_table = FALSE){
 #'
 #' @returns Tibble or list of tibbles (multiclass classification) with Sobol-Jansen results.
 #' @examples
-#' # Note: For obtaining the table with Sobol_Jansen method results the user needs to complete till
-#' sensitivity_analysis() function of the MLwrap pipeline using the Sobol_Jansen method.
+#' # Note: For obtaining the table with Sobol_Jansen method results
+#' # the user needs to complete till sensitivity_analysis() function of the
+#' # MLwrap pipeline using the Sobol_Jansen method.
+#' # Sobol_Jansen method only works when all input features are continuous.
 #'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,

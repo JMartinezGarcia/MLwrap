@@ -19,8 +19,8 @@ and detection of systematic patterns in model residuals. The function uses patch
 and test plots in a single display for direct comparison.
 }
 \examples{
-# Note: For obtaining the residuals distribution plot the user needs to complete till fine_tuning( ) function
-# of the MLwrap pipeline.
+# Note: For obtaining the residuals distribution plot the user needs to
+# complete till fine_tuning( ) function of the MLwrap pipeline.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,

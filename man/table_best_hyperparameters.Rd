@@ -23,7 +23,8 @@ according to the specified primary metric. The function includes optional intera
 capabilities through the show_table parameter.
 }
 \examples{
-# Note: For obtaining hyoperparameters table the user needs to complete till fine_tuning( ) function.
+# Note: For obtaining hyoperparameters table the user needs to
+# complete till fine_tuning( ) function.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,

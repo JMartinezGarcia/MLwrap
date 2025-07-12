@@ -95,8 +95,7 @@
 #'
 #' wrap_object <- fine_tuning(wrap_object,
 #'                 tuner = "Grid Search CV",
-#'                 metrics = c("rmse"),
-#'                 plot_results = TRUE
+#'                 metrics = c("rmse")
 #'                )
 #'
 #' # Extracting Evaluation Results

@@ -21,7 +21,7 @@ into how input variables influence predictions through the network's synaptic co
 }
 \examples{
 # Note: For obtaining the Olden plot the user needs to complete till sensitivity_analysis( )
-function of the MLwrap pipeline using the Olden method.
+# function of the MLwrap pipeline using the Olden method.
 
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
