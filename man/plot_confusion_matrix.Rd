@@ -13,5 +13,22 @@ plot_confusion_matrix(analysis_object)
 analysis_object
 }
 \description{
-Plotting Confusion Matrix
+The \strong{plot_confusion_matrix()} function generates confusion matrices for both training and test data
+in classification problems. This visualization allows evaluation of classification accuracy by category
+and identification of confusion patterns between classes, providing insights into which classes are most
+frequently misclassified.
+}
+\examples{
+# Note: For obtaining confusion matrix plot the user needs to complete till fine_tuning( ) function
+of the MLwrap pipeline and only with categorical outcome.
+
+wrap_object <- preprocessing(df = sim_data,
+                             formula = psych_well_bin ~ depression + emot_intel + resilience,
+                             task = "classification")
+wrap_object <- build_model(wrap_object, "Neural Network")
+wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+
+# And then, you can obtain the confusion matrix plot.
+
+plot_confusion_matrix(wrap_object)
 }

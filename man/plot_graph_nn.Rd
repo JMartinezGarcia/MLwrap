@@ -13,5 +13,20 @@ plot_graph_nn(analysis_object)
 analysis_object
 }
 \description{
-Plot Neural Network Architecture
+Plots a graph visualization of the Neural Network's architecture along with its optimized hyperparameters.
+}
+\examples{
+# Note: For obtaining the Neural Network architecture graph plot the user needs to complete till the fine_tuning( ) function
+# of the MLwrap pipeline.
+
+wrap_object <- preprocessing(df = sim_data,
+                             formula = psych_well ~ depression + emot_intel + resilience,
+                             task = "regression")
+wrap_object <- build_model(wrap_object, "Neural Network")
+wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+
+# And then, you can obtain the Neural Network architecture graph plot.
+
+plot_graph_nn(wrap_object)
+
 }

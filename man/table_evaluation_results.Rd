@@ -15,5 +15,22 @@ table_evaluation_results(analysis_object, show_table = FALSE)
 Tibble or list of tibbles (multiclass classification) with evaluation results.
 }
 \description{
-Evaluation Results
+The \strong{table_evaluation_results()} function provides access to trained model evaluation metrics, automatically
+adapting to the type of problem being analyzed. For binary classification problems, it returns a unified
+table with performance metrics, while for multiclass classification it generates separate tables for training
+and test data, enabling comparative performance evaluation and detection of potential overfitting.
+}
+\examples{
+# Note: For obtaining the evaluation table the user needs to complete till fine_tuning( ) function.
+
+wrap_object <- preprocessing(df = sim_data,
+                             formula = psych_well ~ depression + emot_intel + resilience,
+                             task = "regression")
+wrap_object <- build_model(wrap_object, "Random Forest")
+wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+
+# And then, you can obtain the evaluation table.
+
+table_results <- table_evaluation_results(wrap_object)
+
 }

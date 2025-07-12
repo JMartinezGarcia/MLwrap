@@ -12,8 +12,26 @@ table_sobol_jansen_results(analysis_object, show_table = FALSE)
 \item{show_table}{Boolean. Whether to print the table.}
 }
 \value{
-Tibble with Sobol-Jansen results.
+Tibble or list of tibbles (multiclass classification) with Sobol-Jansen results.
 }
 \description{
-Sobol-Jansen Results Table
+The \strong{table_sobol_jansen_results()} function processes results from Sobol-Jansen global sensitivity analysis,
+a variance decomposition-based methodology that quantifies each variable's contribution and their interactions
+to the total variability of model predictions. This technique is particularly valuable for identifying
+higher-order effects and complex interactions between variables.
+}
+\examples{
+# Note: For obtaining the table with Sobol_Jansen method results the user needs to complete till
+sensitivity_analysis() function of the MLwrap pipeline using the Sobol_Jansen method.
+
+wrap_object <- preprocessing(df = sim_data,
+                             formula = psych_well ~ depression + emot_intel + resilience,
+                             task = "regression")
+wrap_object <- build_model(wrap_object, "Neural Network")
+wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+wrap_object <- sensitivity_analysis(wrap_object, methods = "Sobol_Jansen")
+
+# And then, you can obtain the Sobol_Jansen results table.
+
+table_Sobol <- table_sobol_jansen_results(wrap_object)
 }

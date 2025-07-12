@@ -13,5 +13,22 @@ plot_loss_curve(analysis_object)
 analysis_object
 }
 \description{
-Plot Neural Network Loss Curve
+Plots the training loss curve of the Neural Network model on the validation set. This plot can be used
+for underfitting / overfitting diagnostics.
+}
+\examples{
+
+# Note: For obtaining the loss curve plot the user needs to complete till the fine_tuning( ) function
+# of the MLwrap pipeline.
+
+wrap_object <- preprocessing(df = sim_data,
+                             formula = psych_well ~ depression + emot_intel + resilience,
+                             task = "regression")
+wrap_object <- build_model(wrap_object, "Neural Network")
+wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+
+# And then, you can obtain the loss curve plot.
+
+plot_loss_curve(wrap_object)
+
 }

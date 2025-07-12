@@ -13,5 +13,23 @@ plot_tuning_results(analysis_object)
 analysis_object
 }
 \description{
-Plotting Tuner Search Results
+The \strong{plot_tuning_results()} function generates graphical representations of hyperparameter search results,
+automatically adapting to the type of optimizer used. When Bayesian optimization is employed, the function
+presents additional plots showing the iterative evolution of the loss function and search results throughout
+the optimization process. This function validates that model fitting has been completed and that hyperparameter
+tuning was actually performed before attempting to display results.
+}
+\examples{
+# Note: For obtaining the plot with tuning results the user needs to complete till
+fine_tuning( ) function of the MLwrap pipeline.
+
+wrap_object <- preprocessing(df = sim_data,
+                             formula = psych_well ~ depression + emot_intel + resilience,
+                             task = "regression")
+wrap_object <- build_model(wrap_object, "Neural Network")
+wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+
+# And then, you can obtain the tuning results plot.
+
+plot_tuning_results(wrap_object)
 }

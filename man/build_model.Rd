@@ -25,15 +25,16 @@ evaluation, or prediction tasks.
 \description{
 The function \strong{build_model()} is designed to construct and attach a ML model to an existing
 analysis object,which contains the preprocessed dataset generated in the previous step using the
-preprocessing() function. Based on the specified model type and optional hyperparameters, it supports
-several popular algorithms—including \strong{Neural Network}, \strong{XGBOOST}, \strong{Random Forest}, and \strong{SVM}
-(James et al., 2021)— by initializing the corresponding hyperparameter class, updating the analysis object
-with these settings, and invoking the appropriate model creation function. For SVM models, it further
-distinguishes between kernel types (rbf, polynomial, linear) to ensure the correct implementation. The
-function also updates the analysis object with the model name, the fitted model, and the current processing
-stage before returning the enriched object, thereby streamlining the workflow for subsequent training,
-evaluation, or prediction steps. This modular approach facilitates flexible and reproducible ML pipelines
-by encapsulating both the model and its configuration within a single structured object.
+preprocessing() function. Based on the specified model type and optional hyperparameters, it
+supports several popular algorithms—including \strong{Neural Network}, \strong{Random Forest}, \strong{XGBOOST},
+and \strong{SVM} (James et al., 2021)— by initializing the corresponding hyperparameter class,
+updating the analysis object with these settings, and invoking the appropriate model creation
+function. For SVM models, it further distinguishes between kernel types (rbf, polynomial, linear)
+to ensure the correct implementation. The function also updates the analysis object with the model
+name, the fitted model, and the current processing stage before returning the enriched object,
+thereby streamlining the workflow for subsequent training, evaluation, or prediction steps.
+This modular approach facilitates flexible and reproducible ML pipelines by encapsulating both
+the model and its configuration within a single structured object.
 }
 \section{Hyperparameters}{
 
@@ -107,37 +108,37 @@ A single value, a vector with range values \code{c(min_val, max_val)} or NULL fo
 
 library(MLwrap)
 
-data(sim_data) # sim_data is a simulated dataset wtih psychological variables
+data(sim_data) # sim_data is a simulated dataset with psychological variables
 
-tidy_object <- preprocessing(
+wrap_object <- preprocessing(
      df = sim_data,
      formula = psych_well ~ depression + emot_intel + resilience + life_sat,
      task = "regression"
      )
 
-tidy_object <- build_model(
-               analysis_object = tidy_object,
+wrap_object <- build_model(
+               analysis_object = wrap_object,
                model_name = "Random Forest",
                hyperparameters = list(
                                  mtry = 3,
                                  trees = 100
                                  )
                            )
-# It is safe to reuse the same object name (e.g., tidy_object, or whatever) step by step,
+# It is safe to reuse the same object name (e.g., wrap_object, or whatever) step by step,
 # as all previous results and information are retained within the updated analysis object.
 
 # Example 2: SVM for classification task
 
-data(sim_data) # sim_data is a simulated dataset wtih psychological variables
+data(sim_data) # sim_data is a simulated dataset with psychological variables
 
-tidy_object <- preprocessing(
+wrap_object <- preprocessing(
          df = sim_data,
          formula = psych_well_bin ~ depression + emot_intel + resilience + life_sat,
          task = "classification"
          )
 
-tidy_object <- build_model(
-               analysis_object = tidy_object,
+wrap_object <- build_model(
+               analysis_object = wrap_object,
                model_name = "SVM",
                hyperparameters = list(
                                  type = "rbf",

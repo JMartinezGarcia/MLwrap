@@ -41,6 +41,8 @@ one_hot_predictors <- function(rec, encode_cat_vars, one_hot = T){
 
 #' Preprocessing Data Matrix
 #'
+#' @description
+#'
 #' The **preprocessing()** function streamlines data preparation for regression and classification tasks by
 #' integrating variable selection, type conversion, normalization, and categorical encoding into a single
 #' workflow. It takes a data frame and a formula, applies user-specified transformations to numeric and
@@ -74,9 +76,9 @@ one_hot_predictors <- function(rec, encode_cat_vars, one_hot = T){
 #'
 #' library(MLwrap)
 #'
-#' data(sim_data) # sim_data is a simulated dataset wtih psychological variables
+#' data(sim_data) # sim_data is a simulated dataset with psychological variables
 #'
-#' tidy_object <- preprocessing(
+#' wrap_object <- preprocessing(
 #'           df = sim_data,
 #'           formula = psych_well ~ depression + emot_intel + resilience + life_sat + gender,
 #'           task = "regression"
@@ -85,7 +87,7 @@ one_hot_predictors <- function(rec, encode_cat_vars, one_hot = T){
 #' # Example 2: Dataset where neither the outcome nor the categorical features are formatted as factors
 #' # and all categorical variables are specified to be formatted as factors
 #'
-#' tidy_object <- preprocessing(
+#' wrap_object <- preprocessing(
 #'            df = sim_data,
 #'            formula = psych_well_bin ~ gender + depression + age + life_sat,
 #'            task = "classification",

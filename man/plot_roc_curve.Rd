@@ -13,5 +13,21 @@ plot_roc_curve(analysis_object)
 analysis_object
 }
 \description{
-Plotting ROC Curve
+The \strong{plot_roc_curve()} function produces ROC (Receiver Operating Characteristic) curves, providing fundamental
+visual metrics for evaluating binary and multiclass classifier performance. The ROC curve illustrates the
+trade-off between true positive rate and false positive rate across different classification thresholds.
+}
+\examples{
+# Note: For obtaining roc curve plot the user needs to complete till fine_tuning( ) function
+of the MLwrap pipeline and only with categorical outcome.
+
+wrap_object <- preprocessing(df = sim_data,
+                             formula = psych_well_bin ~ depression + emot_intel + resilience,
+                             task = "classification")
+wrap_object <- build_model(wrap_object, "Neural Network")
+wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+
+# And then, you can obtain the roc curve plot.
+
+plot_roc_curve(wrap_object)
 }

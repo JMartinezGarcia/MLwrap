@@ -13,5 +13,22 @@ plot_residuals_distribution(analysis_object)
 analysis_object
 }
 \description{
-Plotting Residuals Distribution
+The \strong{plot_residuals_distribution()} function generates histograms of residual distributions for both
+training and test data in regression problems. This visualization enables evaluation of error normality
+and detection of systematic patterns in model residuals. The function uses patchwork to combine training
+and test plots in a single display for direct comparison.
+}
+\examples{
+# Note: For obtaining the residuals distribution plot the user needs to complete till fine_tuning( ) function
+# of the MLwrap pipeline.
+
+wrap_object <- preprocessing(df = sim_data,
+                             formula = psych_well ~ depression + emot_intel + resilience,
+                             task = "regression")
+wrap_object <- build_model(wrap_object, "Neural Network")
+wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+
+# And then, you can obtain the residuals distribution plot.
+
+plot_residuals_distribution(wrap_object)
 }

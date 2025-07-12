@@ -19,13 +19,16 @@ Description: A minimalistic library specifically designed to make the estimation
              all the essential tools needed to efficiently structure and execute each stage of a predictive
              or classification modeling workflow, aligning closely with the fundamental steps of the KDD
              methodology, from data selection and preparation, through model building and tuning, to the
-             interpretation and evaluation of results using Sensitivity Analysis. The 'TidyML' workflow is
-             organized into five core steps; preprocessing(), build_model(), fine_tuning(), show_results(),
-             and sensitivity_analysis(). These steps correspond, respectively, to data preparation and
-             transformation, model construction, hyperparameter optimization, results presentation, and
-             sensitivity analysis. By streamlining these phases, 'TidyML' aims to simplify the implementation
-             of ML techniques, allowing analysts and data scientists to focus on extracting actionable insights
-             and meaningful patterns from large datasets, in line with the objectives of the KDD process.
+             interpretation and evaluation of results using Sensitivity Analysis. The 'MLwrap' workflow is
+             organized into four core steps; preprocessing(), build_model(), fine_tuning(), and
+             sensitivity_analysis(). These steps correspond, respectively, to data preparation and
+             transformation, model construction, hyperparameter optimization, and sensitivity analysis.
+             The user can access comprehensive model evaluation results including fit assessment metrics,
+             plots, predictions, and performance diagnostics for ML models implemented through Neural Networks,
+             Random Forest, XGBoost, and Support Vector Machines algorithms. By streamlining these phases,
+             'MLwrap' aims to simplify the implementation of ML techniques, allowing analysts and data
+             scientists to focus on extracting actionable insights and meaningful patterns from large datasets,
+             in line with the objectives of the KDD process.
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

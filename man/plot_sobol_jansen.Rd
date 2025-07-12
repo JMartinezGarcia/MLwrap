@@ -15,5 +15,22 @@ plot_sobol_jansen(analysis_object, show_table = FALSE)
 analysis_object
 }
 \description{
-Plotting Sobol-Jansen Values Barplot
+The \strong{plot_sobol_jansen()} function produces bar plots for Sobol-Jansen analysis results, offering a
+global sensitivity perspective based on variance decomposition. This methodology is particularly valuable
+for identifying higher-order effects and complex interactions between variables in model predictions.
+}
+\examples{
+# Note: For obtaining the Sobol_Jansen plot the user needs to complete till sensitivity_analysis( )
+function of the MLwrap pipeline using the Sobol_Jansen method.
+
+wrap_object <- preprocessing(df = sim_data,
+                             formula = psych_well ~ depression + emot_intel + resilience,
+                             task = "regression")
+wrap_object <- build_model(wrap_object, "Neural Network")
+wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+wrap_object <- sensitivity_analysis(wrap_object, methods = "Sobol_Jansen")
+
+# And then, you can obtain the Sobol_Jansen plot.
+
+plot_sobol_jansen(wrap_object)
 }

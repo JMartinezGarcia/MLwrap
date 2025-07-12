@@ -13,5 +13,22 @@ plot_scatter_predicitions(analysis_object)
 analysis_object
 }
 \description{
-Plotting Observed vs Predictions
+The \strong{plot_scatter_predictions()} function generates scatter plots between observed and predicted values,
+providing direct visual assessment of model predictive accuracy. The function displays both training and
+test results side by side, enabling evaluation of model generalization performance and identification of
+potential overfitting.
+}
+\examples{
+# Note: For obtaining the observed vs. predicted values plot the user needs to complete till
+fine_tuning( ) function of the MLwrap pipeline.
+
+wrap_object <- preprocessing(df = sim_data,
+                             formula = psych_well ~ depression + emot_intel + resilience,
+                             task = "regression")
+wrap_object <- build_model(wrap_object, "Neural Network")
+wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+
+# And then, you can obtain the observed vs predicted values plot.
+
+plot_scatter_predictions(wrap_object)
 }

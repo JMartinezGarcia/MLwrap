@@ -2,7 +2,7 @@
 % Please edit documentation in R/table_utils.R
 \name{table_best_hyperparameters}
 \alias{table_best_hyperparameters}
-\title{Best Hyperparameter Configuration}
+\title{Best Hyperparameters Configuration}
 \usage{
 table_best_hyperparameters(analysis_object, show_table = FALSE)
 }
@@ -15,5 +15,24 @@ table_best_hyperparameters(analysis_object, show_table = FALSE)
 Tibble with best hyperparameter configuration.
 }
 \description{
-Best Hyperparameter Configuration
+The \strong{table_best_hyperparameters()} function extracts and presents the optimal hyperparameter configuration
+identified during the model fine-tuning process. This function validates that the model has been properly
+trained and that hyperparameter tuning has been performed, combining both constant and optimized
+hyperparameters to generate a comprehensive table with the configuration that maximizes performance
+according to the specified primary metric. The function includes optional interactive visualization
+capabilities through the show_table parameter.
+}
+\examples{
+# Note: For obtaining hyoperparameters table the user needs to complete till fine_tuning( ) function.
+
+wrap_object <- preprocessing(df = sim_data,
+                             formula = psych_well ~ depression + emot_intel + resilience,
+                             task = "regression")
+wrap_object <- build_model(wrap_object, "Random Forest")
+wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+
+# And then, you can obtain the best hyperparameters table.
+
+table_best_hyp <- table_best_hyperparameters(wrap_object)
+
 }

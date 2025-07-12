@@ -15,5 +15,23 @@ plot_pfi(analysis_object, show_table = FALSE)
 analysis_object
 }
 \description{
-Plotting Permutation Feature Importance Barplot
+The \strong{plot_pfi()} function generates bar plots to visualize feature importance through permutation,
+providing clear representation of each predictor variable's relative contribution to model performance.
+The function includes an option to display accompanying numerical results tables for comprehensive
+interpretation.
+}
+\examples{
+# Note: For obtaining the PFI plot results the user needs to complete till
+sensitivity_analysis( ) function of the MLwrap pipeline using the PFI method.
+
+wrap_object <- preprocessing(df = sim_data,
+                             formula = psych_well ~ depression + emot_intel + resilience,
+                             task = "regression")
+wrap_object <- build_model(wrap_object, "Neural Network")
+wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+wrap_object <- sensitivity_analysis(wrap_object, methods = "PFI")
+
+# And then, you can obtain the PFI plot.
+
+plot_pfi(wrap_object)
 }

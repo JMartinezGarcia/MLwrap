@@ -12,8 +12,27 @@ table_olden_results(analysis_object, show_table = FALSE)
 \item{show_table}{Boolean. Whether to print the table.}
 }
 \value{
-Tibble with Olden results.
+Tibble or list of tibbles (multiclass classification) with Olden results.
 }
 \description{
-Olden Results Table
+The \strong{table_olden_results()} function extracts results from the Olden method, a technique specific to
+neural networks that calculates relative importance of input variables through analysis of connection
+weights between network layers. This method provides a measure of each variable's contribution based
+on the magnitude and direction of synaptic connections.
+}
+\examples{
+# Note: For obtaining the table with Olden method results the user needs to complete till
+sensitivity_analysis() function of the MLwrap pipeline using the Olden method. Remember Olden method only
+can be used with all input variables are continuous.
+
+wrap_object <- preprocessing(df = sim_data,
+                             formula = psych_well ~ depression + emot_intel + resilience,
+                             task = "regression")
+wrap_object <- build_model(wrap_object, "Neural Network")
+wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+wrap_object <- sensitivity_analysis(wrap_object, methods = "Olden")
+
+# And then, you can obtain the Olden results table.
+
+table_Olden <- table_olden_results(wrap_object)
 }

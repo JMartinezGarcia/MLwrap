@@ -13,5 +13,7 @@ plot_pr_curve(analysis_object)
 analysis_object
 }
 \description{
-Plotting Precision-Recall Curve
+The \strong{plot_pr_curve()} function generates precision-recall curves, which are particularly valuable for evaluating
+classifier performance on imbalanced datasets. These curves show the relationship between precision and recall
+across different decision thresholds, complementing ROC curve analysis.
 }

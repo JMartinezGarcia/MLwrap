@@ -13,5 +13,22 @@ plot_distribution_by_class(analysis_object)
 analysis_object
 }
 \description{
-Plotting Output Distribution By Class
+The \strong{plot_distribution_by_class()} function generates distributions of model output scores segmented by class,
+facilitating evaluation of separability between categories and identification of problematic overlaps. This
+visualization helps assess whether the model produces sufficiently distinct score distributions for different
+classes.
+}
+\examples{
+# Note: For obtaining the distribution by class plot the user needs to complete till fine_tuning( ) function
+of the MLwrap pipeline and only with categorical outcome.
+
+wrap_object <- preprocessing(df = sim_data,
+                             formula = psych_well_bin ~ depression + emot_intel + resilience,
+                             task = "classification")
+wrap_object <- build_model(wrap_object, "Neural Network")
+wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+
+# And then, you can obtain the distribution by class plot.
+
+plot_distribution_by_class(wrap_object)
 }

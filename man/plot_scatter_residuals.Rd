@@ -13,5 +13,21 @@ plot_scatter_residuals(analysis_object)
 analysis_object
 }
 \description{
-Plotting Residuals vs Predictions
+The \strong{plot_scatter_residuals()} function produces scatter plots relating residuals to predictions, facilitating
+identification of heteroscedasticity and non-linear patterns in model errors. This diagnostic plot is essential
+for validating regression model assumptions and detecting potential issues with model specification or data quality.
+}
+\examples{
+# Note: For obtaining the residuals vs. predicted values plot the user needs to complete till
+fine_tuning( ) function of the MLwrap pipeline.
+
+wrap_object <- preprocessing(df = sim_data,
+                             formula = psych_well ~ depression + emot_intel + resilience,
+                             task = "regression")
+wrap_object <- build_model(wrap_object, "Neural Network")
+wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+
+# And then, you can obtain the residuals vs predicted values plot.
+
+plot_scatter_residuals(wrap_object)
 }

@@ -1,5 +1,7 @@
 #' Fine Tune ML Model
 #'
+#' @description
+#'
 #' The **fine_tuning()** function performs automated hyperparameter optimization for ML workflows encapsulated
 #' within an AnalysisObject. It supports different tuning strategies, such as **Bayesian Optimization** and
 #' **Grid Search Cross-Validation**, allowing the user to specify evaluation metrics and whether to visualize
@@ -76,14 +78,14 @@
 #'
 #' data(sim_data) # sim_data is a simulated dataset wtih psychological variables
 #'
-#' tidy_object <- preprocessing(
+#' wrap_object <- preprocessing(
 #'            df = sim_data,
 #'            formula = psych_well ~ depression + emot_intel + resilience + life_sat,
 #'            task = "regression"
 #'            )
 #'
-#' tidy_object <- build_model(
-#'                analysis_object = tidy_object,
+#' wrap_object <- build_model(
+#'                analysis_object = wrap_object,
 #'                model_name = "Random Forest",
 #'                hyperparameters = list(
 #'                      mtry = 3,
@@ -91,26 +93,27 @@
 #'                      )
 #'                  )
 #'
-#' tidy_object <- fine_tuning(tidy_object,
+#' wrap_object <- fine_tuning(wrap_object,
 #'                 tuner = "Grid Search CV",
-#'                 metrics = c("rmse")
+#'                 metrics = c("rmse"),
+#'                 plot_results = TRUE
 #'                )
 #'
 #' # Extracting Evaluation Results
 #'
-#' table_best_hyp <- table_best_hyperparameters(tidy_object)
-#' table_results <- table_evaluation_results(tidy_object)
+#' table_best_hyp <- table_best_hyperparameters(wrap_object)
+#' table_results <- table_evaluation_results(wrap_object)
 #'
 #' # Plotting Results
 #'
-#' tidy_object |>
+#' wrap_object |>
 #'   plot_tuning_results() |>
 #'   plot_residuals_distribution() |>
 #'   plot_scatter_residuals()
 #'
 #' @references
-#' Bartz, E., Bartz-Beielstein, T., Zaefferer, M., & Mersmann, O. (2023). *Hyperparameter tuner
-#' for Machine and Deep Learning with R. A Practical Guide*. Springer, Singapore.
+#' Bartz, E., Bartz-Beielstein, T., Zaefferer, M., & Mersmann, O. (2023). *Hyperparameter
+#' tuner for Machine and Deep Learning with R. A Practical Guide*. Springer, Singapore.
 #' https://doi.org/10.1007/978-981-19-5170-1
 #' @export
 fine_tuning <- function(analysis_object, tuner, metrics = NULL, verbose = FALSE){
