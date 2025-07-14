@@ -25,6 +25,8 @@ into how input variables influence predictions through the network's synaptic co
 
 if (requireNamespace("torch", quietly = TRUE)) {
 
+  \dontrun{
+
   wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
                              task = "regression")
@@ -35,6 +37,8 @@ if (requireNamespace("torch", quietly = TRUE)) {
   # And then, you can obtain the Olden plot.
 
   plot_olden(wrap_object)
+
+  }
 
 }
 

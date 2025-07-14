@@ -27,6 +27,8 @@ on the magnitude and direction of synaptic connections.
 
 if (requireNamespace("torch", quietly = TRUE)) {
 
+  \dontrun{
+
   wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
                              task = "regression")
@@ -37,6 +39,8 @@ if (requireNamespace("torch", quietly = TRUE)) {
   # And then, you can obtain the Olden results table.
 
   table_Olden <- table_olden_results(wrap_object)
+
+  }
 
 }
 

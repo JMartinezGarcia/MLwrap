@@ -32,6 +32,8 @@ summarize the Integrated Gradients values calculated, three different metrics ar
 
 if (requireNamespace("torch", quietly = TRUE)) {
 
+  \dontrun{
+
   wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
                              task = "regression")
@@ -42,6 +44,8 @@ if (requireNamespace("torch", quietly = TRUE)) {
   # And then, you can obtain the Integrated Gradients results table.
 
   table_IG <- table_integrated_gradients_results(wrap_object)
+
+  }
 
 }
 

@@ -341,6 +341,8 @@ table_shap_results <- function(analysis_object, show_table = FALSE){
 #'
 #' if (requireNamespace("torch", quietly = TRUE)) {
 #'
+#'   \dontrun{
+#'
 #'   wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
@@ -351,6 +353,8 @@ table_shap_results <- function(analysis_object, show_table = FALSE){
 #'   # And then, you can obtain the Integrated Gradients results table.
 #'
 #'   table_IG <- table_integrated_gradients_results(wrap_object)
+#'
+#'   }
 #'
 #' }
 #'
@@ -422,6 +426,8 @@ table_integrated_gradients_results <- function(analysis_object, show_table = FAL
 #'
 #' if (requireNamespace("torch", quietly = TRUE)) {
 #'
+#'   \dontrun{
+#'
 #'   wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
@@ -432,6 +438,8 @@ table_integrated_gradients_results <- function(analysis_object, show_table = FAL
 #'   # And then, you can obtain the Olden results table.
 #'
 #'   table_Olden <- table_olden_results(wrap_object)
+#'
+#'   }
 #'
 #' }
 #'

@@ -27,6 +27,8 @@ architectures where gradients provide direct information about model sensitivity
 
 if (requireNamespace("torch", quietly = TRUE)) {
 
+  \dontrun{
+
   wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
                              task = "regression")
@@ -37,6 +39,8 @@ if (requireNamespace("torch", quietly = TRUE)) {
   # And then, you can obtain the Integrated Gradients plot.
 
   plot_integrated_gradients(wrap_object)
+
+  }
 
 }
 
