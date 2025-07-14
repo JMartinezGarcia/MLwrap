@@ -30,15 +30,19 @@ summarize the Integrated Gradients values calculated, three different metrics ar
 # the user needs to complete till sensitivity_analysis() function of the
 # MLwrap pipeline using the Integrated Gradient method.
 
-wrap_object <- preprocessing(df = sim_data,
+if (requireNamespace("torch", quietly = TRUE)) {
+
+  wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
                              task = "regression")
-wrap_object <- build_model(wrap_object, "Neural Network")
-wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
-wrap_object <- sensitivity_analysis(wrap_object, methods = "Integrated Gradients")
+  wrap_object <- build_model(wrap_object, "Neural Network")
+  wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+  wrap_object <- sensitivity_analysis(wrap_object, methods = "Integrated Gradients")
 
-# And then, you can obtain the Integrated Gradients results table.
+  # And then, you can obtain the Integrated Gradients results table.
 
-table_IG <- table_integrated_gradients_results(wrap_object)
+  table_IG <- table_integrated_gradients_results(wrap_object)
+
+}
 
 }

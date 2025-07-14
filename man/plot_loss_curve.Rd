@@ -21,14 +21,18 @@ for underfitting / overfitting diagnostics.
 # Note: For obtaining the loss curve plot the user needs to
 # complete till the fine_tuning( ) function of the MLwrap pipeline.
 
-wrap_object <- preprocessing(df = sim_data,
+if (requireNamespace("torch", quietly = TRUE)) {
+
+  wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
                              task = "regression")
-wrap_object <- build_model(wrap_object, "Neural Network")
-wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+  wrap_object <- build_model(wrap_object, "Neural Network")
+  wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 
-# And then, you can obtain the loss curve plot.
+  # And then, you can obtain the loss curve plot.
 
-plot_loss_curve(wrap_object)
+  plot_loss_curve(wrap_object)
+
+}
 
 }

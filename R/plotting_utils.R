@@ -20,7 +20,7 @@
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
+#' wrap_object <- build_model(wrap_object, "Random Forest")
 #' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 #'
 #' # And then, you can obtain the tuning results plot.
@@ -74,15 +74,19 @@ plot_tuning_results <- function(analysis_object){
 #' # Note: For obtaining the loss curve plot the user needs to
 #' # complete till the fine_tuning( ) function of the MLwrap pipeline.
 #'
-#' wrap_object <- preprocessing(df = sim_data,
+#' if (requireNamespace("torch", quietly = TRUE)) {
+#'
+#'   wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
-#' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+#'   wrap_object <- build_model(wrap_object, "Neural Network")
+#'   wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 #'
-#' # And then, you can obtain the loss curve plot.
+#'   # And then, you can obtain the loss curve plot.
 #'
-#' plot_loss_curve(wrap_object)
+#'   plot_loss_curve(wrap_object)
+#'
+#' }
 #'
 #' @export
 plot_loss_curve <- function(analysis_object){
@@ -123,15 +127,19 @@ plot_loss_curve <- function(analysis_object){
 #' # Note: For obtaining the Neural Network architecture graph plot the user needs to
 #' # complete till the fine_tuning( ) function of the MLwrap pipeline.
 #'
-#' wrap_object <- preprocessing(df = sim_data,
+#' if (requireNamespace("torch", quietly = TRUE)) {
+#'
+#'   wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
-#' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+#'   wrap_object <- build_model(wrap_object, "Neural Network")
+#'   wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 #'
-#' # And then, you can obtain the Neural Network architecture graph plot.
+#'   # And then, you can obtain the Neural Network architecture graph plot.
 #'
-#' plot_graph_nn(wrap_object)
+#'   plot_graph_nn(wrap_object)
+#'
+#' }
 #'
 #' @export
 plot_graph_nn <- function(analysis_object){
@@ -184,7 +192,7 @@ plot_graph_nn <- function(analysis_object){
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
+#' wrap_object <- build_model(wrap_object, "Random Forest")
 #' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 #'
 #' # And then, you can obtain the residuals distribution plot.
@@ -225,7 +233,7 @@ plot_residuals_distribution <- function(analysis_object){
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
+#' wrap_object <- build_model(wrap_object, "Random Forest")
 #' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 #'
 #' # And then, you can obtain the residuals vs predicted values plot.
@@ -266,7 +274,7 @@ plot_scatter_residuals <- function(analysis_object){
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
+#' wrap_object <- build_model(wrap_object, "Random Forest")
 #' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 #'
 #' # And then, you can obtain the observed vs predicted values plot.
@@ -311,7 +319,7 @@ plot_scatter_predictions <- function(analysis_object){
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
 #'                              task = "classification")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
+#' wrap_object <- build_model(wrap_object, "Random Forest")
 #' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 #'
 #' # And then, you can obtain the confusion matrix plot.
@@ -353,7 +361,7 @@ plot_confusion_matrix <- function(analysis_object){
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
 #'                              task = "classification")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
+#' wrap_object <- build_model(wrap_object, "Random Forest")
 #' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 #'
 #' # And then, you can obtain the roc curve plot.
@@ -419,7 +427,7 @@ plot_pr_curve <- function(analysis_object){
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
 #'                              task = "classification")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
+#' wrap_object <- build_model(wrap_object, "Random Forest")
 #' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 #'
 #' # And then, you can obtain the gain curve plot.
@@ -458,7 +466,7 @@ plot_gain_curve <- function(analysis_object){
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
 #'                              task = "classification")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
+#' wrap_object <- build_model(wrap_object, "Random Forest")
 #' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 #'
 #' # And then, you can obtain the lift curve plot.
@@ -499,7 +507,7 @@ plot_lift_curve <- function(analysis_object){
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
 #'                              task = "classification")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
+#' wrap_object <- build_model(wrap_object, "Random Forest")
 #' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 #'
 #' # And then, you can obtain the distribution by class plot.
@@ -542,7 +550,7 @@ plot_distribution_by_class <- function(analysis_object){
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
 #'                              task = "classification")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
+#' wrap_object <- build_model(wrap_object, "Random Forest")
 #' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 #'
 #' # And then, you can obtain the calibration curve plot.
@@ -592,7 +600,7 @@ plot_calibration_curve <- function(analysis_object){
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
+#' wrap_object <- build_model(wrap_object, "Random Forest")
 #' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 #' wrap_object <- sensitivity_analysis(wrap_object, methods = "PFI")
 #'
@@ -654,7 +662,7 @@ plot_pfi <- function(analysis_object, show_table = FALSE){
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
+#' wrap_object <- build_model(wrap_object, "Random Forest")
 #' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 #' wrap_object <- sensitivity_analysis(wrap_object, methods = "SHAP")
 #'
@@ -733,16 +741,21 @@ plot_shap <- function(analysis_object, show_table = FALSE){
 #' # complete till sensitivity_analysis( ) function of the MLwrap pipeline
 #' # using the Integrated Gradients method.
 #'
-#' wrap_object <- preprocessing(df = sim_data,
+#' if (requireNamespace("torch", quietly = TRUE)) {
+#'
+#'   wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
-#' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
-#' wrap_object <- sensitivity_analysis(wrap_object, methods = "Integrated Gradients")
+#'   wrap_object <- build_model(wrap_object, "Neural Network")
+#'   wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+#'   wrap_object <- sensitivity_analysis(wrap_object, methods = "Integrated Gradients")
 #'
-#' # And then, you can obtain the Integrated Gradients plot.
+#'   # And then, you can obtain the Integrated Gradients plot.
 #'
-#' plot_integrated_gradients(wrap_object)
+#'   plot_integrated_gradients(wrap_object)
+#'
+#' }
+#'
 #' @export
 plot_integrated_gradients <- function(analysis_object, show_table = FALSE){
 
@@ -813,16 +826,21 @@ plot_integrated_gradients <- function(analysis_object, show_table = FALSE){
 #' # Note: For obtaining the Olden plot the user needs to complete till sensitivity_analysis( )
 #' # function of the MLwrap pipeline using the Olden method.
 #'
-#' wrap_object <- preprocessing(df = sim_data,
+#' if (requireNamespace("torch", quietly = TRUE)) {
+#'
+#'   wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
-#' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
-#' wrap_object <- sensitivity_analysis(wrap_object, methods = "Olden")
+#'   wrap_object <- build_model(wrap_object, "Neural Network")
+#'   wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+#'   wrap_object <- sensitivity_analysis(wrap_object, methods = "Olden")
 #'
-#' # And then, you can obtain the Olden plot.
+#'   # And then, you can obtain the Olden plot.
 #'
-#' plot_olden(wrap_object)
+#'   plot_olden(wrap_object)
+#'
+#' }
+#'
 #' @export
 plot_olden <- function(analysis_object, show_table = FALSE){
 
@@ -876,7 +894,7 @@ plot_olden <- function(analysis_object, show_table = FALSE){
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
+#' wrap_object <- build_model(wrap_object, "Random Forest")
 #' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 #' wrap_object <- sensitivity_analysis(wrap_object, methods = "Sobol_Jansen")
 #'

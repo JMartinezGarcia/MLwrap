@@ -27,7 +27,7 @@ interpretation.
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
                              task = "regression")
-wrap_object <- build_model(wrap_object, "Neural Network")
+wrap_object <- build_model(wrap_object, "Random Forest")
 wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 wrap_object <- sensitivity_analysis(wrap_object, methods = "PFI")
 

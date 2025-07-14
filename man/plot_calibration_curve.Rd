@@ -26,7 +26,7 @@ reliability of the model's probabilistic estimates.
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well_bin ~ depression + emot_intel + resilience,
                              task = "classification")
-wrap_object <- build_model(wrap_object, "Neural Network")
+wrap_object <- build_model(wrap_object, "Random Forest")
 wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 
 # And then, you can obtain the calibration curve plot.

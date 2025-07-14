@@ -339,16 +339,20 @@ table_shap_results <- function(analysis_object, show_table = FALSE){
 #' # the user needs to complete till sensitivity_analysis() function of the
 #' # MLwrap pipeline using the Integrated Gradient method.
 #'
-#' wrap_object <- preprocessing(df = sim_data,
+#' if (requireNamespace("torch", quietly = TRUE)) {
+#'
+#'   wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
-#' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
-#' wrap_object <- sensitivity_analysis(wrap_object, methods = "Integrated Gradients")
+#'   wrap_object <- build_model(wrap_object, "Neural Network")
+#'   wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+#'   wrap_object <- sensitivity_analysis(wrap_object, methods = "Integrated Gradients")
 #'
-#' # And then, you can obtain the Integrated Gradients results table.
+#'   # And then, you can obtain the Integrated Gradients results table.
 #'
-#' table_IG <- table_integrated_gradients_results(wrap_object)
+#'   table_IG <- table_integrated_gradients_results(wrap_object)
+#'
+#' }
 #'
 #' @export
 table_integrated_gradients_results <- function(analysis_object, show_table = FALSE){
@@ -416,16 +420,21 @@ table_integrated_gradients_results <- function(analysis_object, show_table = FAL
 #' # sensitivity_analysis() function of the MLwrap pipeline using the Olden method.
 #' # Remember Olden method only can be used with neural network model.
 #'
-#' wrap_object <- preprocessing(df = sim_data,
+#' if (requireNamespace("torch", quietly = TRUE)) {
+#'
+#'   wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
-#' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
-#' wrap_object <- sensitivity_analysis(wrap_object, methods = "Olden")
+#'   wrap_object <- build_model(wrap_object, "Neural Network")
+#'   wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
+#'   wrap_object <- sensitivity_analysis(wrap_object, methods = "Olden")
 #'
-#' # And then, you can obtain the Olden results table.
+#'   # And then, you can obtain the Olden results table.
 #'
-#' table_Olden <- table_olden_results(wrap_object)
+#'   table_Olden <- table_olden_results(wrap_object)
+#'
+#' }
+#'
 #' @export
 table_olden_results <- function(analysis_object, show_table = FALSE){
 
@@ -476,7 +485,7 @@ table_olden_results <- function(analysis_object, show_table = FALSE){
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
-#' wrap_object <- build_model(wrap_object, "Neural Network")
+#' wrap_object <- build_model(wrap_object, "Random Forest")
 #' wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 #' wrap_object <- sensitivity_analysis(wrap_object, methods = "Sobol_Jansen")
 #'
