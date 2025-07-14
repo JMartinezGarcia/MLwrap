@@ -79,6 +79,6 @@ analysis_object |>
 
 table_pfi <- table_pfi_results(analysis_object)
 
-print(table_pfi)
+show(table_pfi)
 
 ```

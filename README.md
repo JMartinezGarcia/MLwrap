@@ -102,17 +102,17 @@ analysis_object |>
 
 table_pfi <- table_pfi_results(analysis_object)
 
-print(table_pfi)
+show(table_pfi)
 #> $PFI
 #> # A tibble: 8 × 3
 #>   Feature               Importance   StDev
 #>   <chr>                      <dbl>   <dbl>
-#> 1 depression                0.805  0.0157 
-#> 2 emot_intel                0.211  0.0298 
-#> 3 age                       0.0682 0.00674
-#> 4 socioec_status_Medium     0.0139 0.00398
-#> 5 socioec_status_High       0.0136 0.00249
-#> 6 gender_Female             0.0136 0.00280
-#> 7 socioec_status_Low        0.0131 0.00267
-#> 8 gender_Male               0.0128 0.00336
+#> 1 depression               0.796   0.0265 
+#> 2 emot_intel               0.193   0.0276 
+#> 3 age                      0.0681  0.00720
+#> 4 socioec_status_Medium    0.00690 0.00257
+#> 5 socioec_status_High      0.00682 0.00165
+#> 6 socioec_status_Low       0.00665 0.00123
+#> 7 gender_Male              0.00531 0.00129
+#> 8 gender_Female            0.00516 0.00167
 ```
