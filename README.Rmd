@@ -60,10 +60,25 @@ analysis_object <- preprocessing(sim_data, formula_reg, task = "regression") |>
                    sensitivity_analysis(methods = c("PFI", "SHAP"), 
                                         metric = "rsq")
 
+### Tuning Results
+
+analysis_object |>
+  plot_tuning_results()
+
+### Evaluation Plots
+
 analysis_object |>
   plot_residuals_distribution() |>
-  plot_scatter_residuals() |>
-  plot_pfi(show_table = TRUE) |>
-  plot_shap(show_table = TRUE)
+  plot_scatter_residuals() 
+
+### Sensitivity analysis
+
+analysis_object |>
+  plot_pfi() |>
+  plot_shap()
+
+table_pfi <- table_pfi_results(analysis_object)
+
+print(table_pfi)
 
 ```

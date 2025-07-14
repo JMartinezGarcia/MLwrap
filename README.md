@@ -73,11 +73,46 @@ analysis_object <- preprocessing(sim_data, formula_reg, task = "regression") |>
                                         metric = "rsq")
 #> ! No improvement for 5 iterations; returning current results.
 
+### Tuning Results
+
 analysis_object |>
-  plot_residuals_distribution() |>
-  plot_scatter_residuals() |>
-  plot_pfi(show_table = TRUE) |>
-  plot_shap(show_table = TRUE)
+  plot_tuning_results()
 ```
 
-<img src="man/figures/README-example-1.png" width="100%" /><img src="man/figures/README-example-2.png" width="100%" />
+<img src="man/figures/README-example-1.png" width="100%" /><img src="man/figures/README-example-2.png" width="100%" /><img src="man/figures/README-example-3.png" width="100%" />
+
+``` r
+
+### Evaluation Plots
+
+analysis_object |>
+  plot_residuals_distribution() |>
+  plot_scatter_residuals() 
+```
+
+<img src="man/figures/README-example-4.png" width="100%" /><img src="man/figures/README-example-5.png" width="100%" />
+
+``` r
+
+### Sensitivity analysis
+
+analysis_object |>
+  plot_pfi() |>
+  plot_shap()
+
+table_pfi <- table_pfi_results(analysis_object)
+
+print(table_pfi)
+#> $PFI
+#> # A tibble: 8 × 3
+#>   Feature               Importance   StDev
+#>   <chr>                      <dbl>   <dbl>
+#> 1 depression                0.805  0.0157 
+#> 2 emot_intel                0.211  0.0298 
+#> 3 age                       0.0682 0.00674
+#> 4 socioec_status_Medium     0.0139 0.00398
+#> 5 socioec_status_High       0.0136 0.00249
+#> 6 gender_Female             0.0136 0.00280
+#> 7 socioec_status_Low        0.0131 0.00267
+#> 8 gender_Male               0.0128 0.00336
+```
