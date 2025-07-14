@@ -21,10 +21,10 @@ An updated \code{analysis_object} with the results of the sensitivity analysis s
 \code{sensitivity_analysis} slot as a list. Each method's results are accessible under named elements
 (e.g., \code{sensitivity_analysis[["PFI"]]}). Additionally, the function produces various plots (bar plots,
 box plots, beeswarm plots) for visual interpretation of feature importance, tailored to the task type
-and number of outcome levels, completing the TidyML workflow with actionable model insights.
+and number of outcome levels, completing the MLwrap workflow with actionable model insights.
 }
 \description{
-As the final step in the TidyML package workflow, this function performs Sensitivity Analysis (SA) on a fitted
+As the final step in the MLwrap package workflow, this function performs Sensitivity Analysis (SA) on a fitted
 ML model stored in an \code{analysis_object} (in the examples, e.g., tidy_object). It evaluates the importance
 of features using various methods such as Permutation Feature Importance (PFI), SHAP (SHapley Additive
 exPlanations), Integrated Gradients, Olden sensitivity analysis, and Sobol indices. The function generates
@@ -33,13 +33,13 @@ of each feature on the model's predictions for both regression and classificatio
 insights after model training and evaluation.
 }
 \details{
-Following the steps of data preprocessing, model fitting, and performance assessment in the TidyML pipeline,
+Following the steps of data preprocessing, model fitting, and performance assessment in the MLwrap pipeline,
 \emph{sensitivity_analysis()} processes the training and test data using the preprocessing recipe stored in the
 analysis_object, applies the specified SA methods, and stores the results within the analysis_object. It
 supports different metrics for evaluation and handles multi-class classification by producing class-specific
 analyses and plots, ensuring a comprehensive understanding of model behavior (Iooss & Lemaître, 2015).
 
-As the concluding phase of the TidyML workflow—after data preparation, model training, and evaluation—this
+As the concluding phase of the MLwrap workflow—after data preparation, model training, and evaluation—this
 function enables users to interpret their models by quantifying and visualizing feature importance. It first
 validates the input arguments using \code{check_args_sensitivity_analysis()}. Then, it preprocesses the training
 and test data using the recipe stored in \code{analysis_object$transformer}. Depending on the specified \code{methods},
@@ -64,7 +64,7 @@ Sobol' sensitivity indices simultaneously using the Jansen (1999) Monte Carlo es
 For classification tasks with more than two outcome levels, the function generates separate results and plots
 for each class. Visualizations include bar plots for importance metrics, box plots for distribution of values,
 and beeswarm plots for detailed feature impact across observations. All results are stored in the \code{analysis_object}
-under the \code{sensitivity_analysis} slot, finalizing the TidyML pipeline with a deep understanding of model drivers.
+under the \code{sensitivity_analysis} slot, finalizing the MLwrap pipeline with a deep understanding of model drivers.
 }
 \examples{
 # Example: Using PFI and SHAP

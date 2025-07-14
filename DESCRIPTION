@@ -67,6 +67,6 @@ Suggests:
     kernlab,
     xgboost
 Config/testthat/edition: 3
-URL: https://github.com/JMartinezGarcia/TidyML
-BugReports: https://github.com/JMartinezGarcia/TidyML/issues
+URL: https://github.com/JMartinezGarcia/MLwrap
+BugReports: https://github.com/JMartinezGarcia/MLwrap/issues
 LazyData: true
