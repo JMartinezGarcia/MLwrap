@@ -21,6 +21,8 @@ Plots a graph visualization of the Neural Network's architecture along with its 
 
 if (requireNamespace("torch", quietly = TRUE)) {
 
+  \dontrun{
+
   wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
                              task = "regression")
@@ -30,6 +32,8 @@ if (requireNamespace("torch", quietly = TRUE)) {
   # And then, you can obtain the Neural Network architecture graph plot.
 
   plot_graph_nn(wrap_object)
+
+  }
 
 }
 

@@ -23,6 +23,8 @@ for underfitting / overfitting diagnostics.
 
 if (requireNamespace("torch", quietly = TRUE)) {
 
+  \dontrun{
+
   wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
                              task = "regression")
@@ -32,6 +34,8 @@ if (requireNamespace("torch", quietly = TRUE)) {
   # And then, you can obtain the loss curve plot.
 
   plot_loss_curve(wrap_object)
+
+  }
 
 }
 

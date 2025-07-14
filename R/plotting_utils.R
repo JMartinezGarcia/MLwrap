@@ -76,6 +76,8 @@ plot_tuning_results <- function(analysis_object){
 #'
 #' if (requireNamespace("torch", quietly = TRUE)) {
 #'
+#'   \dontrun{
+#'
 #'   wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
@@ -85,6 +87,8 @@ plot_tuning_results <- function(analysis_object){
 #'   # And then, you can obtain the loss curve plot.
 #'
 #'   plot_loss_curve(wrap_object)
+#'
+#'   }
 #'
 #' }
 #'
@@ -129,6 +133,8 @@ plot_loss_curve <- function(analysis_object){
 #'
 #' if (requireNamespace("torch", quietly = TRUE)) {
 #'
+#'   \dontrun{
+#'
 #'   wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
@@ -138,6 +144,8 @@ plot_loss_curve <- function(analysis_object){
 #'   # And then, you can obtain the Neural Network architecture graph plot.
 #'
 #'   plot_graph_nn(wrap_object)
+#'
+#'   }
 #'
 #' }
 #'
