@@ -129,6 +129,10 @@ table_evaluation_results <- function(analysis_object, show_table = FALSE){
 
     result <- tibble::as_tibble(tables$summary_results)
 
+    result$Dataset <- c("Train", "Test")
+
+    result <- result %>% dplyr::select("Dataset", dplyr::everything())
+
   }
 
   if (base::interactive() && show_table){
@@ -151,7 +155,7 @@ table_evaluation_results <- function(analysis_object, show_table = FALSE){
 
     } else {
 
-      print(tables$summary_results)
+      print(result)
 
 
     }

@@ -89,7 +89,7 @@ wrap_object <- build_model(
                            )
 
 wrap_object <- fine_tuning(wrap_object,
-                tuner = "Bayesian Optmization",
+                tuner = "Bayesian Optimization",
                 metrics = c("rmse")
                 )
 
