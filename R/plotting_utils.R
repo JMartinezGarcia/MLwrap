@@ -17,6 +17,8 @@
 #' # Note: For obtaining the plot with tuning results the user needs to complete till
 #' # fine_tuning( ) function of the MLwrap pipeline.
 #'
+#' \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
@@ -26,6 +28,9 @@
 #' # And then, you can obtain the tuning results plot.
 #'
 #' plot_tuning_results(wrap_object)
+#'
+#' }
+#'
 #' @export
 plot_tuning_results <- function(analysis_object){
 
