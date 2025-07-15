@@ -469,11 +469,11 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
         "Feature" = base::rownames(sobol$S),
         "First Order (S)" = sobol$S$original,
         "S StErr" = sobol$S$`std. error`,
-        "S Order Min CI" = sobol$S$`min. c.i.`,
-        "S Order Max CI" = sobol$S$`max. c.i.`,
+        "S Min CI" = sobol$S$`min. c.i.`,
+        "S Max CI" = sobol$S$`max. c.i.`,
         "Total Order (T)" = sobol$T$original,
         "T StErr" = sobol$T$`std. error`,
-        "T Order Min CI" = sobol$T$`min. c.i.`,
+        "T Min CI" = sobol$T$`min. c.i.`,
         "T Max CI" = sobol$T$`max. c.i.`
 
       )
