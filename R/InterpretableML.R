@@ -523,7 +523,7 @@ plot_barplot <- function(X, func = NULL, func_se = stats::sd, title, x_label) {
       ggplot2::geom_col(fill = "steelblue") +
       ggplot2::geom_errorbar(ggplot2::aes(xmin = Importance - StDev, xmax = Importance + StDev), width = 0.2) +
       ggplot2::geom_text(ggplot2::aes(label = paste0(round(Importance, 3), " (", round(StDev, 3), ")")),
-                vjust =  -0.5,
+                vjust =  -1.5,
                 hjust = -0.2) +
       ggplot2::labs(
         x = x_label,
