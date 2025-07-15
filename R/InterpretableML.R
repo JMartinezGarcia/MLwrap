@@ -78,7 +78,7 @@
 #'                            )
 #'
 #' wrap_object <- fine_tuning(wrap_object,
-#'                 tuner = "Grid Search CV",
+#'                 tuner = "Bayesian Optmization",
 #'                 metrics = c("rmse")
 #'                 )
 #'
@@ -93,8 +93,7 @@
 #' # Plotting PFI Barplot
 #'
 #' wrap_object %>%
-#'     plot_pfi() %>%
-#'     plot_shap()
+#'     plot_pfi()
 #'
 #' @references
 #' Iooss, B., & Lemaître, P. (2015). A review on global sensitivity analysis methods. In C. Meloni & G. Dellino
