@@ -103,8 +103,8 @@ table_shap <- table_shap_results(wrap_object)
 
 # Plotting PFI Barplot
 
-wrap_object |>
-    plot_pfi() |>
+wrap_object \%>\%
+    plot_pfi() \%>\%
     plot_shap()
 
 }

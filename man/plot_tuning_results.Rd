@@ -23,6 +23,8 @@ tuning was actually performed before attempting to display results.
 # Note: For obtaining the plot with tuning results the user needs to complete till
 # fine_tuning( ) function of the MLwrap pipeline.
 
+\dontrun{
+
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
                              task = "regression")
@@ -32,4 +34,7 @@ wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 # And then, you can obtain the tuning results plot.
 
 plot_tuning_results(wrap_object)
+
+}
+
 }
