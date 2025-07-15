@@ -83,17 +83,16 @@
 #'                 )
 #'
 #'
-#' wrap_object <- sensitivity_analysis(wrap_object, methods = c("PFI", "SHAP"), metric = "rmse")
+#' wrap_object <- sensitivity_analysis(wrap_object, methods = "SHAP")
 #'
 #' # Extracting Results
 #'
-#' table_pfi <- table_pfi_results(wrap_object)
 #' table_shap <- table_shap_results(wrap_object)
 #'
-#' # Plotting PFI Barplot
+#' # Plotting SHAP Results
 #'
 #' wrap_object %>%
-#'     plot_pfi()
+#'     plot_shap()
 #'
 #' @references
 #' Iooss, B., & Lemaître, P. (2015). A review on global sensitivity analysis methods. In C. Meloni & G. Dellino
