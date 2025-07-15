@@ -89,7 +89,7 @@ wrap_object <- build_model(
                            )
 
 wrap_object <- fine_tuning(wrap_object,
-                tuner = "Grid Search CV",
+                tuner = "Bayesian Optmization",
                 metrics = c("rmse")
                 )
 
@@ -104,8 +104,7 @@ table_shap <- table_shap_results(wrap_object)
 # Plotting PFI Barplot
 
 wrap_object \%>\%
-    plot_pfi() \%>\%
-    plot_shap()
+    plot_pfi()
 
 }
 \references{
