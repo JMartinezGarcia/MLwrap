@@ -92,8 +92,8 @@
 #'
 #' # Plotting PFI Barplot
 #'
-#' wrap_object |>
-#'     plot_pfi() |>
+#' wrap_object %>%
+#'     plot_pfi() %>%
 #'     plot_shap()
 #'
 #' @references
