@@ -24,6 +24,8 @@ interpretation.
 # Note: For obtaining the PFI plot results the user needs to complete till
 # sensitivity_analysis( ) function of the MLwrap pipeline using the PFI method.
 
+\dontrun{
+
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
                              task = "regression")
@@ -34,4 +36,7 @@ wrap_object <- sensitivity_analysis(wrap_object, methods = "PFI")
 # And then, you can obtain the PFI plot.
 
 plot_pfi(wrap_object)
+
+}
+
 }

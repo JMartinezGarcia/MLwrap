@@ -26,6 +26,8 @@ higher-order effects and complex interactions between variables.
 # MLwrap pipeline using the Sobol_Jansen method.
 # Sobol_Jansen method only works when all input features are continuous.
 
+\dontrun{
+
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
                              task = "regression")
@@ -36,4 +38,7 @@ wrap_object <- sensitivity_analysis(wrap_object, methods = "Sobol_Jansen")
 # And then, you can obtain the Sobol_Jansen results table.
 
 table_Sobol <- table_sobol_jansen_results(wrap_object)
+
+}
+
 }

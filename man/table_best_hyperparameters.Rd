@@ -26,6 +26,8 @@ capabilities through the show_table parameter.
 # Note: For obtaining hyoperparameters table the user needs to
 # complete till fine_tuning( ) function.
 
+  \dontrun{
+
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
                              task = "regression")
@@ -35,5 +37,7 @@ wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 # And then, you can obtain the best hyperparameters table.
 
 table_best_hyp <- table_best_hyperparameters(wrap_object)
+
+}
 
 }

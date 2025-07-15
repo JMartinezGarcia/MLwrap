@@ -197,6 +197,8 @@ plot_graph_nn <- function(analysis_object){
 #' # Note: For obtaining the residuals distribution plot the user needs to
 #' # complete till fine_tuning( ) function of the MLwrap pipeline.
 #'
+#' \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
@@ -206,6 +208,9 @@ plot_graph_nn <- function(analysis_object){
 #' # And then, you can obtain the residuals distribution plot.
 #'
 #' plot_residuals_distribution(wrap_object)
+#'
+#' }
+#'
 #' @export
 plot_residuals_distribution <- function(analysis_object){
 
@@ -238,6 +243,8 @@ plot_residuals_distribution <- function(analysis_object){
 #' # Note: For obtaining the residuals vs. predicted values plot the user needs to
 #' # complete till fine_tuning( ) function of the MLwrap pipeline.
 #'
+#' \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
@@ -247,6 +254,9 @@ plot_residuals_distribution <- function(analysis_object){
 #' # And then, you can obtain the residuals vs predicted values plot.
 #'
 #' plot_scatter_residuals(wrap_object)
+#'
+#' }
+#'
 #' @export
 plot_scatter_residuals <- function(analysis_object){
 
@@ -279,6 +289,8 @@ plot_scatter_residuals <- function(analysis_object){
 #' # Note: For obtaining the observed vs. predicted values plot the user needs to
 #' # complete till fine_tuning( ) function of the MLwrap pipeline.
 #'
+#' \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
@@ -288,6 +300,9 @@ plot_scatter_residuals <- function(analysis_object){
 #' # And then, you can obtain the observed vs predicted values plot.
 #'
 #' plot_scatter_predictions(wrap_object)
+#'
+#' }
+#'
 #' @export
 plot_scatter_predictions <- function(analysis_object){
 
@@ -324,6 +339,8 @@ plot_scatter_predictions <- function(analysis_object){
 #' # complete till fine_tuning( ) function of the MLwrap pipeline and
 #' # only with categorical outcome.
 #'
+#' \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
 #'                              task = "classification")
@@ -333,6 +350,9 @@ plot_scatter_predictions <- function(analysis_object){
 #' # And then, you can obtain the confusion matrix plot.
 #'
 #' plot_confusion_matrix(wrap_object)
+#'
+#' }
+#'
 #' @export
 plot_confusion_matrix <- function(analysis_object){
 
@@ -366,6 +386,8 @@ plot_confusion_matrix <- function(analysis_object){
 #' # complete till fine_tuning( ) function of the MLwrap pipeline and
 #' # only with categorical outcome.
 #'
+#' \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
 #'                              task = "classification")
@@ -375,6 +397,9 @@ plot_confusion_matrix <- function(analysis_object){
 #' # And then, you can obtain the roc curve plot.
 #'
 #' plot_roc_curve(wrap_object)
+#'
+#' }
+#'
 #' @export
 plot_roc_curve <- function(analysis_object){
 
@@ -432,6 +457,8 @@ plot_pr_curve <- function(analysis_object){
 #' # Note: For obtaining the gain curve plot the user needs to complete till fine_tuning( ) function
 #' # of the MLwrap pipeline and only with categorical outcome.
 #'
+#' \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
 #'                              task = "classification")
@@ -441,6 +468,9 @@ plot_pr_curve <- function(analysis_object){
 #' # And then, you can obtain the gain curve plot.
 #'
 #' plot_gain_curve(wrap_object)
+#'
+#' }
+#'
 #' @export
 plot_gain_curve <- function(analysis_object){
 
@@ -471,6 +501,8 @@ plot_gain_curve <- function(analysis_object){
 #' # Note: For obtaining the lift curve plot the user needs to complete till fine_tuning( ) function
 #' # of the MLwrap pipeline and only with categorical outcome.
 #'
+#' \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
 #'                              task = "classification")
@@ -480,6 +512,9 @@ plot_gain_curve <- function(analysis_object){
 #' # And then, you can obtain the lift curve plot.
 #'
 #' plot_lift_curve(wrap_object)
+#'
+#' }
+#'
 #' @export
 plot_lift_curve <- function(analysis_object){
 
@@ -512,6 +547,8 @@ plot_lift_curve <- function(analysis_object){
 #' # complete till fine_tuning( ) function of the MLwrap pipeline
 #' # and only with categorical outcome.
 #'
+#' \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
 #'                              task = "classification")
@@ -521,6 +558,9 @@ plot_lift_curve <- function(analysis_object){
 #' # And then, you can obtain the distribution by class plot.
 #'
 #' plot_distribution_by_class(wrap_object)
+#'
+#' }
+#'
 #' @export
 plot_distribution_by_class <- function(analysis_object){
 
@@ -555,6 +595,8 @@ plot_distribution_by_class <- function(analysis_object){
 #' # complete till fine_tuning( ) function of the MLwrap pipeline and
 #' # only with binary outcome.
 #'
+#' \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well_bin ~ depression + emot_intel + resilience,
 #'                              task = "classification")
@@ -564,6 +606,9 @@ plot_distribution_by_class <- function(analysis_object){
 #' # And then, you can obtain the calibration curve plot.
 #'
 #' plot_calibration_curve(wrap_object)
+#'
+#' }
+#'
 #' @export
 plot_calibration_curve <- function(analysis_object){
 
@@ -605,6 +650,8 @@ plot_calibration_curve <- function(analysis_object){
 #' # Note: For obtaining the PFI plot results the user needs to complete till
 #' # sensitivity_analysis( ) function of the MLwrap pipeline using the PFI method.
 #'
+#' \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
@@ -615,6 +662,9 @@ plot_calibration_curve <- function(analysis_object){
 #' # And then, you can obtain the PFI plot.
 #'
 #' plot_pfi(wrap_object)
+#'
+#' }
+#'
 #' @export
 plot_pfi <- function(analysis_object, show_table = FALSE){
 
@@ -667,6 +717,8 @@ plot_pfi <- function(analysis_object, show_table = FALSE){
 #' # Note: For obtaining the SHAP plots the user needs to complete till sensitivity_analysis( )
 #' # function of the MLwrap pipeline using the SHAP method.
 #'
+#' \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
@@ -677,6 +729,9 @@ plot_pfi <- function(analysis_object, show_table = FALSE){
 #' # And then, you can obtain the SHAP plots.
 #'
 #' plot_shap(wrap_object)
+#'
+#' }
+#'
 #' @export
 plot_shap <- function(analysis_object, show_table = FALSE){
 
@@ -907,6 +962,8 @@ plot_olden <- function(analysis_object, show_table = FALSE){
 #' # Note: For obtaining the Sobol_Jansen plot the user needs to complete till sensitivity_analysis( )
 #' # function of the MLwrap pipeline using the Sobol_Jansen method.
 #'
+#' \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
@@ -917,6 +974,9 @@ plot_olden <- function(analysis_object, show_table = FALSE){
 #' # And then, you can obtain the Sobol_Jansen plot.
 #'
 #' plot_sobol_jansen(wrap_object)
+#'
+#' }
+#'
 #' @export
 plot_sobol_jansen <- function(analysis_object, show_table = FALSE){
 

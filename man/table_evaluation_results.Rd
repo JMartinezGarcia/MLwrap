@@ -24,6 +24,8 @@ and test data, enabling comparative performance evaluation and detection of pote
 # Note: For obtaining the evaluation table the user needs to
 # complete till fine_tuning( ) function.
 
+\dontrun{
+
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
                              task = "regression")
@@ -33,5 +35,7 @@ wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 # And then, you can obtain the evaluation table.
 
 table_results <- table_evaluation_results(wrap_object)
+
+}
 
 }

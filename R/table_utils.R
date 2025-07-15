@@ -19,6 +19,8 @@
 #' # Note: For obtaining hyoperparameters table the user needs to
 #' # complete till fine_tuning( ) function.
 #'
+#'   \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
@@ -28,6 +30,8 @@
 #' # And then, you can obtain the best hyperparameters table.
 #'
 #' table_best_hyp <- table_best_hyperparameters(wrap_object)
+#'
+#' }
 #'
 #' @export
 table_best_hyperparameters <- function(analysis_object, show_table = FALSE){
@@ -88,6 +92,8 @@ table_best_hyperparameters <- function(analysis_object, show_table = FALSE){
 #' # Note: For obtaining the evaluation table the user needs to
 #' # complete till fine_tuning( ) function.
 #'
+#' \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
@@ -97,6 +103,8 @@ table_best_hyperparameters <- function(analysis_object, show_table = FALSE){
 #' # And then, you can obtain the evaluation table.
 #'
 #' table_results <- table_evaluation_results(wrap_object)
+#'
+#' }
 #'
 #' @export
 table_evaluation_results <- function(analysis_object, show_table = FALSE){
@@ -174,6 +182,8 @@ table_evaluation_results <- function(analysis_object, show_table = FALSE){
 #' # complete till sensitivity_analysis() function of the
 #' # MLwrap pipeline using PFI method.
 #'
+#' \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
@@ -184,6 +194,8 @@ table_evaluation_results <- function(analysis_object, show_table = FALSE){
 #' # And then, you can obtain the PFI results table.
 #'
 #' table_pfi <- table_pfi_results(wrap_object)
+#'
+#' }
 #'
 #' @export
 table_pfi_results <- function(analysis_object, show_table = FALSE){
@@ -257,6 +269,8 @@ table_pfi_results <- function(analysis_object, show_table = FALSE){
 #' # to complete till sensitivity_analysis() function of the
 #' # MLwrap pipeline using the SHAP method.
 #'
+#' \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
@@ -267,6 +281,8 @@ table_pfi_results <- function(analysis_object, show_table = FALSE){
 #' # And then, you can obtain the SHAP results table.
 #'
 #' table_shap <- table_shap_results(wrap_object)
+#'
+#' }
 #'
 #' @export
 table_shap_results <- function(analysis_object, show_table = FALSE){
@@ -490,6 +506,8 @@ table_olden_results <- function(analysis_object, show_table = FALSE){
 #' # MLwrap pipeline using the Sobol_Jansen method.
 #' # Sobol_Jansen method only works when all input features are continuous.
 #'
+#' \dontrun{
+#'
 #' wrap_object <- preprocessing(df = sim_data,
 #'                              formula = psych_well ~ depression + emot_intel + resilience,
 #'                              task = "regression")
@@ -500,6 +518,9 @@ table_olden_results <- function(analysis_object, show_table = FALSE){
 #' # And then, you can obtain the Sobol_Jansen results table.
 #'
 #' table_Sobol <- table_sobol_jansen_results(wrap_object)
+#'
+#' }
+#'
 #' @export
 table_sobol_jansen_results <- function(analysis_object, show_table = FALSE){
 

@@ -23,6 +23,8 @@ for identifying higher-order effects and complex interactions between variables 
 # Note: For obtaining the Sobol_Jansen plot the user needs to complete till sensitivity_analysis( )
 # function of the MLwrap pipeline using the Sobol_Jansen method.
 
+\dontrun{
+
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
                              task = "regression")
@@ -33,4 +35,7 @@ wrap_object <- sensitivity_analysis(wrap_object, methods = "Sobol_Jansen")
 # And then, you can obtain the Sobol_Jansen plot.
 
 plot_sobol_jansen(wrap_object)
+
+}
+
 }

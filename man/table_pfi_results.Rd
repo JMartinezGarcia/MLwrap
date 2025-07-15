@@ -24,6 +24,8 @@ each feature's values.
 # complete till sensitivity_analysis() function of the
 # MLwrap pipeline using PFI method.
 
+\dontrun{
+
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
                              task = "regression")
@@ -34,5 +36,7 @@ wrap_object <- sensitivity_analysis(wrap_object, methods = "PFI")
 # And then, you can obtain the PFI results table.
 
 table_pfi <- table_pfi_results(wrap_object)
+
+}
 
 }

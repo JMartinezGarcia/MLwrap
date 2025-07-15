@@ -22,6 +22,8 @@ and test plots in a single display for direct comparison.
 # Note: For obtaining the residuals distribution plot the user needs to
 # complete till fine_tuning( ) function of the MLwrap pipeline.
 
+\dontrun{
+
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well ~ depression + emot_intel + resilience,
                              task = "regression")
@@ -31,4 +33,7 @@ wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 # And then, you can obtain the residuals distribution plot.
 
 plot_residuals_distribution(wrap_object)
+
+}
+
 }

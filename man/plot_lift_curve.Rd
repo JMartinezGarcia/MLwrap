@@ -21,6 +21,8 @@ better the model performs compared to random selection at different population s
 # Note: For obtaining the lift curve plot the user needs to complete till fine_tuning( ) function
 # of the MLwrap pipeline and only with categorical outcome.
 
+\dontrun{
+
 wrap_object <- preprocessing(df = sim_data,
                              formula = psych_well_bin ~ depression + emot_intel + resilience,
                              task = "classification")
@@ -30,4 +32,7 @@ wrap_object <- fine_tuning(wrap_object, "Bayesian Optimization")
 # And then, you can obtain the lift curve plot.
 
 plot_lift_curve(wrap_object)
+
+}
+
 }
