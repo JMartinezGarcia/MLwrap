@@ -78,7 +78,7 @@
 #'                            )
 #'
 #' wrap_object <- fine_tuning(wrap_object,
-#'                 tuner = "Bayesian Optimization",
+#'                 tuner = "Grid Search CV",
 #'                 metrics = c("rmse")
 #'                 )
 #'
