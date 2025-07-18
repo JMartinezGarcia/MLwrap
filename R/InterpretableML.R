@@ -686,8 +686,19 @@ summarize_importance <- function(importance_matrix, original_df,  feature_names)
 
     name = feature_names[i]
 
+    if (base::is.factor(original_df[name])){
+
+      m1 <- base::mean(importance_matrix[original_df[name] == 1], na.rm = TRUE)
+      m0 <- base::mean(importance_matrix[original_df[name] == 0], na.rm = TRUE)
+
+      directional_list[i] <- m1 - m0
+
+    } else {
+
+
     directional_list[i] <- stats::cov(importance_matrix[name], original_df[name]) / stats::var(original_df[name])
 
+    }
   }
 
   # Crear resumen ordenado
