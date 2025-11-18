@@ -23,7 +23,6 @@
 #' # plot_pfi(wrap_object)
 #' @seealso \code{\link{sensitivity_analysis}}
 #' @export
-
 plot_partial_dependence_plot <- function(analysis_object, feature,
                          group_by = NULL,
                          grid_size = 25,

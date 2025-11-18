@@ -69,6 +69,6 @@ Suggests:
     kernlab,
     xgboost
 Config/testthat/edition: 3
-URL: https://github.com/AlbertSesePsy/MLwrap
-BugReports: https://github.com/AlbertSesePsy/MLwrap/issues
+URL: https://github.com/JMartinezGarcia/MLwrap
+BugReports: https://github.com/JMartinezGarcia/MLwrap/issues
 LazyData: true
