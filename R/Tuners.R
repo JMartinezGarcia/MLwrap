@@ -7,46 +7,6 @@ create_workflow <- function(analysis_object){
   return(workflow)
 }
 
-split_data <- function(analysis_object, prop_train = 0.6, prop_val = 0.2){
-
-  model_name = analysis_object$model_name
-
-  y = all.vars(analysis_object$formula)[1]
-
-  tuner = analysis_object$tuner
-
-    if (analysis_object$task == "classification"){
-
-    train_test_split = rsample::initial_split(analysis_object$full_data, prop = 0.75,
-                                              strata = !!y)
-
-    }
-
-    else {
-
-      train_test_split = rsample::initial_split(analysis_object$full_data, prop = 0.75)
-
-    }
-
-    analysis_object$modify("train_data", rsample::training(train_test_split))
-    analysis_object$modify("test_data", rsample::testing(train_test_split))
-
-    train_data_id <- train_test_split$in_id
-    test_data_id <- setdiff(1:nrow(analysis_object$full_data), train_data_id)
-
-    data_id = list(train_data_id = train_data_id, test_data_id = test_data_id)
-
-    analysis_object$modify("data_id", data_id)
-
-    sampling_method <- rsample::vfold_cv(analysis_object$train_data, v = 5)
-
-    final_split <- analysis_object$train_data
-
-  return(list(sampling_method = sampling_method, final_split = final_split))
-
-}
-
-
 create_metric_set <- function(metrics){
 
   set_metrics <- yardstick::metric_set(!!!rlang::syms(metrics))
@@ -120,12 +80,7 @@ check_mtry <- function(analysis_object, hyperparameters){
 
   analysis_object = analysis_object$clone()
 
-  rec =  analysis_object$transformer %>%
-    recipes::prep(training = analysis_object$full_data)
-
-  bake_train = recipes::bake(rec, new_data = analysis_object$full_data)
-
-  n_features = ncol(bake_train) - 1
+  n_features = length(analysis_object$feature_names)
 
   if (!is.null(hyperparameters$hyperparams_constant$mtry)){
 

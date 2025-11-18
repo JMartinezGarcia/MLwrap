@@ -2,27 +2,27 @@
 #'
 #' @description
 #'
-#' The **fine_tuning()** function performs automated hyperparameter optimization
-#' for ML workflows encapsulated within an AnalysisObject. It supports different
-#' tuning strategies, such as **Bayesian Optimization** (with cross-validation)
-#' and **Grid Search Cross-Validation**, allowing the user to specify evaluation
-#' metrics and whether to visualize tuning results. The function first validates
-#' arguments and updates the workflow and metric settings within the AnalysisObject.
-#' If hyperparameter tuning is enabled, it executes the selected tuning procedure,
-#' identifies the best hyperparameter configuration based on the specified
-#' metrics, and updates the workflow accordingly. For neural network models, it
-#' also manages the creation and integration of new model instances and provides
-#' additional visualization of training dynamics. Finally, the function fits the
-#' optimized model to the training data and updates the AnalysisObject, ensuring
-#' a reproducible and efficient model selection process (Bartz et al., 2023).
+#' The **fine_tuning()** function performs automated hyperparameter
+#' optimization for ML workflows encapsulated within an AnalysisObject. It
+#' supports two tuning strategies: **Bayesian Optimization** (with
+#' cross-validation) and **Grid Search Cross-Validation**, allowing the user
+#' to specify evaluation metrics and whether to visualize tuning results. The
+#' function first validates arguments and updates the workflow and metric
+#' settings within the AnalysisObject. If hyperparameter tuning is enabled,
+#' it executes the selected tuning procedure, identifies the best
+#' hyperparameter configuration based on the specified metrics, and updates
+#' the workflow accordingly. For neural network models, it also manages the
+#' creation and integration of new model instances and provides additional
+#' visualization of training dynamics. Finally, the function fits the optimized
+#' model to the training data and updates the AnalysisObject, ensuring a
+#' reproducible and efficient model selection process (Bartz et al., 2023).
 #'
 #' @param analysis_object analysis_object created from build_model function.
-#' @param tuner Name of the Hyperparameter Tuner. A string of the tuner name: "Bayesian Optimization" or
-#'     "Grid Search CV".
-#' @param metrics Metric used for Model Selection. A string of the name of metric (see Metrics). By default
-#'    either "rmse" (regression) or "roc_auc" (classification).
-#' @param verbose Whether to show tuning process. Boolean TRUE or FALSE (default).
-#'
+#' @param tuner Name of the Hyperparameter Tuner. A string of the tuner name:
+#'             "Bayesian Optimization" or "Grid Search CV".
+#' @param metrics Metric used for Model Selection. A string of the name of
+#'             metric (see Metrics). By default either "rmse" (regression)
+#'             or "roc_auc" (classification).
 #' @section Tuners:
 #'
 #' ## Bayesian Optimization (with cross-validation)
@@ -70,51 +70,42 @@
 #' * brier_class
 #' * roc_aunp
 #'
-#' @returns An updated analysis_object containing the fitted model with optimized hyperparameters,
-#' the tuning results, and all relevant workflow modifications. This object includes the final trained
-#' model, the best hyperparameter configuration, tuning diagnostics, and, if applicable, plots of the
-#' tuning process. It can be used for further model evaluation, prediction, or downstream analysis within
-#' the package workflow.
+#' @returns An updated analysis_object containing the fitted model with
+#' optimized hyperparameters, the tuning results, and all relevant workflow
+#' modifications. This object includes the final trained model, the best
+#' hyperparameter configuration, tuning diagnostics, and, if applicable, plots
+#' of the tuning process. It can be used for further model evaluation,
+#' prediction, or downstream analysis within the package workflow.
 #' @examples
-#' # Example 1: Fine tuning function applied to a regression task
-#'
-#' library(MLwrap)
-#'
-#' data(sim_data) # sim_data is a simulated dataset wtih psychological variables
+#' # Fine tuning function applied to a regression task using Random Forest
 #'
 #' wrap_object <- preprocessing(
 #'            df = sim_data[1:500 ,],
-#'            formula = psych_well ~ depression + resilience + life_sat,
+#'            formula = psych_well ~ depression + life_sat,
 #'            task = "regression"
 #'            )
-#'
 #' wrap_object <- build_model(
 #'                analysis_object = wrap_object,
 #'                model_name = "Random Forest",
 #'                hyperparameters = list(
-#'                      mtry = 3,
-#'                      trees = 10
+#'                      mtry = 2,
+#'                      trees = 3
 #'                      )
 #'                  )
-#'
+#' set.seed(123) # For reproducibility
 #' wrap_object <- fine_tuning(wrap_object,
-#'                 tuner = "Bayesian Optimization",
+#'                 tuner = "Grid Search CV",
 #'                 metrics = c("rmse")
-#'                )
-#'
-#' # Extracting Evaluation Results
-#'
-#' table_best_hyp <- table_best_hyperparameters(wrap_object)
-#' table_results <- table_evaluation_results(wrap_object)
-#'
+#'                 )
 #' @references
-#' Bartz, E., Bartz-Beielstein, T., Zaefferer, M., & Mersmann, O. (2023). *Hyperparameter
-#' tuner for Machine and Deep Learning with R. A Practical Guide*. Springer, Singapore.
-#' https://doi.org/10.1007/978-981-19-5170-1
+#' Bartz, E., Bartz-Beielstein, T., Zaefferer, M., & Mersmann, O. (2023).
+#' *Hyperparameter tuner for Machine and Deep Learning with R. A
+#' Practical Guide*. Springer.
+#' \doi{10.1007/978-981-19-5170-1}
 #' @export
-fine_tuning <- function(analysis_object, tuner, metrics = NULL, verbose = FALSE){
+fine_tuning <- function(analysis_object, tuner, metrics = NULL){
 
-  check_args_fine_tuning(analysis_object = analysis_object, tuner = tuner, metrics = metrics, verbose = verbose)
+  check_args_fine_tuning(analysis_object = analysis_object, tuner = tuner, metrics = metrics)
 
   analysis_object = analysis_object$clone()
 
@@ -141,11 +132,9 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, verbose = FALSE)
 
   set_metrics <- create_metric_set(analysis_object$metrics)
 
-  split_final_data <- split_data(analysis_object)
+  sampling_method <- rsample::vfold_cv(analysis_object$data$raw$train_data, v = 5)
 
-  sampling_method = split_final_data$sampling_method
-
-  final_data = split_final_data$final_split
+  final_data <- analysis_object$data$raw$train_data
 
   if (analysis_object$hyperparameters$tuning == TRUE){
 
@@ -154,8 +143,7 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, verbose = FALSE)
     tuner_fit = tune_models(analysis_object,
                             tuner,
                             sampling_method,
-                            metrics = set_metrics,
-                            verbose = verbose)
+                            metrics = set_metrics)
 
     if (base::interactive()){cli::cli_alert_success("Tuning Finalized!")}
 
@@ -222,15 +210,15 @@ fine_tuning <- function(analysis_object, tuner, metrics = NULL, verbose = FALSE)
 
 }
 
-tune_models <- function(analysis_object, tuner, sampling_method, metrics, verbose = TRUE){
+tune_models <- function(analysis_object, tuner, sampling_method, metrics){
 
   if (tuner == "Bayesian Optimization"){
 
-    tuner_object <- tune_models_bayesian(analysis_object, sampling_method, metrics = metrics,  verbose = verbose)
+    tuner_object <- tune_models_bayesian(analysis_object, sampling_method, metrics = metrics)
 
   } else if (tuner == "Grid Search CV"){
 
-    tuner_object <- tune_models_grid_search_cv(analysis_object, sampling_method, metrics = metrics, verbose = verbose)
+    tuner_object <- tune_models_grid_search_cv(analysis_object, sampling_method, metrics = metrics)
 
   }
 

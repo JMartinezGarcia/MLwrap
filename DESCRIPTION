@@ -47,7 +47,6 @@ Imports:
     tune,
     workflows,
     yardstick,
-    vip,
     glue,
     innsight,
     fastshap,
@@ -60,7 +59,8 @@ Imports:
     tibble,
     patchwork,
     cli,
-    scales
+    scales,
+    hstats
 Suggests: 
     testthat (>= 3.0.0),
     torch,

@@ -13,7 +13,7 @@ create_nn <- function(hyperparams, task, epochs){
     parsnip::set_engine(
       "brulee",
       optimizer = "SGD",
-      stop_iter = 15,
+      stop_iter = 5,
       early_stopping = TRUE,
       batch_size = 32
     ) %>%

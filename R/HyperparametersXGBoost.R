@@ -27,7 +27,7 @@ HyperparamsXGBoost <- R6::R6Class("XGBOOST Hyperparameters",
 
                                check_hyperparams = function(hyperparams){
 
-                                 valid_hparams <- c("mtry", "trees", "min_n", "tree_depth", "learn_rate", "loss_reduction")
+                                 valid_hparams <- c("mtry", "trees", "min_n", "tree_depth", "learn_rate", "loss_reduction", "sample_size")
 
                                  if (!is.null(hyperparams)){
 
