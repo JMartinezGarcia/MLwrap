@@ -3,8 +3,6 @@ calc_hstats <- function(analysis_object){
   task <- analysis_object$task
   outcome_levels <- analysis_object$outcome_levels
 
-  tables <- analysis_object$tables
-
   if (task == "regression"){
 
     h2_tables <- calc_hstats_regression(analysis_object)
@@ -64,11 +62,11 @@ calc_hstats_regression <- function(analysis_object){
 
   h2_pairwise_norm_table <- h2_pairwise_norm_table %>%
     dplyr::mutate("Pairwise Interaction" = rownames(.)) %>%
-    dplyr::relocate("Pairwise Interaction", .before = 1) %>%
+    dplyr::relocate("Pairwise Interaction", .before = 1)
 
   h2_pairwise_raw_table <- h2_pairwise_raw_table %>%
     dplyr::mutate("Pairwise Interaction" = rownames(.)) %>%
-    dplyr::relocate("Pairwise Interaction", .before = 1) %>%
+    dplyr::relocate("Pairwise Interaction", .before = 1)
 
   rownames(h2_pairwise_norm_table) <- NULL
   rownames(h2_pairwise_raw_table) <- NULL
