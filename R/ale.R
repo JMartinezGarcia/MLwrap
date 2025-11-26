@@ -74,17 +74,26 @@ comp_ale <- function(model, X, feature, K = 20,
   }
 
   # accumulate per class
-  ale_acc <- apply(ale_vals, 2, cumsum)
+  if (length(class_names) == 1) {
+    ale_acc <- matrix(cumsum(ale_vals[,1]), ncol = 1)
+  } else {
+    ale_acc <- apply(ale_vals, 2, cumsum)
+  }
 
   # center per class
   ale_centered <- sweep(ale_acc, 2, colMeans(ale_acc), FUN = "-")
+
+  ale_centered <- unname(ale_centered)
+  qs_vals <- unname(qs[-1])
+  class_names <- unname(class_names)
 
   # return long format
   out <- data.frame(
     grid = rep(qs[-1], times = length(class_names)),
     ale  = as.vector(ale_centered),
     Class = rep(class_names, each = K),
-    Level = NA
+    Level = NA,
+    row.names = NULL
   )
 
   return(out)

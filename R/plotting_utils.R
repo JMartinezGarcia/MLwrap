@@ -1080,13 +1080,14 @@ plot_ale <- function(analysis_object,feature,
     inherit.aes = FALSE,
     alpha = 1
   ) +
-    ggplot2::theme_minimal(base_size = 13) +
+    ggplot2::scale_color_viridis_d(option = "plasma", begin = 0.1, end = 0.9) +
     ggplot2::labs(
       x = feature,
       y = "ALE",
       title = paste("ALE effect of", feature,
                     if (!is.null(group)) paste("grouped by", group))
-    )
+    ) +
+    ggplot2::theme_gray()
 
   if (plot){
 

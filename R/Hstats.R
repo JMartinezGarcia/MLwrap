@@ -333,6 +333,7 @@ comp_hstats <- function(model, df, task, grid_size = 20, n_sample = 300, outcome
 
   num <- as.data.frame(unlist(num), )
   colnames(num) <- "h2_value"
+  rownames(num) <- names(df)
 
   denom <- sum((f_centered)^2)
 
