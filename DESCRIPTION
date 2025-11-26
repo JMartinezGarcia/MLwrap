@@ -59,8 +59,7 @@ Imports:
     tibble,
     patchwork,
     cli,
-    scales,
-    hstats
+    scales
 Suggests: 
     testthat (>= 3.0.0),
     torch,

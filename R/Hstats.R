@@ -27,9 +27,10 @@ calc_hstats_regression <- function(analysis_object){
   train_data <- analysis_object$data$raw$train_data %>%
     dplyr::select(-dplyr::all_of(analysis_object$dep_var))
 
-  hstats_object <- hstats::hstats(analysis_object$final_model,
-                                  X = train_data,
-                                  verbose = FALSE)
+  hstats_object <- comp_hstats(analysis_object$final_model,
+                               train_data,
+                               task = "regression",
+                               outcome_levels = analysis_object$outcome_levels)
 
   # Total H2
 
@@ -51,12 +52,12 @@ calc_hstats_regression <- function(analysis_object){
   denom <- hstats_object$h2_pairwise$denom
 
   h2_pairwise_norm <- round(num / denom, 5)
-  h2_pairwise_norm <- h2_pairwise_norm[order(-h2_pairwise_norm[,1]), ]
+  h2_pairwise_norm <- h2_pairwise_norm[order(-h2_pairwise_norm$h2_value),, drop = FALSE ]
   h2_pairwise_norm_table <- as.data.frame(h2_pairwise_norm)
   colnames(h2_pairwise_norm_table) <- "H^2 Normalized"
 
   h2_pairwise_raw <- round(num, 5)
-  h2_pairwise_raw <- h2_pairwise_raw[order(-h2_pairwise_raw[,1]), ]
+  h2_pairwise_raw <- h2_pairwise_raw[order(-h2_pairwise_raw$h2_value),, drop = FALSE ]
   h2_pairwise_raw_table <- as.data.frame(h2_pairwise_raw)
   colnames(h2_pairwise_raw_table) <- "H^2 Raw"
 
@@ -83,10 +84,10 @@ calc_hstats_binary <- function(analysis_object){
   train_data <- analysis_object$data$raw$train_data %>%
               dplyr::select(-dplyr::all_of(analysis_object$dep_var))
 
-  hstats_object <- hstats::hstats(analysis_object$final_model,
-                                  X = train_data,
-                                  verbose = FALSE,
-                                  type = "prob")
+  hstats_object <- comp_hstats(analysis_object$final_model,
+                               train_data,
+                               task = "classification",
+                               outcome_levels = analysis_object$outcome_levels)
 
   # Total H2
 
@@ -108,22 +109,22 @@ calc_hstats_binary <- function(analysis_object){
   denom <- hstats_object$h2_pairwise$denom
 
   h2_pairwise_norm <- round(num / denom, 5)
-  h2_pairwise_norm <- h2_pairwise_norm[order(-h2_pairwise_norm[,1]), ]
-  h2_pairwise_norm_table <- as.data.frame(h2_pairwise_norm[,1])
+  h2_pairwise_norm <- h2_pairwise_norm[order(-h2_pairwise_norm$h2_value), , drop = FALSE]
+  h2_pairwise_norm_table <- as.data.frame(h2_pairwise_norm)
   colnames(h2_pairwise_norm_table) <- "H^2 Normalized"
 
   h2_pairwise_raw <- round(num, 5)
-  h2_pairwise_raw <- h2_pairwise_raw[order(-h2_pairwise_raw[,1]), ]
-  h2_pairwise_raw_table <- as.data.frame(h2_pairwise_raw[,1])
+  h2_pairwise_raw <- h2_pairwise_raw[order(-h2_pairwise_raw$h2_value),, drop = FALSE ]
+  h2_pairwise_raw_table <- as.data.frame(h2_pairwise_raw)
   colnames(h2_pairwise_raw_table) <- "H^2 Raw"
 
   h2_pairwise_norm_table <- h2_pairwise_norm_table %>%
     dplyr::mutate("Pairwise Interaction" = rownames(.)) %>%
-    dplyr::relocate("Pairwise Interaction", .before = 1) %>%
+    dplyr::relocate("Pairwise Interaction", .before = 1)
 
   h2_pairwise_raw_table <- h2_pairwise_raw_table %>%
     dplyr::mutate("Pairwise Interaction" = rownames(.)) %>%
-    dplyr::relocate("Pairwise Interaction", .before = 1) %>%
+    dplyr::relocate("Pairwise Interaction", .before = 1)
 
   rownames(h2_pairwise_norm_table) <- NULL
   rownames(h2_pairwise_raw_table) <- NULL
@@ -140,10 +141,10 @@ calc_hstats_multiclass <- function(analysis_object){
   train_data <- analysis_object$data$raw$train_data %>%
     dplyr::select(-dplyr::all_of(analysis_object$dep_var))
 
-  hstats_object <- hstats::hstats(analysis_object$final_model,
-                                  X = train_data,
-                                  verbose = FALSE,
-                                  type = "prob")
+  hstats_object <- comp_hstats_mult(analysis_object$final_model,
+                               train_data,
+                               task = "classification",
+                               outcome_levels = analysis_object$outcome_levels)
 
   # Total H2
 
@@ -213,7 +214,7 @@ hstat_total_plot <- function(h2_total, outcome_levels){
                                                y = stats::reorder(Feature, H2),
                                                fill = Class)) +
         ggplot2::geom_col(orientation = "y", position = "dodge") +
-      ggplot2::labs(x = expression(H^2~"Normalized"), y = NULL,
+      ggplot2::labs(x = expression(H^2~"Normalized"), y = "Feature",
            title = "Friedman's H-statistic per Class")
   }
 
@@ -264,16 +265,317 @@ hstat_pairwise_plot <- function(h2_pairwise, outcome_levels, normalized = TRUE){
 
     if (normalized){
 
-      p <- p + ggplot2::labs(x = expression(H^2~"Normalized"), y = NULL,
-                            title = "Feature Interaction")
+      p <- p + ggplot2::labs(x = expression(H^2~"Normalized"), y = "Feature Interaction",
+                            title = "Feature Interaction Plot")
 
     } else {
 
-      p <- p + ggplot2::labs(x = expression(H^2~"Unnormalized"), y = NULL,
-                             title = "Feature Interaction")
+      p <- p + ggplot2::labs(x = expression(H^2~"Unnormalized"), y = "Feature Interaction",
+                             title = "Feature Interaction Plot")
 
     }
 
     return(p)
+
+}
+
+##### Comp #####
+
+comp_hstats <- function(model, df, task, grid_size = 20, n_sample = 300, outcome_levels = 0){
+
+  pd <- list()
+  num <- list()
+  denom <- list()
+
+  df <- df[sample(nrow(df), min(n_sample, nrow(df))), ]
+
+  f_pred <- pred_fun(model, df, task, outcome_levels)
+
+
+  f_centered <- f_pred - mean(f_pred)
+
+  for (feature in names(df)){
+
+    ice_df <- ice_data(model, df, task, feature,
+                       outcome_levels = outcome_levels, grid_size = grid_size)
+
+    pd_j <- ice_df %>%
+      dplyr::group_by(feature_value) %>%
+      dplyr::summarise(pd = mean(prediction))
+
+    if (is.numeric(df[[feature]])){
+
+      pd_j <- stats::approx(x = pd_j$feature_value,
+                            y = pd_j$pd,
+                            xout = df[[feature]],
+                            rule = 2)$y
+
+    } else {
+
+      levels <- levels(as.factor(df[[feature]]))
+
+      pd_j <- pd_j$pd[ match(df[[feature]], levels) ]
+
+    }
+
+    pd[[feature]] <- pd_j
+
+    pd_minus_j <- ice_df %>%
+      dplyr::group_by(id) %>%
+      dplyr::summarise(pd_minus_j = mean(prediction))
+
+    pd_j_centered <- pd_j - mean(pd_j)
+    pd_minus_j_centered <- pd_minus_j$pd_minus_j - mean(pd_minus_j$pd_minus_j)
+
+    num[[feature]] <- sum((f_centered - pd_j_centered  - pd_minus_j_centered)^2)
+
+  }
+
+  num <- as.data.frame(unlist(num), )
+  colnames(num) <- "h2_value"
+
+  denom <- sum((f_centered)^2)
+
+  selected_features <- rownames(num)[order(num$h2_value, decreasing = TRUE)][1:min(5, nrow(num))]
+
+  num_ij <- c()
+
+  denom_ij <- c()
+
+  interaction_name_list <- c()
+
+  for (i in 1:length(selected_features)){
+
+    for (j in i:length(selected_features)){
+
+      if (i == j){next}
+
+      feat1 <- selected_features[[i]]
+      feat2 <- selected_features[[j]]
+
+      interaction_name <- paste0(feat1,":", feat2)
+
+      h_ij <- hstat_interaction(model, df, feat1, feat2,
+                                pd[[feat1]], pd[[feat2]],
+                                task = task,
+                                outcome_levels = outcome_levels)
+
+      interaction_name_list <- c(interaction_name_list, interaction_name)
+      num_ij <- c(num_ij, h_ij$num)
+      denom_ij <- c(denom_ij, h_ij$denom)
+
+    }
+  }
+
+  num_df <- data.frame(
+    h2_value = num_ij
+  )
+
+  denom_df <- data.frame(
+    h2_value = denom_ij
+  )
+
+  rownames(num_df) <- interaction_name_list
+  rownames(denom_df) <- interaction_name_list
+
+  ord <- order(num_df$h2_value, decreasing = TRUE)
+
+  # 2. Reorder both dataframes using the index
+  num_df   <- num_df[ord, , drop = FALSE]
+  denom_df <- denom_df[ord, , drop = FALSE]
+
+
+  return(list(h2_overall = list(num = num, denom = denom),
+              h2_pairwise = list(num = num_df, denom = denom_df))
+  )
+
+}
+
+comp_hstats_mult <- function(model, df, task, grid_size = 20, n_sample = 300, outcome_levels = 0){
+
+  pd <- list()
+  num <- list()
+  denom <- list()
+
+  df <- df[sample(nrow(df), min(n_sample, nrow(df))), ]
+
+  f_pred <- pred_fun(model, df, task, outcome_levels)
+
+  f_centered <- f_pred - colMeans(f_pred)
+
+  denom <- colSums((f_centered)^2)
+
+  dep_levels <- names(f_centered)
+
+  for (feature in names(df)){
+
+    ice_df <- ice_data(model, df, task, feature,
+                       outcome_levels = outcome_levels, grid_size = grid_size)
+
+    pd_j <- ice_df %>%
+      dplyr::group_by(pred_class, feature_value) %>%
+      dplyr::summarise(pd = mean(prediction), .groups = "drop")
+
+    pd_minus_j <- ice_df %>%
+      dplyr::group_by(pred_class, id) %>%
+      dplyr::summarise(pd_minus_j = mean(prediction), .groups = "drop")
+
+    for (level in dep_levels){
+
+      class_name <- sub("^\\.pred_", "", level)
+
+      pd_j_filter <- pd_j %>% dplyr::filter(pred_class == class_name)
+      pd_minus_j_filter <- pd_minus_j %>% dplyr::filter(pred_class == class_name)
+
+      if (is.numeric(df[[feature]])){
+
+        pd_j_filter <- stats::approx(x = pd_j_filter$feature_value,
+                                     y = pd_j_filter$pd,
+                                     xout = df[[feature]],
+                                     rule = 2)$y
+
+      } else {
+
+        cat_levels <- levels(as.factor(df[[feature]]))
+
+        pd_j_filter <- pd_j_filter$pd[ match(df[[feature]], cat_levels) ]
+
+      }
+
+      pd[[level]][[feature]] <- pd_j_filter
+
+      pd_j_centered <- pd_j_filter - mean(pd_j_filter)
+      pd_minus_j_centered <- pd_minus_j_filter$pd_minus_j - mean(pd_minus_j_filter$pd_minus_j)
+
+      num[[level]][[feature]] <- sum((f_centered[[level]] - pd_j_centered  - pd_minus_j_centered)^2)
+
+    }
+
+  }
+
+  for (level in dep_levels){
+
+    num[[level]] <- unlist(num[[level]], use.names = FALSE)
+
+  }
+
+  num <- as.data.frame(num)
+  colnames(num) <- dep_levels
+  rownames(num) <- names(df)
+
+  avg_h2 <- rowMeans(num / denom)
+
+  selected_features <- rownames(num)[order(avg_h2, decreasing = TRUE)][1:min(5, nrow(num))]
+
+  interaction_name_list <- c()
+
+  num_ij <- list()
+  denom_ij <- list()
+
+  for (i in 1:length(selected_features)){
+
+    for (j in i:length(selected_features)){
+
+      if (i == j){next}
+
+      feat1 <- selected_features[[i]]
+      feat2 <- selected_features[[j]]
+
+      interaction_name <- paste0(feat1,":", feat2)
+
+      for (level in dep_levels){
+
+        h_ij <- hstat_interaction(model, df, feat1, feat2,
+                                  pd[[level]][[feat1]], pd[[level]][[feat2]],
+                                  task = task,
+                                  outcome_levels = outcome_levels,
+                                  level = level)
+
+        num_ij[[level]] <- c(num_ij[[level]], h_ij$num)
+        denom_ij[[level]] <- c(denom_ij[[level]], h_ij$denom)
+
+      }
+
+      interaction_name_list <- c(interaction_name_list, interaction_name)
+
+    }
+  }
+
+  num_df <- as.data.frame(num_ij)
+  colnames(num_df) <- dep_levels
+  rownames(num_df) <- interaction_name_list
+
+  denom_df <- as.data.frame(denom_ij)
+  colnames(denom_df) <- dep_levels
+  rownames(denom_df) <- interaction_name_list
+
+  avg_h2 <- rowMeans(num_df[dep_levels] / denom_df[dep_levels])
+
+  ord <- order(avg_h2, decreasing = TRUE)
+
+  # 2. Reorder both dataframes using the index
+  num_df   <- num_df[ord, , drop = FALSE]
+  denom_df <- denom_df[ord, , drop = FALSE]
+
+
+  return(list(h2_overall = list(num = num, denom = denom),
+              h2_pairwise = list(num = num_df, denom = denom_df))
+  )
+
+}
+
+hstat_interaction <- function(model, data, feat1, feat2, pd_j, pd_k,
+                              grid.size = 20, task = "regression",
+                              outcome_levels = 0,
+                              level = NULL){
+
+  xj <- data[[feat1]]
+  xk <- data[[feat2]]
+
+  # Determine if numeric or categorical
+  is.num1 <- is.numeric(xj)
+  is.num2 <- is.numeric(xk)
+
+  pd_2D <- calc_pd_2D(model, data, feat1, feat2, grid.size, task, outcome_levels, level = level)
+
+  if (is.num1 && is.num2){
+
+    pd_jk <- pd2D_interpolate(pd_2D$grid1, pd_2D$grid2, pd_2D$pd.matrix, xj, xk)
+
+  }
+
+  if (!is.num1 && is.num2){
+
+    pd_jk <- pd_1d_interpolate_vec(pd_2D$grid, xj, xk, cat_var = 1)
+
+  }
+
+  if (is.num1 && !is.num2){
+
+    pd_jk <- pd_1d_interpolate_vec(pd_2D$grid, xj, xk, cat_var = 2)
+
+  }
+
+  if (!is.num1 && !is.num2){
+
+    idx <- match(
+      paste(data[[feat1]], data[[feat2]]),
+      paste(pd_2D$grid[[feat1]], pd_2D$grid[[feat2]])
+    )
+
+    pd_jk <- pd_2D$grid$pd[idx]
+
+  }
+
+  pd_jk_centered <- pd_jk - mean(pd_jk)
+  pd_j_centered <- pd_j - mean(pd_j)
+  pd_k_centered <- pd_k - mean(pd_k)
+
+  num <- sum((pd_jk_centered - pd_j_centered  - pd_k_centered)^2)
+
+  denom <- sum((pd_jk_centered)^2)
+
+  return(list(num = num, denom = denom))
+
 
 }

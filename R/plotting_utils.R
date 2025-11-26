@@ -849,3 +849,254 @@ plot_sobol_jansen <- function(analysis_object, show_table = FALSE){
   invisible(analysis_object)
 
 }
+
+#' Plotting Partial Dependence Plot
+#'
+#' @description
+#'
+#' The **plot_pfi()** function generates feature importance estimates via
+#' Permutation Feature Importance measuring performance degradation when each
+#' feature's values are randomly permuted while holding all other features
+#' constant. Provides model-agnostic importance ranking independent of
+#' feature-target correlation patterns, capturing both linear and non-linear
+#' predictive contributions to model performance.
+#'
+#' @param analysis_object Fitted analysis_object with
+#' 'sensitivity_analysis(methods = "PFI")'.
+#' @param show_table Boolean. Whether to print PFI results table.
+#' @returns analysis_object
+#' @examples
+#' # Note: For obtaining the PFI plot results the user needs to complete till
+#' # sensitivity_analysis( ) function of the MLwrap pipeline using the PFI
+#' # method.
+#' # See the full pipeline example under sensitivity_analysis()
+#' # (Requires sensitivity_analysis(methods = "PFI"))
+#' # Final call signature:
+#' # plot_pfi(wrap_object)
+#' @seealso \code{\link{sensitivity_analysis}}
+#' @export
+plot_pdp <- function(analysis_object, feature,
+                                         group_by = NULL,
+                                         grid_size = 25,
+                                         show_ice = TRUE, ice_n = 50,
+                                         pdp_line_size = 1.1,
+                                         plot = TRUE){
+
+  model <- analysis_object$final_model
+  data <- analysis_object$data$raw$test_data
+  task <- analysis_object$task
+  outcome_levels <- analysis_object$outcome_levels
+
+  # 1) Full ICE (no sampling) using your ice_data() with trimmed grid
+  ice_full <- ice_data(
+    model = model,
+    data = data,
+    task = task,
+    outcome_levels = outcome_levels,
+    feature   = feature,
+    grid_size = grid_size,
+    group_by  = group_by
+  )
+
+  # 2) PDP from full ICE
+  if ("pred_class" %in% names(ice_full)) {
+    # Multiclass: group by class
+    if (is.null(group_by)) {
+      pdp_df <- ice_full %>%
+        dplyr::group_by(pred_class, feature_value) %>%
+        dplyr::summarise(prediction = mean(prediction, na.rm = TRUE), .groups = "drop")
+    } else {
+      pdp_df <- ice_full %>%
+        dplyr::group_by(pred_class, .data[[group_by]], feature_value) %>%
+        dplyr::summarise(prediction = mean(prediction, na.rm = TRUE), .groups = "drop")
+    }
+  } else {
+    # Regression or binary classification
+    if (is.null(group_by)) {
+      pdp_df <- ice_full %>%
+        dplyr::group_by(feature_value) %>%
+        dplyr::summarise(prediction = mean(prediction, na.rm = TRUE), .groups = "drop")
+    } else {
+      pdp_df <- ice_full %>%
+        dplyr::group_by(.data[[group_by]], feature_value) %>%
+        dplyr::summarise(prediction = mean(prediction, na.rm = TRUE), .groups = "drop")
+    }
+  }
+
+  # 3) If plotting ICE, sample IDs from the full ICE (same dataframe)
+  if (isTRUE(show_ice)) {
+    sampled_ids <- sample(unique(ice_full$id), size = min(ice_n, length(unique(ice_full$id))))
+    ice_plot <- ice_full[ice_full$id %in% sampled_ids, , drop = FALSE]
+  }
+
+  # Multiclass PDP + ICE facet version
+  if ("pred_class" %in% names(ice_full)) {
+    p <- ggplot2::ggplot()
+
+    if (isTRUE(show_ice)) {
+      p <- p +
+        ggplot2::geom_line(data = ice_plot,
+                           ggplot2::aes(x = feature_value, y = prediction,
+                                        group = interaction(id, pred_class),
+                                        color = if (!is.null(group_by)) .data[[group_by]] else "dodgerblue2"),
+                           alpha = 0.3, linewidth = 0.4)
+    }
+
+    p <- p +
+      ggplot2::geom_line(data = pdp_df,
+                         ggplot2::aes(x = feature_value, y = prediction,
+                                      color = if (!is.null(group_by)) .data[[group_by]] else "dodgerblue2"),
+                         linewidth = pdp_line_size) +
+      ggplot2::facet_wrap(~ pred_class) +
+      ggplot2::scale_color_viridis_d(option = "plasma", begin = 0.1, end = 0.9) +
+      ggplot2::labs(
+        title = if (is.null(group_by)) glue::glue("PD Plot {feature}") else glue::glue("PD Plot {feature} by {group_by}"),
+        x = feature, y = "Predicted probability",
+        color = if (!is.null(group_by)) group_by else NULL
+      ) +
+      ggplot2::theme_gray()
+
+    if (is.null(group_by)) {
+      p <- p + ggplot2::guides(color = "none")
+    }
+
+  } else {
+    # Regression or binary
+    p <- ggplot2::ggplot()
+
+    if (isTRUE(show_ice)) {
+      p <- p +
+        ggplot2::geom_line(data = ice_plot,
+                           ggplot2::aes(x = feature_value, y = prediction, group = id,
+                                        color = if (!is.null(group_by)) .data[[group_by]] else NULL),
+                           alpha = 0.3, linewidth = 0.4
+        )
+    }
+
+    p <- p +
+      ggplot2::geom_line(data = pdp_df,
+                         ggplot2::aes(x = feature_value, y = prediction,
+                                      color = if (!is.null(group_by)) .data[[group_by]] else NULL),
+                         linewidth = pdp_line_size) +
+      ggplot2::scale_color_viridis_d(option = "plasma", begin = 0.1, end = 0.9) +
+      ggplot2::labs(
+        title = if (is.null(group_by)) glue::glue("PD Plot {feature}") else glue::glue("PD Plot {feature} by {group_by}"),
+        x = feature, y = "Prediction",
+        color = group_by
+      ) +
+      ggplot2::theme_gray()
+  }
+
+  x_data <- analysis_object$data$raw$train_data[[feature]]
+
+  p <- p + ggplot2::geom_rug(
+    data = data.frame(x = x_data),
+    ggplot2::aes(x = x),
+    sides = "b",
+    inherit.aes = FALSE,
+    alpha = 1
+  )
+
+  if (plot){
+
+    plot(p)
+
+    invisible(analysis_object)
+
+  } else{
+
+    return(p)
+
+  }
+}
+
+#' Plotting Accumulated Local Effects Plot
+#'
+#' @description
+#'
+#' The **plot_pfi()** function generates feature importance estimates via
+#' Permutation Feature Importance measuring performance degradation when each
+#' feature's values are randomly permuted while holding all other features
+#' constant. Provides model-agnostic importance ranking independent of
+#' feature-target correlation patterns, capturing both linear and non-linear
+#' predictive contributions to model performance.
+#'
+#' @param analysis_object Fitted analysis_object with
+#' 'sensitivity_analysis(methods = "PFI")'.
+#' @param show_table Boolean. Whether to print PFI results table.
+#' @returns analysis_object
+#' @examples
+#' # Note: For obtaining the PFI plot results the user needs to complete till
+#' # sensitivity_analysis( ) function of the MLwrap pipeline using the PFI
+#' # method.
+#' # See the full pipeline example under sensitivity_analysis()
+#' # (Requires sensitivity_analysis(methods = "PFI"))
+#' # Final call signature:
+#' # plot_pfi(wrap_object)
+#' @seealso \code{\link{sensitivity_analysis}}
+#' @export
+plot_ale <- function(analysis_object,feature,
+                          group = NULL, grid.size = 20,
+                          plot = TRUE) {
+
+  task            <- analysis_object$task
+  outcome_levels  <- analysis_object$outcome_levels
+  train           <- analysis_object$data$raw$train_data
+  model           <- analysis_object$final_model
+
+  ale_long <- comp_ale(model, train, feature, group = group, task = task,
+                       outcome_levels = outcome_levels, K = grid.size)
+
+  # Group
+
+  if (is.null(group)) {
+
+    p <- ggplot2::ggplot(ale_long,
+                         ggplot2::aes(x = grid, y = ale)) +
+      ggplot2::geom_line(linewidth = 1) +
+      ggplot2::geom_point(size = 2)
+
+  } else {
+
+    p <- ggplot2::ggplot(ale_long,
+                         ggplot2::aes(x = grid, y = ale, color = Level)) +
+      ggplot2::geom_line(linewidth = 1) +
+      ggplot2::geom_point(size = 2)
+  }
+
+  # Facet wrap
+
+  if (outcome_levels > 2) {
+    p <- p + ggplot2::facet_wrap(~ Class)
+  }
+
+  # Add rug
+
+  x_data <- train[[feature]]
+  p <- p + ggplot2::geom_rug(
+    data = data.frame(x = x_data),
+    ggplot2::aes(x = x),
+    sides = "b",
+    inherit.aes = FALSE,
+    alpha = 1
+  ) +
+    ggplot2::theme_minimal(base_size = 13) +
+    ggplot2::labs(
+      x = feature,
+      y = "ALE",
+      title = paste("ALE effect of", feature,
+                    if (!is.null(group)) paste("grouped by", group))
+    )
+
+  if (plot){
+
+    plot(p)
+
+    invisible(analysis_object)
+
+  } else{
+
+    return(p)
+
+  }
+}

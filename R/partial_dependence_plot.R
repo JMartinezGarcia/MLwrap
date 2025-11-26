@@ -1,160 +1,18 @@
-#' Plotting Partial Dependence Plot
-#'
-#' @description
-#'
-#' The **plot_pfi()** function generates feature importance estimates via
-#' Permutation Feature Importance measuring performance degradation when each
-#' feature's values are randomly permuted while holding all other features
-#' constant. Provides model-agnostic importance ranking independent of
-#' feature-target correlation patterns, capturing both linear and non-linear
-#' predictive contributions to model performance.
-#'
-#' @param analysis_object Fitted analysis_object with
-#' 'sensitivity_analysis(methods = "PFI")'.
-#' @param show_table Boolean. Whether to print PFI results table.
-#' @returns analysis_object
-#' @examples
-#' # Note: For obtaining the PFI plot results the user needs to complete till
-#' # sensitivity_analysis( ) function of the MLwrap pipeline using the PFI
-#' # method.
-#' # See the full pipeline example under sensitivity_analysis()
-#' # (Requires sensitivity_analysis(methods = "PFI"))
-#' # Final call signature:
-#' # plot_pfi(wrap_object)
-#' @seealso \code{\link{sensitivity_analysis}}
-#' @export
-plot_partial_dependence_plot <- function(analysis_object, feature,
-                         group_by = NULL,
-                         grid_size = 25,
-                         show_ice = TRUE, ice_n = 50,
-                         pdp_line_size = 1.1,
-                         plot = TRUE){
-
-  model <- analysis_object$final_model
-  data <- analysis_object$data$raw$test_data
-  task <- analysis_object$task
-  outcome_levels <- analysis_object$outcome_levels
-
-  # 1) Full ICE (no sampling) using your ice_data() with trimmed grid
-  ice_full <- ice_data(
-    model = model,
-    data = data,
-    task = task,
-    outcome_levels = outcome_levels,
-    feature   = feature,
-    grid_size = grid_size,
-    group_by  = group_by
-  )
-
-  # 2) PDP from full ICE
-  if ("pred_class" %in% names(ice_full)) {
-    # Multiclass: group by class
-    if (is.null(group_by)) {
-      pdp_df <- ice_full %>%
-        dplyr::group_by(pred_class, feature_value) %>%
-        dplyr::summarise(prediction = mean(prediction, na.rm = TRUE), .groups = "drop")
-    } else {
-      pdp_df <- ice_full %>%
-        dplyr::group_by(pred_class, .data[[group_by]], feature_value) %>%
-        dplyr::summarise(prediction = mean(prediction, na.rm = TRUE), .groups = "drop")
-    }
-  } else {
-    # Regression or binary classification
-    if (is.null(group_by)) {
-      pdp_df <- ice_full %>%
-        dplyr::group_by(feature_value) %>%
-        dplyr::summarise(prediction = mean(prediction, na.rm = TRUE), .groups = "drop")
-    } else {
-      pdp_df <- ice_full %>%
-        dplyr::group_by(.data[[group_by]], feature_value) %>%
-        dplyr::summarise(prediction = mean(prediction, na.rm = TRUE), .groups = "drop")
-    }
-  }
-
-  # 3) If plotting ICE, sample IDs from the full ICE (same dataframe)
-  if (isTRUE(show_ice)) {
-    sampled_ids <- sample(unique(ice_full$id), size = min(ice_n, length(unique(ice_full$id))))
-    ice_plot <- ice_full[ice_full$id %in% sampled_ids, , drop = FALSE]
-  }
-
-  # Multiclass PDP + ICE facet version
-  if ("pred_class" %in% names(ice_full)) {
-    p <- ggplot2::ggplot()
-
-    if (isTRUE(show_ice)) {
-      p <- p +
-        ggplot2::geom_line(data = ice_plot,
-                  ggplot2::aes(x = feature_value, y = prediction,
-                      group = interaction(id, pred_class),
-                      color = if (!is.null(group_by)) .data[[group_by]] else "dodgerblue2"),
-                  alpha = 0.3, linewidth = 0.4)
-    }
-
-    p <- p +
-      ggplot2::geom_line(data = pdp_df,
-                ggplot2::aes(x = feature_value, y = prediction,
-                    color = if (!is.null(group_by)) .data[[group_by]] else "dodgerblue2"),
-                linewidth = pdp_line_size) +
-      ggplot2::facet_wrap(~ pred_class, scales = "free_y") +
-      ggplot2::scale_color_viridis_d(option = "plasma", begin = 0.1, end = 0.9) +
-      ggplot2::labs(
-        title = if (is.null(group_by)) glue::glue("PD Plot {feature}") else glue::glue("PD Plot {feature} by {group_by}"),
-        x = feature, y = "Predicted probability",
-        color = if (!is.null(group_by)) group_by else NULL
-      ) +
-      ggplot2::theme_gray()
-
-    if (is.null(group_by)) {
-      p <- p + ggplot2::guides(color = "none")
-    }
-
-  } else {
-    # Regression or binary
-    p <- ggplot2::ggplot()
-
-    if (isTRUE(show_ice)) {
-      p <- p +
-        ggplot2::geom_line(data = ice_plot,
-                  ggplot2::aes(x = feature_value, y = prediction, group = id,
-                      color = if (!is.null(group_by)) .data[[group_by]] else NULL),
-                  alpha = 0.3, linewidth = 0.4
-                  )
-    }
-
-    p <- p +
-      ggplot2::geom_line(data = pdp_df,
-                ggplot2::aes(x = feature_value, y = prediction,
-                    color = if (!is.null(group_by)) .data[[group_by]] else NULL),
-                linewidth = pdp_line_size) +
-      ggplot2::scale_color_viridis_d(option = "plasma", begin = 0.1, end = 0.9) +
-      ggplot2::labs(
-        title = if (is.null(group_by)) glue::glue("PD Plot {feature}") else glue::glue("PD Plot {feature} by {group_by}"),
-        x = feature, y = "Prediction",
-        color = group_by
-      ) +
-      ggplot2::theme_gray()
-  }
-
-  if (plot){
-
-        plot(p)
-
-        invisible(analysis_object)
-
-  } else{
-
-    return(p)
-
-  }
-}
-
 ice_data <- function(model, data, task, feature,
                      outcome_levels = NULL, group_by = NULL, grid_size = 25) {
 
   # 1) Build trimmed numeric grid (1%–99%)
   x <- data[[feature]]
-  q <- stats::quantile(x, probs = c(0.01, 0.99), na.rm = TRUE)
-  grid <- seq(q[1], q[2], length.out = grid_size)
+  if (is.numeric(x)){
+
+    q <- stats::quantile(x, probs = c(0.01, 0.99), na.rm = TRUE)
+    grid <- seq(q[1], q[2], length.out = grid_size)
+
+  } else{
+
+    grid <- levels(as.factor(x))
+
+  }
 
   # 2) Prepare grouping vector (with numeric -> quartiles)
   group_vec <- NULL
@@ -228,3 +86,201 @@ ice_data <- function(model, data, task, feature,
   rownames(ice_df) <- NULL
   ice_df
 }
+
+pred_fun <- function(model, new_data, task, outcome_levels){
+
+  if (task == "regression"){
+
+    return(predict(model, new_data= new_data, type = "numeric")[[1]])
+
+  }
+
+  if (task == "classification" && outcome_levels == 2){
+
+    return(predict(model, new_data= new_data, type = "prob")[[2]])
+
+  }
+
+  if (task == "classification" && outcome_levels != 2){
+
+    return(predict(model, new_data= new_data, type = "prob"))
+
+  }
+
+}
+
+
+
+
+calc_pd_2D <- function(model, data, feat1, feat2,
+                 grid.size = 20, task = "regression", outcome_levels = 0,
+                 level = NULL) {
+
+  x1 <- data[[feat1]]
+  x2 <- data[[feat2]]
+
+  # Determine if numeric or categorical
+  is.num1 <- is.numeric(x1)
+  is.num2 <- is.numeric(x2)
+
+  # ---- 1. BUILD GRID ----
+  grid1 <- if (is.num1) seq(min(x1), max(x1), length.out = grid.size) else levels(as.factor(x1))
+  grid2 <- if (is.num2) seq(min(x2), max(x2), length.out = grid.size) else levels(as.factor(x2))
+
+  # Cartesian grid
+  grid <- expand.grid(val1 = grid1, val2 = grid2, KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE)
+  colnames(grid) <- c(feat1, feat2)
+  # ---- 2. COMPUTE 2D ICE (over the grid) ----
+  # For each (val1, val2), replace feat1 & feat2 and predict
+  preds <- numeric(nrow(grid))
+
+  for (g in seq_len(nrow(grid))) {
+    temp <- data
+    temp[[feat1]] <- if (is.num1) grid[[feat1]][g] else factor(grid[[feat1]][g], levels = grid1)
+    temp[[feat2]] <- if (is.num2) grid[[feat2]][g] else factor(grid[[feat2]][g], levels = grid2)
+
+
+
+    p <- pred_fun(model, temp, task, outcome_levels)
+
+    if (!is.null(level)){
+
+      p <- p[[level]]
+
+    }
+
+    preds[g] <- mean(p)   # partial dependence = average prediction
+  }
+
+  grid$pd <- preds
+
+  # ---- 3. RESHAPE TO MATRIX FORM FOR INTERPOLATION OR PLOTTING ----
+  # For numeric × numeric → produce matrix grid.size × grid.size
+  if (is.num1 && is.num2) {
+    pd.mat <- matrix(grid$pd, nrow = length(grid1), ncol = length(grid2), byrow = FALSE)
+    out <- list(
+      pd.matrix = pd.mat,
+      grid = grid,
+      grid1 = grid1,
+      grid2 = grid2
+    )
+    return(out)
+  }
+
+  # For numeric × categorical
+  if (is.num1 && !is.num2) {
+    pd.mat <- matrix(grid$pd, nrow = length(grid1), ncol = length(grid2), byrow = FALSE)
+    colnames(pd.mat) <- grid2
+    rownames(pd.mat) <- grid1
+
+    out <- list(
+      pd.matrix = pd.mat,
+      grid = grid,
+      grid1 = grid1,
+      grid2 = grid2
+    )
+    return(out)
+  }
+
+  # For categorical × numeric
+  if (!is.num1 && is.num2) {
+    pd.mat <- matrix(grid$pd, nrow = length(grid1), ncol = length(grid2), byrow = FALSE)
+    rownames(pd.mat) <- grid1
+    colnames(pd.mat) <- grid2
+    out <- list(
+      pd.matrix = pd.mat,
+      grid = grid,
+      grid1 = grid1,
+      grid2 = grid2
+    )
+    return(out)
+  }
+
+  # For factor × factor, no interpolation needed
+  if (!is.num1 && !is.num2) {
+    pd.mat <- matrix(grid$pd, nrow = length(grid1), ncol = length(grid2), byrow = TRUE,
+                     dimnames = list(grid1, grid2))
+    out <- list(
+      pd.matrix = pd.mat,
+      grid = grid,
+      grid1 = grid1,
+      grid2 = grid2
+    )
+    return(out)
+  }
+}
+
+pd2D_interpolate <- function(grid_j, grid_k, pd_mat, xj, xk) {
+
+  # find interval indices for each observation
+  find_interval <- function(x, grid) {
+    pmax(1, pmin(length(grid) - 1, findInterval(x, grid)))
+  }
+
+  j1 <- find_interval(xj, grid_j)
+  j2 <- j1 + 1
+
+  k1 <- find_interval(xk, grid_k)
+  k2 <- k1 + 1
+
+  # compute interpolation weights
+  wj <- (xj - grid_j[j1]) / (grid_j[j2] - grid_j[j1])
+  wk <- (xk - grid_k[k1]) / (grid_k[k2] - grid_k[k1])
+
+  # extract corner values
+  Q11 <- pd_mat[cbind(j1, k1)]
+  Q21 <- pd_mat[cbind(j2, k1)]
+  Q12 <- pd_mat[cbind(j1, k2)]
+  Q22 <- pd_mat[cbind(j2, k2)]
+
+  # bilinear interpolation
+  out <-
+    Q11 * (1 - wj) * (1 - wk) +
+    Q21 * (wj)      * (1 - wk) +
+    Q12 * (1 - wj) * (wk) +
+    Q22 * (wj)      * (wk)
+
+  return(out)
+}
+
+pd_1d_interpolate <- function(grid, xj, xk, cat_var = 1){
+
+  if (cat_var == 1){
+
+    filter_pd <- grid %>%
+                  dplyr::filter(grid[[1]] == xj)
+
+    num_var = 2
+
+    x_out = xk
+
+  } else{
+
+    filter_pd <- grid %>%
+      dplyr::filter(grid[[2]] == xk)
+
+    num_var = 1
+
+    x_out = xj
+
+  }
+
+  pd_jk_i <- stats::approx(x = filter_pd[[num_var]],
+                        y = filter_pd$pd,
+                        xout = x_out,
+                        rule = 2)$y
+
+  return(pd_jk_i)
+
+}
+
+pd_1d_interpolate_vec <- function(grid, xj, xk, cat_var = 1) {
+  mapply(
+    function(a, b) pd_1d_interpolate(grid, a, b, cat_var = cat_var),
+    xj, xk
+  )
+}
+
+
+
+
