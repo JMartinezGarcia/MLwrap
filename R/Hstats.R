@@ -93,7 +93,7 @@ calc_hstats_binary <- function(analysis_object){
 
   num   <- hstats_object$h2_overall$num
   denom <- hstats_object$h2_overall$denom
-  h2_normalized <- as.data.frame(round(sweep(num, 2, denom, "/"), 5)[,1])
+  h2_normalized <- as.data.frame(round(sweep(num, 2, denom, "/"), 5))
   colnames(h2_normalized) <- "H^2 Normalized"
 
   h2_table <- h2_normalized %>%
