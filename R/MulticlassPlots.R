@@ -2,7 +2,7 @@ plot_multi_pfi <- function(df){
 
   x_max <- max(df$Importance) * 1.2
 
-  p <- ggplot2::ggplot(df, aes(x = reorder(Feature, Importance),
+  p <- ggplot2::ggplot(df, ggplot2::aes(x = reorder(Feature, Importance),
                                y = Importance)) +
     ggplot2::geom_col(fill = "steelblue") +
     ggplot2::geom_errorbar(ggplot2::aes(ymin = Importance - StDev,
@@ -91,17 +91,17 @@ plot_multi_abs <- function(df, y_label, title) {
 
   x_max <- max(df$Mean_Abs_Importance) * 1.2
 
-  ggplot2::ggplot(df, aes(x = reorder(Feature, Mean_Abs_Importance),
+  ggplot2::ggplot(df, ggplot2::aes(x = reorder(Feature, Mean_Abs_Importance),
                           y = Mean_Abs_Importance)) +
 
     ggplot2::geom_col(fill = "steelblue") +
 
-    ggplot2::geom_errorbar(aes(
+    ggplot2::geom_errorbar(ggplot2::aes(
       ymin = Mean_Abs_Importance - StDev,
       ymax = Mean_Abs_Importance + StDev
     ), width = 0.3) +
 
-    ggplot2::geom_text(aes(label = sprintf("%.3f (%.3f)",
+    ggplot2::geom_text(ggplot2::aes(label = sprintf("%.3f (%.3f)",
                                            Mean_Abs_Importance, StDev)),
                        nudge_y = 0.01,
                        hjust = 0,
@@ -180,7 +180,7 @@ plot_beeswarm_multi <- function(df, x_label, title) {
 
 plot_boxplot_multi <- function(df, y_label,title) {
 
-  ggplot2::ggplot(df, aes(
+  ggplot2::ggplot(df, ggplot2::aes(
     x = variable,
     y = imp_value
   )) +
