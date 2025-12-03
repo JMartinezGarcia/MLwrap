@@ -564,9 +564,7 @@ plot_pfi <- function(analysis_object, show_table = FALSE){
 
   }
 
-  pfi_plots   <- plots[pfi_names]
-
-  combined <- patchwork::wrap_plots(pfi_plots)
+  pfi_plot <- plots[["PFI_barplot"]]
 
   if (base::interactive()){
 
@@ -576,7 +574,7 @@ plot_pfi <- function(analysis_object, show_table = FALSE){
 
     }
 
-    plot(combined)
+    plot(pfi_plot)
 
   }
 
@@ -623,26 +621,13 @@ plot_shap <- function(analysis_object, show_table = FALSE){
 
   }
 
-  mean_shap_names <- grep("barplot$", shap_names, value = TRUE)
+  mean_shap_plots <- plots[["SHAP_barplot"]]
 
-  dir_shap_names <- grep("directional$", shap_names, value = TRUE)
+  dir_shap_plots <- plots[["SHAP_directional"]]
 
-  box_shap_names <- grep("boxplot$", shap_names, value = TRUE)
+  box_shap_plots <- plots[["SHAP_boxplot"]]
 
-  swarm_shap_names <- grep("swarmplot$", shap_names, value = TRUE)
-
-  mean_shap_plots <- plots[mean_shap_names]
-
-  dir_shap_plots <- plots[dir_shap_names]
-
-  box_shap_plots <- plots[box_shap_names]
-
-  swarm_shap_plots <- plots[swarm_shap_names]
-
-  combined_mean <- patchwork::wrap_plots(mean_shap_plots)
-  combined_dir <- patchwork::wrap_plots(dir_shap_plots)
-  combined_box <- patchwork::wrap_plots(box_shap_plots)
-  combined_swarm <- patchwork::wrap_plots(swarm_shap_plots)
+  swarm_shap_plots <- plots[["SHAP_swarmplot"]]
 
   if (base::interactive()){
 
@@ -652,10 +637,10 @@ plot_shap <- function(analysis_object, show_table = FALSE){
 
     }
 
-    plot(combined_mean)
-    plot(combined_dir)
-    plot(combined_box)
-    plot(combined_swarm)
+    plot(mean_shap_plots)
+    plot(dir_shap_plots)
+    plot(box_shap_plots)
+    plot(swarm_shap_plots)
 
     }
 
@@ -703,26 +688,13 @@ plot_integrated_gradients <- function(analysis_object, show_table = FALSE){
 
   }
 
-  mean_ig_names <- grep("barplot$", ig_names, value = TRUE)
+  mean_ig_plots <- plots[["IntegratedGradients_barplot"]]
 
-  dir_ig_names <- grep("directional$", ig_names, value = TRUE)
+  dir_ig_plots <- plots[["IntegratedGradients_directional"]]
 
-  box_ig_names <- grep("boxplot$", ig_names, value = TRUE)
+  box_ig_plots <- plots[["IntegratedGradients_boxplot"]]
 
-  swarm_ig_names <- grep("swarmplot$", ig_names, value = TRUE)
-
-  mean_ig_plots <- plots[mean_ig_names]
-
-  dir_ig_plots <- plots[dir_ig_names]
-
-  box_ig_plots <- plots[box_ig_names]
-
-  swarm_ig_plots <- plots[swarm_ig_names]
-
-  combined_mean <- patchwork::wrap_plots(mean_ig_plots)
-  combined_dir <- patchwork::wrap_plots(dir_ig_plots)
-  combined_box <- patchwork::wrap_plots(box_ig_plots)
-  combined_swarm <- patchwork::wrap_plots(swarm_ig_plots)
+  swarm_ig_plots <- plots[["IntegratedGradients_swarmplot"]]
 
   if (base::interactive()){
 
@@ -732,10 +704,10 @@ plot_integrated_gradients <- function(analysis_object, show_table = FALSE){
 
     }
 
-    plot(combined_mean)
-    plot(combined_dir)
-    plot(combined_box)
-    plot(combined_swarm)
+    plot(mean_ig_plots)
+    plot(dir_ig_plots)
+    plot(box_ig_plots)
+    plot(swarm_ig_plots)
 
   }
 
@@ -779,9 +751,9 @@ plot_olden <- function(analysis_object, show_table = FALSE){
 
   }
 
-  olden_plots <- plots[olden_names]
+  olden_plots <- plots[[olden_names]]
 
-  combined <- patchwork::wrap_plots(olden_plots)
+  #combined <- patchwork::wrap_plots(olden_plots)
 
   if (base::interactive()){
 
@@ -791,7 +763,7 @@ plot_olden <- function(analysis_object, show_table = FALSE){
 
     }
 
-    plot(combined)
+    plot(olden_plots)
 
   }
 

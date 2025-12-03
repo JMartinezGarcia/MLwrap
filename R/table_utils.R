@@ -200,7 +200,7 @@ table_pfi_results <- function(analysis_object, show_table = FALSE){
 
   }
 
-  pfi_tables <- tables[pfi_names]
+  pfi_tables <- tables[["PFI"]]
 
   if (base::interactive() && show_table){
 
@@ -210,13 +210,17 @@ table_pfi_results <- function(analysis_object, show_table = FALSE){
 
     if (analysis_object$outcome_levels > 2){
 
-      N <- length(pfi_names)
+      y_classes <- unique(pfi_tables$output_class)
 
-      for (i in 1:N){
+      for (target_class in y_classes){
 
-        cli::cli_h2(sub(".*_", "", pfi_names[[i]]))
+        pfi_target <- pfi_tables %>%
+          dplyr::filter(output_class == target_class) %>%
+          dplyr::select(-output_class)
 
-        print(pfi_tables[[i]])
+        cli::cli_h2(sub(".*_", "", target_class))
+
+        print(pfi_target)
 
         cli::cat_line()
 
@@ -278,7 +282,7 @@ table_shap_results <- function(analysis_object, show_table = FALSE){
 
   }
 
-  shap_tables <- tables[shap_names]
+  shap_tables <- tables[["SHAP"]]
 
   if (base::interactive() && show_table){
 
@@ -288,13 +292,17 @@ table_shap_results <- function(analysis_object, show_table = FALSE){
 
     if (analysis_object$outcome_levels > 2){
 
-      N <- length(shap_names)
+      y_classes <- unique(shap_tables$output_class)
 
-      for (i in 1:N){
+      for (target_class in y_classes){
 
-        cli::cli_h2(sub(".*_", "", shap_names[[i]]))
+        shap_target <- shap_tables %>%
+          dplyr::filter(output_class == target_class) %>%
+          dplyr::select(-output_class)
 
-        print(shap_tables[[i]])
+        cli::cli_h2(sub(".*_", "", target_class))
+
+        print(shap_target)
 
         cli::cat_line()
 
@@ -353,7 +361,7 @@ table_integrated_gradients_results <- function(analysis_object, show_table = FAL
 
   }
 
-  ig_tables <- tables[ig_names]
+  ig_tables <- tables[["IntegratedGradients"]]
 
   if (base::interactive() && show_table){
 
@@ -363,13 +371,17 @@ table_integrated_gradients_results <- function(analysis_object, show_table = FAL
 
     if (analysis_object$outcome_levels > 2){
 
-      N <- length(ig_names)
+      y_classes <- unique(ig_tables$output_class)
 
-      for (i in 1:N){
+      for (target_class in y_classes){
 
-        cli::cli_h2(sub(".*_", "", ig_names[[i]]))
+        ig_target <- ig_tables %>%
+          dplyr::filter(output_class == target_class) %>%
+          dplyr::select(-output_class)
 
-        print(ig_tables[[i]])
+        cli::cli_h2(sub(".*_", "", target_class))
+
+        print(ig_target)
 
         cli::cat_line()
 

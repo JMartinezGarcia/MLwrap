@@ -5,7 +5,7 @@ ice_data <- function(model, data, task, feature,
   x <- data[[feature]]
   if (is.numeric(x)){
 
-    q <- stats::quantile(x, probs = c(0.01, 0.99), na.rm = TRUE)
+    q <- stats::quantile(x, probs = c(0.001, 0.999), na.rm = TRUE)
     grid <- seq(q[1], q[2], length.out = grid_size)
 
   } else{
