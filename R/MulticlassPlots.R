@@ -112,7 +112,7 @@ plot_multi_abs <- function(df, y_label, title) {
     ggplot2::facet_wrap(~ output_class, scales = "free_y") +
 
     # ---- EXPAND X-AXIS ----
-  ggplot2::scale_y_continuous(expand = expansion(add= c(0, x_max))) +
+  ggplot2::scale_y_continuous(expand = ggplot2::expansion(add= c(0, x_max))) +
     # ------------------------
 
   ggplot2::labs(
