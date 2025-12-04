@@ -10,6 +10,7 @@ plot_multi_pfi <- function(df){
                            width = 0.2,
                            color = "black") +
 
+
     # ---- NEW: text labels ----
   ggplot2::geom_text(ggplot2::aes(
     label = sprintf("%.3f (%.3f)", Importance, StDev),
@@ -169,11 +170,8 @@ plot_beeswarm_multi <- function(df, x_label, title) {
     ggplot2::theme(
       legend.position = "right",
 
-      # ⭐ Make plot wider (more spacing between columns)
-      panel.spacing.x = ggplot2::unit(0.1, "lines"),
-
       # ⭐ Smaller + tilted y-axis text
-      axis.text.y = ggplot2::element_text(size = 7, angle = 20, hjust = 1),
+      axis.text.y = ggplot2::element_text(size = 7, angle = 45, hjust = 1),
 
       strip.text = ggplot2::element_text(size = 12, face = "bold")
     )
@@ -201,9 +199,6 @@ plot_boxplot_multi <- function(df, y_label,title) {
     ggplot2::theme_grey() +
     ggplot2::theme(
       legend.position = "none",
-
-      # ⭐ Make plot wider horizontally
-      panel.spacing.x = ggplot2::unit(3, "lines"),
 
       # ⭐ Tilt & reduce size of labels
       axis.text.x = ggplot2::element_text(size = 7, angle = 45, hjust = 1),
