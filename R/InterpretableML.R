@@ -524,7 +524,7 @@ plot_barplot <- function(X, func = NULL, func_se = stats::sd, title, x_label) {
       ggplot2::geom_col(fill = "steelblue") +
       ggplot2::geom_errorbar(ggplot2::aes(xmin = Importance - StDev, xmax = Importance + StDev), width = 0.2) +
       ggplot2::geom_text(ggplot2::aes(label = paste0(round(Importance, 3), " (", round(StDev, 3), ")"),
-                                      y = Importance + sign(Importance) * max(abs(StDev)) * 0.2  # slight offset
+                                      x = Importance +  max(abs(StDev)) * 0.2  # slight offset
                                       ),
                 vjust =  -0.25,
                 hjust = -0.2) +

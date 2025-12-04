@@ -233,7 +233,7 @@ hstat_total_plot <- function(h2_total, outcome_levels){
 
     p <- ggplot2::ggplot(
       h2_long,
-      aes(
+      ggplot2::aes(
         x = H2,
         y = Feature_ord,
         fill = Class
