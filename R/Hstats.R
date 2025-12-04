@@ -264,8 +264,8 @@ hstat_total_plot <- function(h2_total, outcome_levels){
 
       ggplot2::theme_grey() +
       ggplot2::theme(
-        strip.text = element_text(size = 12, face = "bold"),
-        axis.text.y = element_text(size = 8)
+        strip.text = ggplot2::element_text(size = 12, face = "bold"),
+        axis.text.y = ggplot2::element_text(size = 8)
       )
   }
 
