@@ -195,9 +195,23 @@ hstat_total_plot <- function(h2_total, outcome_levels){
 
   if (outcome_levels <= 2){
 
+    max_x <- 1.5 * max(h2_total[["H^2 Normalized"]], na.rm = TRUE)
+
     p <- ggplot2::ggplot(h2_total, ggplot2::aes(x = .data[["H^2 Normalized"]],
                                       y = stats::reorder(Feature, .data[["H^2 Normalized"]]))) +
       ggplot2::geom_col(orientation = "y", fill = "orange") +
+      ggplot2::geom_text(ggplot2::aes(label = sprintf("%.3f",
+                                                      .data[["H^2 Normalized"]]),
+                                      x = .data[["H^2 Normalized"]] + 0.1*.data[["H^2 Normalized"]]  # slight offset
+      ),
+      hjust = -0.2,
+      size = 3) +
+
+      ggplot2::scale_x_continuous(
+        limits = c(0, max_x),
+        expand = ggplot2::expansion(mult = c(0, 0.02))
+      ) +
+
       ggplot2::labs(x = expression(H^2~"Normalized"), y = NULL,
            title = "Friedman's H-statistic")
 
@@ -210,12 +224,49 @@ hstat_total_plot <- function(h2_total, outcome_levels){
         values_to = "H2"
       )
 
-    p <- ggplot2::ggplot(h2_long, ggplot2::aes(x = H2,
-                                               y = stats::reorder(Feature, H2),
-                                               fill = Class)) +
-        ggplot2::geom_col(orientation = "y", position = "dodge") +
-      ggplot2::labs(x = expression(H^2~"Normalized"), y = "Feature",
-           title = "Friedman's H-statistic per Class")
+    max_x <- 1.5 * max(h2_long$H2, na.rm = TRUE)
+
+    h2_long <- h2_long %>%
+      dplyr::group_by(Class) %>%
+      dplyr::mutate(Feature_ord = reorder(Feature, H2)) %>%
+      dplyr::ungroup()
+
+    p <- ggplot2::ggplot(
+      h2_long,
+      aes(
+        x = H2,
+        y = Feature_ord,
+        fill = Class
+      )
+    ) +
+
+      ggplot2::geom_col(orientation = "y") +
+
+      ggplot2::geom_text(ggplot2::aes(label = sprintf("%.3f",
+                                                      H2),
+                                              x = H2 + 0.1*H2  # slight offset
+      ),
+      hjust = -0.2,
+      size = 3) +
+
+      ggplot2::facet_wrap(~ Class) +
+
+      ggplot2::scale_x_continuous(
+        limits = c(0, max_x),
+        expand = ggplot2::expansion(mult = c(0, 0.02))
+      ) +
+
+      ggplot2::labs(
+        x = expression(H^2~"Normalized"),
+        y = "Feature",
+        title = "Friedman's H-statistic per Class"
+      ) +
+
+      ggplot2::theme_grey() +
+      ggplot2::theme(
+        strip.text = element_text(size = 12, face = "bold"),
+        axis.text.y = element_text(size = 8)
+      )
   }
 
   return(p)
@@ -236,11 +287,23 @@ hstat_pairwise_plot <- function(h2_pairwise, outcome_levels, normalized = TRUE){
 
     if (outcome_levels <= 2){
 
+      max_x <- 1.5 * max(h2_pairwise[[h2_col]], na.rm = TRUE)
+
       p <- ggplot2::ggplot(h2_pairwise,
                         ggplot2::aes(x = .data[[h2_col]],
                         y = stats::reorder(.data[["Pairwise Interaction"]],
                                     .data[[h2_col]]))) +
-        ggplot2::geom_col(orientation = "y", fill = "orange")
+        ggplot2::geom_col(orientation = "y", fill = "orange") +
+        ggplot2::geom_text(ggplot2::aes(label = sprintf("%.3f",
+                                                        .data[[h2_col]]),
+                                        x = .data[[h2_col]] + 0.1 * .data[[h2_col]]  # slight offset
+        ),
+        hjust = -0.2,
+        size = 3) +
+        ggplot2::scale_x_continuous(
+          limits = c(0, max_x),
+          expand = ggplot2::expansion(mult = c(0, 0.02))
+        )
 
     }
 
@@ -253,12 +316,24 @@ hstat_pairwise_plot <- function(h2_pairwise, outcome_levels, normalized = TRUE){
           values_to = "H2"
         )
 
+      max_x <- 1.5 * max(h2_long$H2, na.rm = TRUE)
+
       p <- ggplot2::ggplot(h2_long,
                         ggplot2::aes(x = H2,
                                   y = stats::reorder(.data[["Pairwise Interaction"]], H2),
                                   fill = Class)) +
         ggplot2::geom_col(orientation = "y") +
-        ggplot2::facet_wrap("Class")
+        ggplot2::geom_text(ggplot2::aes(label = sprintf("%.3f",
+                                                        H2),
+                                        x = H2 + 0.1 * H2
+        ),
+        hjust = -0.2,
+        size = 3) +
+        ggplot2::facet_wrap("Class") +
+        ggplot2::scale_x_continuous(
+          limits = c(0, max_x),
+          expand = ggplot2::expansion(mult = c(0, 0.02))
+        )
 
 
     }

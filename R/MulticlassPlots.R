@@ -42,29 +42,28 @@ plot_multi_pfi <- function(df){
 
 plot_multi_directional <- function(df, title) {
 
-  # Offset for labels
   offset <- 0.05 * max(abs(df$Directional_Importance))
 
+  # ----- FIX -----
   df2 <- df %>%
     dplyr::group_by(output_class) %>%
+    dplyr::arrange(output_class, dplyr::desc(Directional_Importance)) %>%
     dplyr::mutate(
-      # order features per class: max positive -> most negative
-      Feature_ord = reorder(Feature, -Directional_Importance),
-      label_pos  = Directional_Importance +
+      Feature_ord = factor(Feature, levels = Feature),  # niveles fijos por clase
+      label_pos = Directional_Importance +
         ifelse(Directional_Importance > 0, offset, -offset),
-      vjust_pos  = ifelse(Directional_Importance > 0, -0.2, 1.2)
+      vjust_pos = ifelse(Directional_Importance > 0, -0.2, 1.2)
     ) %>%
     dplyr::ungroup()
+  # ----------------
 
   ggplot2::ggplot(df2,
-                  ggplot2::aes(x = Feature_ord,
-                               y = Directional_Importance,
-                               fill = Directional_Importance > 0)) +
-    ggplot2::geom_col() +
-    ggplot2::scale_fill_manual(values = c(
-      "TRUE"  = "steelblue",
-      "FALSE" = "tomato"
-    )) +
+                  ggplot2::aes(
+                    x = Feature_ord,
+                    y = Directional_Importance,
+                    fill = Directional_Importance > 0
+                  )) +
+    ggplot2::geom_col(show.legend = FALSE) +
     ggplot2::geom_text(
       ggplot2::aes(
         y = label_pos,
@@ -73,7 +72,10 @@ plot_multi_directional <- function(df, title) {
       ),
       size = 3
     ) +
-    ggplot2::facet_wrap(~ output_class, scales = "free_x") +
+    ggplot2::scale_fill_manual(
+      values = c("TRUE" = "steelblue", "FALSE" = "firebrick")
+    ) +
+    ggplot2::facet_wrap(~ output_class) +
     ggplot2::labs(
       title = title,
       x = "Feature",
@@ -81,9 +83,8 @@ plot_multi_directional <- function(df, title) {
     ) +
     ggplot2::theme_grey() +
     ggplot2::theme(
-      legend.position = "none",
-      strip.text = ggplot2::element_text(size = 12, face = "bold"),
-      axis.text.x = ggplot2::element_text(size = 7, angle = 45, hjust = 1)
+      axis.text.x  = ggplot2::element_text(angle = 45, hjust = 1),
+      strip.text   = ggplot2::element_text(size = 12, face = "bold")
     )
 }
 
@@ -102,9 +103,10 @@ plot_multi_abs <- function(df, y_label, title) {
     ), width = 0.3) +
 
     ggplot2::geom_text(ggplot2::aes(label = sprintf("%.3f (%.3f)",
-                                           Mean_Abs_Importance, StDev)),
-                       nudge_y = 0.01,
-                       hjust = 0,
+                                           Mean_Abs_Importance, StDev),
+                                    y = Mean_Abs_Importance + sign(Mean_Abs_Importance) * max(abs(StDev)) * 0.2  # slight offset
+                                    ),
+                       hjust = -0.2,
                        size = 3) +
 
     ggplot2::coord_flip() +
@@ -148,8 +150,7 @@ plot_beeswarm_multi <- function(df, x_label, title) {
     ) +
 
     ggplot2::facet_wrap(
-      ~ output_class,
-      scales = "free_y"
+      ~ output_class
     ) +
 
     ggplot2::scale_color_viridis_c(
@@ -188,9 +189,7 @@ plot_boxplot_multi <- function(df, y_label,title) {
     ggplot2::geom_boxplot(outlier.size = 0.8, alpha = 0.8) +
 
     ggplot2::facet_wrap(
-      ~ output_class,
-      scales = "free_y",
-      nrow = 2
+      ~ output_class
     ) +
 
     ggplot2::labs(

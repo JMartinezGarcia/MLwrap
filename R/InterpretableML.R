@@ -523,7 +523,9 @@ plot_barplot <- function(X, func = NULL, func_se = stats::sd, title, x_label) {
     p <- ggplot2::ggplot(summary_df, ggplot2::aes(x = Importance, y = Feature)) +
       ggplot2::geom_col(fill = "steelblue") +
       ggplot2::geom_errorbar(ggplot2::aes(xmin = Importance - StDev, xmax = Importance + StDev), width = 0.2) +
-      ggplot2::geom_text(ggplot2::aes(label = paste0(round(Importance, 3), " (", round(StDev, 3), ")")),
+      ggplot2::geom_text(ggplot2::aes(label = paste0(round(Importance, 3), " (", round(StDev, 3), ")"),
+                                      y = Importance + sign(Importance) * max(abs(StDev)) * 0.2  # slight offset
+                                      ),
                 vjust =  -0.25,
                 hjust = -0.2) +
       ggplot2::labs(
@@ -532,7 +534,7 @@ plot_barplot <- function(X, func = NULL, func_se = stats::sd, title, x_label) {
         title = title
         ) +
       ggplot2::theme_grey() +
-      ggplot2::expand_limits(x = max(summary_df$Importance) * 1.2)
+      ggplot2::expand_limits(x = max(summary_df$Importance) * 1.5)
 
   return(p)
 
