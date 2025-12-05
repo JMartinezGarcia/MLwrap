@@ -852,10 +852,19 @@ plot_pdp <- function(analysis_object, feature,
                                          grid_size = 25,
                                          show_ice = TRUE, ice_n = 50,
                                          pdp_line_size = 1.1,
+                                         use_test = FALSE,
                                          plot = TRUE){
 
   model <- analysis_object$final_model
-  data <- analysis_object$data$raw$test_data
+  if (use_test){
+
+    data <- analysis_object$data$raw$test_data
+
+  } else {
+
+    data <- analysis_object$data$raw$train_data
+
+  }
   task <- analysis_object$task
   outcome_levels <- analysis_object$outcome_levels
 
@@ -959,7 +968,7 @@ plot_pdp <- function(analysis_object, feature,
       ggplot2::theme_gray()
   }
 
-  x_data <- analysis_object$data$raw$train_data[[feature]]
+  x_data <- data[[feature]]
 
   p <- p + ggplot2::geom_rug(
     data = data.frame(x = x_data),
@@ -1009,11 +1018,22 @@ plot_pdp <- function(analysis_object, feature,
 #' @export
 plot_ale <- function(analysis_object,feature,
                           group = NULL, grid.size = 20,
+                          use_test = FALSE,
                           plot = TRUE) {
 
   task            <- analysis_object$task
   outcome_levels  <- analysis_object$outcome_levels
-  train           <- analysis_object$data$raw$train_data
+
+  if (use_test){
+
+    train <- analysis_object$data$raw$test_data
+
+  } else {
+
+    train <- analysis_object$data$raw$train_data
+
+  }
+
   model           <- analysis_object$final_model
 
   ale_long <- comp_ale(model, train, feature, group = group, task = task,

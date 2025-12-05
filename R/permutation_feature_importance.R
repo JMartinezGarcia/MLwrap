@@ -17,23 +17,23 @@ pfi_plot <- function(tidy_object, new_data = "test", metric = NULL){
 #     Regression          #
 ###########################
 
-pfi_calc <- function(model, train, test, y, task, metric, outcome_levels){
+pfi_calc <- function(model, data, y, task, metric, outcome_levels){
 
   if (task == "regression"){
 
-    pfi_results <- pfi_reg(model, test, y, metric)
+    pfi_results <- pfi_reg(model, data, y, metric)
 
   } else {
 
     if (outcome_levels == 2){
 
-      pfi_results <- pfi_bin(model, test, y, metric)
+      pfi_results <- pfi_bin(model, data, y, metric)
 
     }
 
     else{
 
-      pfi_results <- pfi_multiclass(model, test, y, metric)
+      pfi_results <- pfi_multiclass(model, data, y, metric)
 
     }
 

@@ -109,7 +109,7 @@
 #' *Computer Physics Communications, 117*(1-2), 35–43.
 #' \doi{10.1016/S0010-4655(98)00154-4}
 #' @export
-sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = NULL){
+sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = NULL, use_test = FALSE){
 
   check_args_sensitivity_analysis(analysis_object = analysis_object, methods = methods, metric = metric)
 
@@ -122,6 +122,16 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
   if (task == "classification"){
 
     y_classes = levels(analysis_object$data$transformed$train_data[[y]])
+
+  }
+
+  if (use_test){
+
+    data <- analysis_object$data$transformed$test_data
+
+  } else {
+
+    data <- analysis_object$data$transformed$train_data
 
   }
 
@@ -161,7 +171,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
       }
     }
 
-    results <- pfi_calc(model = model_parsnip, train = analysis_object$data$transformed$train_data, test = analysis_object$data$transformed$test_data, y = y,
+    results <- pfi_calc(model = model_parsnip, data = data, y = y,
                         task = task, metric = metric, outcome_levels = analysis_object$outcome_levels)
 
     sensitivity_analysis_list[["PFI"]] <- results
@@ -199,11 +209,11 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
     method_name = "SHAP"
 
     results <- shap_calc(model = model_parsnip, train = analysis_object$data$transformed$train_data, test = analysis_object$data$transformed$test_data, y = y,
-                         task = task, outcome_levels = analysis_object$outcome_levels)
+                         task = task, outcome_levels = analysis_object$outcome_levels, use_test = use_test)
 
     sensitivity_analysis_list[["SHAP"]] <- results
 
-    test <- analysis_object$data$transformed$test_data[analysis_object$feature_names]
+    X_orig <- data[analysis_object$feature_names]
 
     if (analysis_object$outcome_levels > 2){
 
@@ -228,7 +238,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       shap_long <- build_importance_long(
         results = results,
-        X_orig = test,
+        X_orig = X_orig,
         y_classes = y_classes
       )
 
@@ -247,7 +257,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     plot_ob[[plot_name]] = p
 
-    p <- plot2(results, test, func = function(x) mean(x),
+    p <- plot2(results, X_orig, func = function(x) mean(x),
             func_se = function(x) sd(x),
             x_label = "Mean (SHAP * sign(X))",
             title = "Directional SHAP Values")
@@ -262,7 +272,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     plot_ob[[plot_name]] = p
 
-    p <- plot_beeswarm(results, X_orig = test, x_label = "SHAP value", title = "SHAP Swarm Plot")
+    p <- plot_beeswarm(results, X_orig = X_orig, x_label = "SHAP value", title = "SHAP Swarm Plot")
 
     plot_name <- paste0(method_name, "_swarmplot")
 
@@ -270,7 +280,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     table_name <- paste0(method_name)
 
-    table_ob[[table_name]] <- summarize_importance(results, analysis_object$data$transformed$test_data, feature_names)
+    table_ob[[table_name]] <- summarize_importance(results, X_orig, feature_names)
 
     }
 
@@ -281,11 +291,11 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
     method_name = "IntegratedGradients"
 
     results <- IntGrad_calc(model = model_parsnip, train = analysis_object$data$transformed$train_data, test = analysis_object$data$transformed$test_data, y = y,
-                            task = task, outcome_levels = analysis_object$outcome_levels)
+                            task = task, outcome_levels = analysis_object$outcome_levels, use_test = use_test)
 
     sensitivity_analysis_list[["IntegratedGradients"]] <- results
 
-    test <- analysis_object$data$transformed$test_data[analysis_object$feature_names]
+    X_orig <- data[analysis_object$feature_names]
 
     if (analysis_object$outcome_levels > 2){
 
@@ -315,7 +325,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       ig_long <- build_importance_long(
         results = results,
-        X_orig = test,
+        X_orig = X_orig,
         y_classes = y_classes
       )
 
@@ -337,7 +347,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       plot_ob[[plot_name]] = p
 
-      p <- plot2(results, test, func = function(x) mean(x),
+      p <- plot2(results, X_orig, func = function(x) mean(x),
             func_se = function(x) sd(x),
             x_label = "Integradient Gradient Correlation",
             title = "Directional Sensitivity of Integrated Gradients")
@@ -352,7 +362,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       plot_ob[[plot_name]] = p
 
-      p <- plot_beeswarm(results, X_orig = test, x_label = "Integrated Gradient value",
+      p <- plot_beeswarm(results, X_orig = X_orig, x_label = "Integrated Gradient value",
                     title = "Integrated Gradients Swarm Plot")
 
       plot_name <- paste0(method_name,"_swarmplot")
@@ -361,7 +371,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       table_name <- paste0(method_name)
 
-      table_ob[[table_name]] <- summarize_importance(results, analysis_object$data$transformed$test_data, feature_names)
+      table_ob[[table_name]] <- summarize_importance(results, X_orig, feature_names)
 
     }
 
@@ -466,7 +476,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
   if ("Friedman H-stat" %in% methods){
 
 
-    h2_tables <- calc_hstats(analysis_object)
+    h2_tables <- calc_hstats(analysis_object, use_test)
 
     table_ob[["H^2 Total"]] <- h2_tables$h2_total
     table_ob[["H^2 Pairwise Normalized"]] <- h2_tables$h2_pairwise_norm

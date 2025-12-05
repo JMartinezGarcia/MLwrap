@@ -1,19 +1,19 @@
-calc_hstats <- function(analysis_object){
+calc_hstats <- function(analysis_object, use_test = FALSE){
 
   task <- analysis_object$task
   outcome_levels <- analysis_object$outcome_levels
 
   if (task == "regression"){
 
-    h2_tables <- calc_hstats_regression(analysis_object)
+    h2_tables <- calc_hstats_regression(analysis_object, use_test)
 
   } else if (outcome_levels == 2){
 
-    h2_tables <- calc_hstats_binary(analysis_object)
+    h2_tables <- calc_hstats_binary(analysis_object, use_test)
 
   } else {
 
-    h2_tables <- calc_hstats_multiclass(analysis_object)
+    h2_tables <- calc_hstats_multiclass(analysis_object, use_test)
 
   }
 
@@ -22,10 +22,19 @@ calc_hstats <- function(analysis_object){
 }
 
 
-calc_hstats_regression <- function(analysis_object){
+calc_hstats_regression <- function(analysis_object, use_test){
+
+  if (use_test){
+
+    train_data <- analysis_object$data$raw$test_data %>%
+      dplyr::select(-dplyr::all_of(analysis_object$dep_var))
+
+  } else {
 
   train_data <- analysis_object$data$raw$train_data %>%
     dplyr::select(-dplyr::all_of(analysis_object$dep_var))
+
+  }
 
   hstats_object <- comp_hstats(analysis_object$final_model,
                                train_data,
@@ -79,10 +88,19 @@ calc_hstats_regression <- function(analysis_object){
 }
 
 
-calc_hstats_binary <- function(analysis_object){
+calc_hstats_binary <- function(analysis_object, use_test){
 
-  train_data <- analysis_object$data$raw$train_data %>%
-              dplyr::select(-dplyr::all_of(analysis_object$dep_var))
+  if (use_test){
+
+    train_data <- analysis_object$data$raw$test_data %>%
+      dplyr::select(-dplyr::all_of(analysis_object$dep_var))
+
+  } else {
+
+    train_data <- analysis_object$data$raw$train_data %>%
+      dplyr::select(-dplyr::all_of(analysis_object$dep_var))
+
+  }
 
   hstats_object <- comp_hstats(analysis_object$final_model,
                                train_data,
@@ -136,10 +154,19 @@ calc_hstats_binary <- function(analysis_object){
 }
 
 
-calc_hstats_multiclass <- function(analysis_object){
+calc_hstats_multiclass <- function(analysis_object, use_test){
 
-  train_data <- analysis_object$data$raw$train_data %>%
-    dplyr::select(-dplyr::all_of(analysis_object$dep_var))
+  if (use_test){
+
+    train_data <- analysis_object$data$raw$test_data %>%
+      dplyr::select(-dplyr::all_of(analysis_object$dep_var))
+
+  } else {
+
+    train_data <- analysis_object$data$raw$train_data %>%
+      dplyr::select(-dplyr::all_of(analysis_object$dep_var))
+
+  }
 
   hstats_object <- comp_hstats_mult(analysis_object$final_model,
                                train_data,
