@@ -978,6 +978,16 @@ plot_pdp <- function(analysis_object, feature,
     alpha = 1
   )
 
+  if (use_test){
+
+    p$labels$title <- paste0(p$labels$title, " (Test Data)")
+
+  } else {
+
+    p$labels$title <- paste0(p$labels$title, " (Train Data)")
+
+  }
+
   if (plot){
 
     plot(p)
@@ -1076,10 +1086,20 @@ plot_ale <- function(analysis_object,feature,
     ggplot2::labs(
       x = feature,
       y = "ALE",
-      title = paste("ALE effect of", feature,
+      title = paste("ALE Plot of", feature,
                     if (!is.null(group)) paste("grouped by", group))
     ) +
     ggplot2::theme_gray()
+
+  if (use_test){
+
+    p$labels$title <- paste0(p$labels$title, " (Test Data)")
+
+  } else {
+
+    p$labels$title <- paste0(p$labels$title, " (Train Data)")
+
+  }
 
   if (plot){
 

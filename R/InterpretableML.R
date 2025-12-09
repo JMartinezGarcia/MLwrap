@@ -129,9 +129,13 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     data <- analysis_object$data$transformed$test_data
 
+    data_label <- " (Test Data)"
+
   } else {
 
     data <- analysis_object$data$transformed$train_data
+
+    data_label <- " (Train Data)"
 
   }
 
@@ -188,11 +192,18 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
       )
 
       table_ob[["PFI"]] <- final_table
-      plot_ob[["PFI_barplot"]] <- plot_multi_pfi(final_table)
+
+      p <- plot_multi_pfi(final_table)
+
+      p$labels$title <- paste0(p$labels$title, data_label)
+
+      plot_ob[["PFI_barplot"]] <- p
 
     } else{
 
       p <- plot_barplot(results, func = NULL, title = "Permutation Feature Importance", x_label = "Importance")
+
+      p$labels$title <- paste0(p$labels$title, data_label)
 
       plot_name <- paste0(method_name,"_barplot")
 
@@ -222,7 +233,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
         lapply(y_classes, function(cls) {
           df <- summarize_importance(
             results[[cls]],
-            analysis_object$data$transformed$test_data,
+            X_orig,
             feature_names
           )
           df$output_class <- cls
@@ -232,9 +243,17 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
       table_ob[["SHAP"]] <- final_table
 
-      plot_ob[["SHAP_barplot"]]  <- plot_multi_abs(final_table, "Mean |SHAP|", "Mean |SHAP| Barplot")
+      p1 <- plot_multi_abs(final_table, "Mean |SHAP|", "Mean |SHAP| Barplot")
 
-      plot_ob[["SHAP_directional"]] <- plot_multi_directional(final_table, "SHAP Directional Plot")
+      p1$labels$title <- paste0(p1$labels$title, data_label)
+
+      plot_ob[["SHAP_barplot"]]  <- p1
+
+      p2 <- plot_multi_directional(final_table, "SHAP Directional Plot")
+
+      p2$labels$title <- paste0(p2$labels$title, data_label)
+
+      plot_ob[["SHAP_directional"]] <- p2
 
       shap_long <- build_importance_long(
         results = results,
@@ -242,16 +261,16 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
         y_classes = y_classes
       )
 
-      plot_ob[["SHAP_boxplot"]] <- plot_boxplot_multi(shap_long, "SHAP value", "SHAP Boxplot")
+      plot_ob[["SHAP_boxplot"]] <- plot_boxplot_multi(shap_long, "SHAP value", paste0("SHAP Boxplot", data_label))
 
-      plot_ob[["SHAP_swarmplot"]] <- plot_beeswarm_multi(shap_long, "SHAP value", "SHAP Beeswarm Plot")
+      plot_ob[["SHAP_swarmplot"]] <- plot_beeswarm_multi(shap_long, "SHAP value", paste0("SHAP Beeswarm Plot", data_label))
 
     } else{
 
     p <- plot_barplot(results, func = function(x) mean(abs(x)),
                  func_se = function(x) sd(abs(x)) / sqrt(length(x)),
                  x_label = "Mean |SHAP|",
-                 title = "Mean |SHAP| value")
+                 title = paste0("Mean |SHAP| value", data_label))
 
     plot_name <- paste0(method_name, "_barplot")
 
@@ -260,19 +279,18 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
     p <- plot2(results, X_orig, func = function(x) mean(x),
             func_se = function(x) sd(x),
             x_label = "Mean (SHAP * sign(X))",
-            title = "Directional SHAP Values")
+            title = paste0("Directional SHAP Values", data_label))
 
     plot_name <- paste0(method_name, "_directional")
 
     plot_ob[[plot_name]] = p
 
-    p <- plot_boxplot(results, y_label = "SHAP value", title = "SHAP Value Distribution")
-
+    p <- plot_boxplot(results, y_label = "SHAP value", title = paste0("SHAP Value Distribution", data_label))
     plot_name <- paste0(method_name, "_boxplot")
 
     plot_ob[[plot_name]] = p
 
-    p <- plot_beeswarm(results, X_orig = X_orig, x_label = "SHAP value", title = "SHAP Swarm Plot")
+    p <- plot_beeswarm(results, X_orig = X_orig, x_label = "SHAP value", title = paste0("SHAP Swarm Plot", data_label))
 
     plot_name <- paste0(method_name, "_swarmplot")
 
@@ -304,7 +322,7 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
         lapply(y_classes, function(cls) {
           df <- summarize_importance(
             results[[cls]],
-            analysis_object$data$transformed$test_data,
+            X_orig,
             feature_names
           )
           df$output_class <- cls
@@ -317,11 +335,11 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
       plot_ob[["IntegratedGradients_barplot"]] <-
         plot_multi_abs(final_table,
                        y_label = "Mean |Integrated Gradients|",
-                       title = "Mean |Integrated Gradients| (Multiclass)")
+                       title = paste0("Mean |Integrated Gradients|", data_label))
 
       plot_ob[["IntegratedGradients_directional"]] <-
         plot_multi_directional(final_table,
-                               title = "Directional Integrated Gradients (Multiclass)")
+                               title = paste0("Directional Integrated Gradients", data_label))
 
       ig_long <- build_importance_long(
         results = results,
@@ -330,17 +348,17 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
       )
 
       plot_ob[["IntegratedGradients_boxplot"]] <-
-        plot_boxplot_multi(ig_long, y_label = "Integrated Gradient", title = "Integrated Gradient Boxplot")
+        plot_boxplot_multi(ig_long, y_label = "Integrated Gradient", title = paste0("Integrated Gradient Boxplot", data_label))
 
       plot_ob[["IntegratedGradients_swarmplot"]] <-
-        plot_beeswarm_multi(ig_long, x_label = "Integrated Gradient", title = "Integrated Gradient Beeswarm")
+        plot_beeswarm_multi(ig_long, x_label = "Integrated Gradient", title = paste0("Integrated Gradient Beeswarm", data_label))
 
     } else{
 
       p <- plot_barplot(results, func = function(x) mean(abs(x)),
                    func_se = function(x) sd(abs(x)) / sqrt(length(x)),
                    x_label = "Mean |Integrated Gradient|",
-                   title = "Mean |Integrated Gradients| "
+                   title = paste0("Mean |Integrated Gradients|", data_label)
                    )
 
       plot_name <- paste0(method_name,"_barplot")
@@ -350,20 +368,20 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
       p <- plot2(results, X_orig, func = function(x) mean(x),
             func_se = function(x) sd(x),
             x_label = "Integradient Gradient Correlation",
-            title = "Directional Sensitivity of Integrated Gradients")
+            title = paste0("Directional Sensitivity of Integrated Gradients", data_label))
 
       plot_name <- paste0(method_name,"_directional")
 
       plot_ob[[plot_name]] = p
 
-      p <- plot_boxplot(results, y_label = "Integrated Gradient value", title = "Integrated Gradients Distribution")
+      p <- plot_boxplot(results, y_label = "Integrated Gradient value", title = paste0("Integrated Gradients Distribution", data_label))
 
       plot_name <- paste0(method_name,"_boxplot")
 
       plot_ob[[plot_name]] = p
 
       p <- plot_beeswarm(results, X_orig = X_orig, x_label = "Integrated Gradient value",
-                    title = "Integrated Gradients Swarm Plot")
+                    title = paste0("Integrated Gradients Swarm Plot", data_label))
 
       plot_name <- paste0(method_name,"_swarmplot")
 
@@ -484,13 +502,25 @@ sensitivity_analysis <- function(analysis_object, methods = c("PFI"), metric = N
 
     # plot
 
-    plot_ob[["H^2 Total"]] <- hstat_total_plot(h2_tables$h2_total,
-                                               outcome_levels = analysis_object$outcome_levels)
-    plot_ob[["H^2 Pairwise Normalized"]] <- hstat_pairwise_plot(h2_tables$h2_pairwise_norm,
-                                                                outcome_levels = analysis_object$outcome_levels)
-    plot_ob[["H^2 Pairwise Raw"]] <- hstat_pairwise_plot(h2_tables$h2_pairwise_raw,
-                                                         outcome_levels = analysis_object$outcome_levels,
-                                                         normalized = FALSE)
+    p1 <- hstat_total_plot(h2_tables$h2_total, outcome_levels = analysis_object$outcome_levels)
+
+    p1$labels$title <- paste0(p1$labels$title, data_label)
+
+    plot_ob[["H^2 Total"]] <- p1
+
+    p2 <- hstat_pairwise_plot(h2_tables$h2_pairwise_norm, outcome_levels = analysis_object$outcome_levels)
+
+    p2$labels$title <- paste0(p2$labels$title, data_label)
+
+    plot_ob[["H^2 Pairwise Normalized"]] <- p2
+
+    p3 <- hstat_pairwise_plot(h2_tables$h2_pairwise_raw,
+                              outcome_levels = analysis_object$outcome_levels,
+                              normalized = FALSE)
+
+    p3$labels$title <- paste0(p3$labels$title, data_label)
+
+    plot_ob[["H^2 Pairwise Raw"]] <- p3
 
   }
 
