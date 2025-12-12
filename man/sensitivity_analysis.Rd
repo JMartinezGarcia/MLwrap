@@ -4,7 +4,12 @@
 \alias{sensitivity_analysis}
 \title{Perform Sensitivity Analysis and Interpretable ML methods}
 \usage{
-sensitivity_analysis(analysis_object, methods = c("PFI"), metric = NULL)
+sensitivity_analysis(
+  analysis_object,
+  methods = c("PFI"),
+  metric = NULL,
+  use_test = FALSE
+)
 }
 \arguments{
 \item{analysis_object}{analysis_object created from fine_tuning function.}
@@ -12,10 +17,13 @@ sensitivity_analysis(analysis_object, methods = c("PFI"), metric = NULL)
 \item{methods}{Method to be used. A string of the method name: "PFI"
 (Permutation Feature Importance), "SHAP" (SHapley Additive exPlanations),
 "Integrated Gradients" (Neural Network only), "Olden" (Neural Networks
-only), "Sobol_Jansen" (only when all input features are continuous).}
+only), "Sobol_Jansen" (only when all input features are continuous),
+"Friedman H-stat" (Friedman's H-statistics for feature interaction).}
 
 \item{metric}{Metric used for "PFI" method (Permutation Feature Importance).
 A string of the name of metric (see Metrics).}
+
+\item{use_test}{Logical. Compute methods using the test set instead of the training set (default = FALSE).}
 }
 \value{
 An updated \code{analysis_object} containing sensitivity
@@ -69,6 +77,14 @@ features and their interactions. Quantifies how much each feature
 accounts for prediction variability. Only for continuous outcomes.
 Estimates first-order and total-order Sobol indices using the Jansen
 (1999) Monte Carlo estimator.
+\item \strong{Friedman H-Statistic:}
+Computes the Friedman H-statistic for \strong{each feature}, measuring the strength
+of interaction effects relative to main effects, following the formulation in
+\emph{Interpretable Machine Learning} (Christoph Molnar).
+
+After ranking features by global H-statistic, the top 5 features are selected
+and \strong{all their pairwise interactions} are computed, returning both
+\strong{raw interaction strength} and \strong{normalized interaction scores} (0–1).
 }
 
 For classification tasks with more than two outcome levels, the function
@@ -113,6 +129,9 @@ analysis methods. In: G. Dellino & C. Meloni (Eds.),
 Complex Systems. Operations Research/Computer Science Interfaces
 Series} (vol. 59). Springer, Boston, MA.
 \doi{10.1007/978-1-4899-7547-8_5}
+
+Molnar, C. (2022). \emph{Interpretable Machine Learning}.
+https://christophm.github.io/interpretable-ml-book/
 
 Jansen, M. J. W. (1999). Analysis of variance designs for model output.
 \emph{Computer Physics Communications, 117}(1-2), 35–43.

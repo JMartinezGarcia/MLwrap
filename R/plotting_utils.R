@@ -833,7 +833,7 @@ plot_sobol_jansen <- function(analysis_object, show_table = FALSE){
 #' Expectation (ICE) curves can be added to visualize heterogeneous effects.
 #'
 #' @param wrap_object A fitted `wrap_object` containing model results or previously computed PDP values.
-#' @param feature Character. The feature for which the PDP should be computed.
+#' @param feature Character. The continuous feature for which the PDP should be computed.
 #' @param group_by Optional character. A variable used to produce grouped PDP curves.
 #' @param grid_size Integer. Number of points used to evaluate the PDP (default = 25).
 #' @param show_ice Logical. Whether to overlay ICE curves (default = TRUE).
