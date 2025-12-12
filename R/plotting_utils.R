@@ -842,20 +842,16 @@ plot_sobol_jansen <- function(analysis_object, show_table = FALSE){
 #' @param use_test Logical. Compute PDP using the test set instead of the training set (default = FALSE).
 #' @param plot Logical. If TRUE, prints the PDP plot and returns `wrap_object`;
 #' if FALSE, returns the ggplot object without modifying the object.
-#'
 #' @returns
 #' If `plot = TRUE`, returns the updated `wrap_object` and prints the PDP plot.
 #' If `plot = FALSE`, returns a ggplot object containing the PDP (and optionally ICE) visualization.
-#'
 #' @examples
 #' # After fitting model with fine_tuning(wrap_object):
 #' # plot_pdp(wrap_object, feature = "age")
-#'
 #' @seealso \code{\link{sensitivity_analysis}}
 #' @references
 #' Molnar, C. (2022). *Interpretable Machine Learning*.
 #' https://christophm.github.io/interpretable-ml-book/
-#'
 #' @export
 plot_pdp <- function(analysis_object, feature,
                                          group_by = NULL,
@@ -1028,20 +1024,16 @@ plot_pdp <- function(analysis_object, feature,
 #' @param use_test Logical. If TRUE, ALE is computed using the test set (default = FALSE).
 #' @param plot Logical. If TRUE, displays the ALE plot and returns `wrap_object`;
 #' if FALSE, returns the ggplot object without modifying the object.
-#'
 #' @returns
 #' If `plot = TRUE`, returns the updated `wrap_object` and prints the ALE plot.
 #' If `plot = FALSE`, returns a ggplot object containing the ALE visualization.
-#'
 #' @examples
 #' # After fitting a model with fine_tuning(wrap_object):
 #' # plot_ale(wrap_object, feature = "age")
-#'
 #' @seealso \code{\link{sensitivity_analysis}}
 #' @references
 #' Molnar, C. (2022). *Interpretable Machine Learning*.
 #' https://christophm.github.io/interpretable-ml-book/
-#'
 #' @export
 plot_ale <- function(analysis_object,feature,
                           group = NULL, grid.size = 20,
