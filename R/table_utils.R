@@ -510,3 +510,142 @@ table_sobol_jansen_results <- function(analysis_object, show_table = FALSE){
   invisible(sobol)
 
 }
+
+#' Friedman's H-Statistic Table
+#'
+#' @description
+#' The **table_h2_total()** function computes the **global Friedman H-statistic**
+#' for each feature, quantifying how much of a variable's predictive contribution
+#' arises from interactions with other features rather than from its individual
+#' main effect. This metric provides a model-agnostic measure of overall
+#' interaction strength, following the formulation presented in
+#' *Interpretable Machine Learning* by Christoph Molnar.
+#'
+#' The resulting table ranks all features by their global H-statistic, helping
+#' identify which predictors participate most in interaction-driven behavior.
+#'
+#' @param wrap_object A fitted `wrap_object` containing results from
+#' `sensitivity_analysis(methods = "Friedman H-stat")` or compatible internal computations.
+#' @param show_table Logical. If TRUE, prints the table (default = FALSE).
+#'
+#' @returns
+#' A dataframe containing the global H-statistic for each feature.
+#'
+#' @examples
+#' # After running sensitivity_analysis(wrap_object, methods = "Friedman H-stat"):
+#' # table_h2 <- table_h2_total(wrap_object)
+#'
+#' @seealso \code{\link{sensitivity_analysis}}
+#'
+#' @references
+#' Molnar, C. (2022). *Interpretable Machine Learning*.
+#' https://christophm.github.io/interpretable-ml-book/
+#'
+#' @export
+table_h2_total <- function(analysis_object, show_table = FALSE){
+
+  ### Check_args
+
+  h2_total <- analysis_object$tables$`H^2 Total`
+
+  if (is.null(h2_total)){
+
+    stop("You first need to compute Friedman's H-statistic values using 'sensitivity_analysis()'!")
+
+  }
+
+  if (base::interactive() && show_table){
+
+    cli::cli_h1("Friedman's H-statistic Results")
+
+    print(tibble::as_tibble(h2_total))
+
+    cli::cat_line()
+
+  }
+
+
+  invisible(h2_total)
+
+}
+
+#' Friedman's H-Statistic Pairwise Interaction Table
+#'
+#' @description
+#' The **table_pairwise_interaction()** function computes **pairwise interaction
+#' strengths** between predictors using **Friedman's H-statistic**, following the
+#' formulation described in *Interpretable Machine Learning* by Christoph Molnar.
+#'
+#' While the global H-statistic summarizes the overall interaction strength of
+#' each individual feature, this function focuses specifically on **pairwise
+#' feature interactions**, quantifying how strongly two variables interact in
+#' influencing the model's predictions.
+#'
+#' If `normalize = TRUE`, interaction scores are returned on a **0–1 scale** for
+#' ease of comparison; if `FALSE`, raw interaction magnitudes are returned.
+#'
+#' @param wrap_object A fitted `wrap_object` containing results from
+#' `sensitivity_analysis(methods = "Friedman H-stat")` with pairwise
+#' interactions computed internally.
+#' @param show_table Logical. If TRUE, prints the resulting interaction table
+#' to the console (default = FALSE).
+#' @param normalize Logical. If TRUE (default), returns **normalized** pairwise
+#' interaction strengths; if FALSE, returns **raw** interaction values.
+#'
+#' @returns
+#' A tibble containing pairwise interaction strengths between all feature pairs,
+#' in either normalized or raw form depending on the `normalize` argument.
+#'
+#' @examples
+#' # After running:
+#' # wrap_object <- sensitivity_analysis(wrap_object, methods = "Friedman H-stat")
+#' #
+#' # Obtain normalized pairwise interactions:
+#' # table_norm <- table_pairwise_interaction(wrap_object)
+#' #
+#' # Obtain raw interaction strengths:
+#' # table_raw <- table_pairwise_interaction(wrap_object, normalize = FALSE)
+#'
+#' @seealso \code{\link{sensitivity_analysis}},
+#'   \code{\link{table_h2_total}}
+#'
+#' @references
+#' Molnar, C. (2022). *Interpretable Machine Learning*.
+#' https://christophm.github.io/interpretable-ml-book/
+#'
+#' @export
+table_pairwise_interaction <- function(analysis_object, show_table = FALSE, normalize = TRUE){
+
+  ### Check_args
+
+  if (normalize){
+
+    h2_pair <- analysis_object$tables$`H^2 Pairwise Normalized`
+
+  } else {
+
+    h2_pair <- analysis_object$tables$`H^2 Pairwise Raw`
+
+  }
+
+  if (is.null(h2_pair)){
+
+    stop("You first need to compute Friedman's H-statistic values using 'sensitivity_analysis()'!")
+
+  }
+
+  if (base::interactive() && show_table){
+
+    cli::cli_h1("Friedman's H-statistic Pairwise Interaction")
+
+    print(tibble::as_tibble(h2_pair))
+
+    cli::cat_line()
+
+  }
+
+
+  invisible(h2_pair)
+
+}
+

@@ -32,7 +32,9 @@
 #' @param methods Method to be used. A string of the method name: "PFI"
 #'     (Permutation Feature Importance), "SHAP" (SHapley Additive exPlanations),
 #'     "Integrated Gradients" (Neural Network only), "Olden" (Neural Networks
-#'     only), "Sobol_Jansen" (only when all input features are continuous).
+#'     only), "Sobol_Jansen" (only when all input features are continuous),
+#'     "Friedman H-stat" (Friedman's H-statistics for feature interaction).
+#' @param use_test Logical. Compute methods using the test set instead of the training set (default = FALSE).
 #' @param  metric Metric used for "PFI" method (Permutation Feature Importance).
 #'     A string of the name of metric (see Metrics).
 #' @details
@@ -57,6 +59,14 @@
 #'     accounts for prediction variability. Only for continuous outcomes.
 #'     Estimates first-order and total-order Sobol indices using the Jansen
 #'     (1999) Monte Carlo estimator.
+#' - **Friedman H-Statistic:**
+#'   Computes the Friedman H-statistic for **each feature**, measuring the strength
+#'   of interaction effects relative to main effects, following the formulation in
+#'   *Interpretable Machine Learning* (Christoph Molnar).
+#'
+#'   After ranking features by global H-statistic, the top 5 features are selected
+#'   and **all their pairwise interactions** are computed, returning both
+#'   **raw interaction strength** and **normalized interaction scores** (0–1).
 #'
 #' For classification tasks with more than two outcome levels, the function
 #' generates separate results and plots for each class. Visualizations include
@@ -104,6 +114,9 @@
 #' Complex Systems. Operations Research/Computer Science Interfaces
 #' Series} (vol. 59). Springer, Boston, MA.
 #' \doi{10.1007/978-1-4899-7547-8_5}
+#'
+#' Molnar, C. (2022). *Interpretable Machine Learning*.
+#' https://christophm.github.io/interpretable-ml-book/
 #'
 #' Jansen, M. J. W. (1999). Analysis of variance designs for model output.
 #' *Computer Physics Communications, 117*(1-2), 35–43.

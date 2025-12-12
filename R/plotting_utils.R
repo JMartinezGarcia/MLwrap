@@ -822,30 +822,40 @@ plot_sobol_jansen <- function(analysis_object, show_table = FALSE){
 
 }
 
-#' Plotting Partial Dependence Plot
+#' Plot Partial Dependence (PDP)
 #'
 #' @description
+#' The **plot_pdp()** function computes and visualizes **Partial Dependence Plots (PDP)**
+#' for a selected feature, following the methodology described in
+#' *Interpretable Machine Learning* by Christoph Molnar.
+#' PDPs show the average effect of a feature on model predictions by marginalizing
+#' over the distribution of all other features. Optionally, Individual Conditional
+#' Expectation (ICE) curves can be added to visualize heterogeneous effects.
 #'
-#' The **plot_pfi()** function generates feature importance estimates via
-#' Permutation Feature Importance measuring performance degradation when each
-#' feature's values are randomly permuted while holding all other features
-#' constant. Provides model-agnostic importance ranking independent of
-#' feature-target correlation patterns, capturing both linear and non-linear
-#' predictive contributions to model performance.
+#' @param wrap_object A fitted `wrap_object` containing model results or previously computed PDP values.
+#' @param feature Character. The feature for which the PDP should be computed.
+#' @param group_by Optional character. A variable used to produce grouped PDP curves.
+#' @param grid_size Integer. Number of points used to evaluate the PDP (default = 25).
+#' @param show_ice Logical. Whether to overlay ICE curves (default = TRUE).
+#' @param ice_n Integer. Number of ICE curves to sample if `show_ice = TRUE` (default = 50).
+#' @param pdp_line_size Numeric. Line width for the PDP curve (default = 1.1).
+#' @param use_test Logical. Compute PDP using the test set instead of the training set (default = FALSE).
+#' @param plot Logical. If TRUE, prints the PDP plot and returns `wrap_object`;
+#' if FALSE, returns the ggplot object without modifying the object.
 #'
-#' @param analysis_object Fitted analysis_object with
-#' 'sensitivity_analysis(methods = "PFI")'.
-#' @param show_table Boolean. Whether to print PFI results table.
-#' @returns analysis_object
+#' @returns
+#' If `plot = TRUE`, returns the updated `wrap_object` and prints the PDP plot.
+#' If `plot = FALSE`, returns a ggplot object containing the PDP (and optionally ICE) visualization.
+#'
 #' @examples
-#' # Note: For obtaining the PFI plot results the user needs to complete till
-#' # sensitivity_analysis( ) function of the MLwrap pipeline using the PFI
-#' # method.
-#' # See the full pipeline example under sensitivity_analysis()
-#' # (Requires sensitivity_analysis(methods = "PFI"))
-#' # Final call signature:
-#' # plot_pfi(wrap_object)
+#' # After fitting model with fine_tuning(wrap_object):
+#' # plot_pdp(wrap_object, feature = "age")
+#'
 #' @seealso \code{\link{sensitivity_analysis}}
+#' @references
+#' Molnar, C. (2022). *Interpretable Machine Learning*.
+#' https://christophm.github.io/interpretable-ml-book/
+#'
 #' @export
 plot_pdp <- function(analysis_object, feature,
                                          group_by = NULL,
@@ -1001,30 +1011,37 @@ plot_pdp <- function(analysis_object, feature,
   }
 }
 
-#' Plotting Accumulated Local Effects Plot
+#' Plot Accumulated Local Effects (ALE)
 #'
 #' @description
+#' The **plot_ale()** function computes and visualizes **Accumulated Local Effects (ALE)**
+#' for a selected feature, following the approach described in
+#' *Interpretable Machine Learning* by Christoph Molnar.
+#' ALE plots quantify how changes in a feature locally influence model predictions,
+#' offering a robust alternative to Partial Dependence Plots (PDP) by avoiding extrapolation
+#' and handling correlated predictors more reliably.
 #'
-#' The **plot_pfi()** function generates feature importance estimates via
-#' Permutation Feature Importance measuring performance degradation when each
-#' feature's values are randomly permuted while holding all other features
-#' constant. Provides model-agnostic importance ranking independent of
-#' feature-target correlation patterns, capturing both linear and non-linear
-#' predictive contributions to model performance.
+#' @param wrap_object A fitted `wrap_object` containing model results or previously computed ALE values.
+#' @param feature Character. Name of the continuous feature for which ALE should be computed.
+#' @param group Optional character. A grouping variable to compute grouped ALE curves.
+#' @param grid.size Integer. Number of intervals to partition the feature domain (default = 20).
+#' @param use_test Logical. If TRUE, ALE is computed using the test set (default = FALSE).
+#' @param plot Logical. If TRUE, displays the ALE plot and returns `wrap_object`;
+#' if FALSE, returns the ggplot object without modifying the object.
 #'
-#' @param analysis_object Fitted analysis_object with
-#' 'sensitivity_analysis(methods = "PFI")'.
-#' @param show_table Boolean. Whether to print PFI results table.
-#' @returns analysis_object
+#' @returns
+#' If `plot = TRUE`, returns the updated `wrap_object` and prints the ALE plot.
+#' If `plot = FALSE`, returns a ggplot object containing the ALE visualization.
+#'
 #' @examples
-#' # Note: For obtaining the PFI plot results the user needs to complete till
-#' # sensitivity_analysis( ) function of the MLwrap pipeline using the PFI
-#' # method.
-#' # See the full pipeline example under sensitivity_analysis()
-#' # (Requires sensitivity_analysis(methods = "PFI"))
-#' # Final call signature:
-#' # plot_pfi(wrap_object)
+#' # After fitting a model with fine_tuning(wrap_object):
+#' # plot_ale(wrap_object, feature = "age")
+#'
 #' @seealso \code{\link{sensitivity_analysis}}
+#' @references
+#' Molnar, C. (2022). *Interpretable Machine Learning*.
+#' https://christophm.github.io/interpretable-ml-book/
+#'
 #' @export
 plot_ale <- function(analysis_object,feature,
                           group = NULL, grid.size = 20,

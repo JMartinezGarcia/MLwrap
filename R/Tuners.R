@@ -6,15 +6,48 @@ create_workflow <- function(analysis_object){
 
   return(workflow)
 }
+metrics_info <- list(
+
+  #################
+  #   Regression
+  #################
+
+  rmse = c("numeric", "minimize"),
+  mae = c("numeric", "minimize"),
+  mpe = c("numeric", "minimize"),
+  mape = c("numeric", "minimize"),
+  ccc = c("numeric", "maximize"),
+  smape = c("numeric", "minimize"),
+  rpiq = c("numeric", "maximize"),
+  rsq = c("numeric", "maximize"),
+
+  #################
+  #  Classification
+  #################
+
+  accuracy = c("class", "maximize"),
+  precision = c("class", "maximize"),
+  recall = c("class", "maximize"),
+  bal_accuracy = c("class", "maximize"),
+  specificity = c("class", "maximize"),
+  sensitivity = c("class", "maximize"),
+  kap = c("class", "maximize"),
+  f_meas = c("class", "maximize"),
+  mcc = c("class", "maximize"),
+  j_index = c("class", "maximize"),
+  detection_prevalence = c("class", "maximize"),
+
+  roc_auc = c("prob", "maximize"),
+  pr_auc = c("prob", "maximize"),
+  gain_capture = c("prob", "maximize"),
+  brier_class = c("prob", "minimize"),
+  roc_aunp = c("prob", "maximize")
+)
 
 create_metric_set <- function(metrics){
-
   set_metrics <- yardstick::metric_set(!!!rlang::syms(metrics))
-
   return(set_metrics)
-
-}
-
+  }
 
 extract_hyperparams <- function(analysis_object){
 

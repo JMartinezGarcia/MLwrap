@@ -137,6 +137,7 @@ pfi_bin <- function(model, new_data, y, metric){
 
   # Calculate baseline error using standard evaluation
   if (metrics_info[[metric]][1] == "prob"){
+    metric_func <- get(metric, envir = asNamespace("yardstick"))
     df_baseline <- data.frame(truth = y_true, .pred_1 = predictions_baseline, check.names = FALSE)
     error_baseline <- metric_func(df_baseline, truth = "truth", ".pred_1", event_level = "second")$.estimate
   } else {
@@ -244,6 +245,7 @@ pfi_multiclass <- function(model, new_data, y, metric){
 
     # Calculate baseline error using standard evaluation
     if (metrics_info[[metric]][1] == "prob"){
+      metric_func <- get(metric, envir = asNamespace("yardstick"))
       df_baseline <- data.frame(truth = y_true, .pred_1 = predictions_baseline, check.names = FALSE)
       error_baseline <- metric_func(df_baseline, truth = "truth", ".pred_1", event_level = "second")$.estimate
     } else {
