@@ -77,7 +77,7 @@ features and their interactions. Quantifies how much each feature
 accounts for prediction variability. Only for continuous outcomes.
 Estimates first-order and total-order Sobol indices using the Jansen
 (1999) Monte Carlo estimator.
-\item \strong{Friedman H-Statistic:}
+\item \strong{Friedman H-stat:}
 Computes the Friedman H-statistic for \strong{each feature}, measuring the strength
 of interaction effects relative to main effects, following the formulation in
 \emph{Interpretable Machine Learning} (Christoph Molnar).

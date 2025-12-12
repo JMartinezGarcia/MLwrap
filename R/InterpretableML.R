@@ -59,7 +59,7 @@
 #'     accounts for prediction variability. Only for continuous outcomes.
 #'     Estimates first-order and total-order Sobol indices using the Jansen
 #'     (1999) Monte Carlo estimator.
-#' - **Friedman H-Statistic:**
+#' - **Friedman H-stat:**
 #'   Computes the Friedman H-statistic for **each feature**, measuring the strength
 #'   of interaction effects relative to main effects, following the formulation in
 #'   *Interpretable Machine Learning* (Christoph Molnar).
