@@ -14,6 +14,8 @@ plot_ale(
 )
 }
 \arguments{
+\item{analysis_object}{A fitted \code{wrap_object} containing model results or previously computed ALE values.}
+
 \item{feature}{Character. Name of the continuous feature for which ALE should be computed.}
 
 \item{group}{Optional character. A grouping variable to compute grouped ALE curves.}
@@ -24,8 +26,6 @@ plot_ale(
 
 \item{plot}{Logical. If TRUE, displays the ALE plot and returns \code{wrap_object};
 if FALSE, returns the ggplot object without modifying the object.}
-
-\item{wrap_object}{A fitted \code{wrap_object} containing model results or previously computed ALE values.}
 }
 \value{
 If \code{plot = TRUE}, returns the updated \code{wrap_object} and prints the ALE plot.

@@ -2,7 +2,7 @@ plot_multi_pfi <- function(df){
 
   x_max <- max(df$Importance) * 1.2
 
-  p <- ggplot2::ggplot(df, ggplot2::aes(x = reorder(Feature, Importance),
+  p <- ggplot2::ggplot(df, ggplot2::aes(x = stats::reorder(Feature, Importance),
                                y = Importance)) +
     ggplot2::geom_col(fill = "steelblue") +
     ggplot2::geom_errorbar(ggplot2::aes(ymin = Importance - StDev,
@@ -93,7 +93,7 @@ plot_multi_abs <- function(df, y_label, title) {
 
   x_max <- max(df$Mean_Abs_Importance) * 1.2
 
-  ggplot2::ggplot(df, ggplot2::aes(x = reorder(Feature, Mean_Abs_Importance),
+  ggplot2::ggplot(df, ggplot2::aes(x = stats::reorder(Feature, Mean_Abs_Importance),
                           y = Mean_Abs_Importance)) +
 
     ggplot2::geom_col(fill = "steelblue") +
@@ -135,7 +135,7 @@ plot_multi_abs <- function(df, y_label, title) {
 
 plot_beeswarm_multi <- function(df, x_label, title) {
 
-  q <- quantile(df$val_color, c(0.02, 0.98), na.rm = TRUE)
+  q <- stats::quantile(df$val_color, c(0.02, 0.98), na.rm = TRUE)
   if (diff(q) == 0) q <- q + c(-1e-8, 1e-8)
 
   ggplot2::ggplot(df, ggplot2::aes(
@@ -270,7 +270,7 @@ plot_olden_multi <- function(df, title = "Olden Feature Importance") {
     dplyr::group_by(output_class) %>%
     dplyr::mutate(
       # per-class ordering: max positive → most negative
-      Feature_ord = reorder(Feature, -Importance),
+      Feature_ord = stats::reorder(Feature, -Importance),
 
       # label placement
       label_pos  = Importance + ifelse(Importance > 0, offset, -offset),

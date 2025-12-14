@@ -7,10 +7,10 @@
 table_h2_total(analysis_object, show_table = FALSE)
 }
 \arguments{
-\item{show_table}{Logical. If TRUE, prints the table (default = FALSE).}
-
-\item{wrap_object}{A fitted \code{wrap_object} containing results from
+\item{analysis_object}{A fitted \code{wrap_object} containing results from
 \code{sensitivity_analysis(methods = "Friedman H-stat")} or compatible internal computations.}
+
+\item{show_table}{Logical. If TRUE, prints the table (default = FALSE).}
 }
 \value{
 A dataframe containing the global H-statistic for each feature.

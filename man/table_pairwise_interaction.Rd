@@ -11,15 +11,15 @@ table_pairwise_interaction(
 )
 }
 \arguments{
+\item{analysis_object}{A fitted \code{wrap_object} containing results from
+\code{sensitivity_analysis(methods = "Friedman H-stat")} with pairwise
+interactions computed internally.}
+
 \item{show_table}{Logical. If TRUE, prints the resulting interaction table
 to the console (default = FALSE).}
 
 \item{normalize}{Logical. If TRUE (default), returns \strong{normalized} pairwise
 interaction strengths; if FALSE, returns \strong{raw} interaction values.}
-
-\item{wrap_object}{A fitted \code{wrap_object} containing results from
-\code{sensitivity_analysis(methods = "Friedman H-stat")} with pairwise
-interactions computed internally.}
 }
 \value{
 A tibble containing pairwise interaction strengths between all feature pairs,

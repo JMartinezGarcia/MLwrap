@@ -255,7 +255,7 @@ hstat_total_plot <- function(h2_total, outcome_levels){
 
     h2_long <- h2_long %>%
       dplyr::group_by(Class) %>%
-      dplyr::mutate(Feature_ord = reorder(Feature, H2)) %>%
+      dplyr::mutate(Feature_ord = stats::reorder(Feature, H2)) %>%
       dplyr::ungroup()
 
     p <- ggplot2::ggplot(

@@ -39,7 +39,7 @@ comp_ale <- function(model, X, feature, K = 20,
 
   # ---- MAIN ALE (NO GROUP) ----
   x <- X[[feature]]
-  qs <- quantile(x, seq(0, 1, length.out = K + 1))
+  qs <- stats::quantile(x, seq(0, 1, length.out = K + 1))
 
   # storage for all classes
   ale_vals <- matrix(0, nrow = K, ncol = max(1, outcome_levels))

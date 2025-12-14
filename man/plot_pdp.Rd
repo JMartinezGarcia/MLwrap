@@ -17,6 +17,8 @@ plot_pdp(
 )
 }
 \arguments{
+\item{analysis_object}{A fitted \code{wrap_object} containing model results or previously computed PDP values.}
+
 \item{feature}{Character. The continuous feature for which the PDP should be computed.}
 
 \item{group_by}{Optional character. A variable used to produce grouped PDP curves.}
@@ -33,8 +35,6 @@ plot_pdp(
 
 \item{plot}{Logical. If TRUE, prints the PDP plot and returns \code{wrap_object};
 if FALSE, returns the ggplot object without modifying the object.}
-
-\item{wrap_object}{A fitted \code{wrap_object} containing model results or previously computed PDP values.}
 }
 \value{
 If \code{plot = TRUE}, returns the updated \code{wrap_object} and prints the PDP plot.

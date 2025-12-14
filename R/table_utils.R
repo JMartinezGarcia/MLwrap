@@ -524,7 +524,7 @@ table_sobol_jansen_results <- function(analysis_object, show_table = FALSE){
 #' The resulting table ranks all features by their global H-statistic, helping
 #' identify which predictors participate most in interaction-driven behavior.
 #'
-#' @param wrap_object A fitted `wrap_object` containing results from
+#' @param analysis_object A fitted `wrap_object` containing results from
 #' `sensitivity_analysis(methods = "Friedman H-stat")` or compatible internal computations.
 #' @param show_table Logical. If TRUE, prints the table (default = FALSE).
 #'
@@ -584,7 +584,7 @@ table_h2_total <- function(analysis_object, show_table = FALSE){
 #' If `normalize = TRUE`, interaction scores are returned on a **0–1 scale** for
 #' ease of comparison; if `FALSE`, raw interaction magnitudes are returned.
 #'
-#' @param wrap_object A fitted `wrap_object` containing results from
+#' @param analysis_object A fitted `wrap_object` containing results from
 #' `sensitivity_analysis(methods = "Friedman H-stat")` with pairwise
 #' interactions computed internally.
 #' @param show_table Logical. If TRUE, prints the resulting interaction table
