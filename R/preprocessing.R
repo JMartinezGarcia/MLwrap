@@ -165,9 +165,18 @@ preprocessing <- function(df, formula, task = "regression", num_vars = NULL, cat
           # Check categorical variables are factor
 
           if (!is.null(cat_vars)) {
+            
+            # identify binary 0/1 variables
+            bin01 <- cat_vars[vapply(cat_vars, function(v) is_binary_01(df[[v]]), logical(1))]
+            
+            # drop them from categorical processing
+            cat_vars <- setdiff(cat_vars, bin01)
+            
+            if (cat_vars > 0){
 
               rec <- rec %>% recipes::step_mutate_at(all_of(cat_vars),
                                             fn = as.factor)
+            }
           }
 
           # Normalize selected numerical columns
@@ -193,6 +202,12 @@ preprocessing <- function(df, formula, task = "regression", num_vars = NULL, cat
 
           return(analysis_object)
 
+}
+
+is_binary_01 <- function(x) {
+  if (!is.numeric(x)) return(FALSE)
+  ux <- unique(na.omit(x))
+  length(ux) == 2 && all(ux %in% c(0, 1))
 }
 
 
