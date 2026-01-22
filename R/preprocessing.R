@@ -172,7 +172,7 @@ preprocessing <- function(df, formula, task = "regression", num_vars = NULL, cat
             # drop them from categorical processing
             cat_vars <- setdiff(cat_vars, bin01)
             
-            if (cat_vars > 0){
+            if (length(cat_vars) > 0){
 
               rec <- rec %>% recipes::step_mutate_at(all_of(cat_vars),
                                             fn = as.factor)
