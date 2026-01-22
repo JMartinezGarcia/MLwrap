@@ -169,6 +169,11 @@ preprocessing <- function(df, formula, task = "regression", num_vars = NULL, cat
             # identify binary 0/1 variables
             bin01 <- cat_vars[vapply(cat_vars, function(v) is_binary_01(df[[v]]), logical(1))]
             
+            # only drop binary vars that are NOT to be encoded
+            if (!is.null(encode_cat_vars)) {
+              bin01 <- setdiff(bin01, encode_cat_vars)
+            }
+            
             # drop them from categorical processing
             cat_vars <- setdiff(cat_vars, bin01)
             
