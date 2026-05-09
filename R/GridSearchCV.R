@@ -1,4 +1,4 @@
-tune_models_grid_search_cv <- function(analysis_object, sampling_method, metrics, seed = 123){
+tune_models_grid_search_cv <- function(analysis_object, sampling_method, metrics, verbose,  seed = 123){
 
   grid_hyperparams = hyperparams_grid(analysis_object$hyperparameters)
 
@@ -7,7 +7,8 @@ tune_models_grid_search_cv <- function(analysis_object, sampling_method, metrics
     allow_par     = TRUE,
     save_pred     = TRUE,
     save_workflow = TRUE,
-    parallel_over = NULL
+    parallel_over = NULL,
+    verbose = verbose
 
   )
 

@@ -113,6 +113,16 @@ pfi_reg <- function(model, new_data, y, metric){
 #####################################
 
 pfi_bin <- function(model, new_data, y, metric){
+  
+  target_class = levels(new_data[[y]])[[1]]
+  
+  predicted = paste0(".pred_", target_class)
+  
+  pred_bin <- function(object, newdata){
+    
+    return(predict(object, new_data = newdata, type = "prob")[[predicted]])
+    
+  }
 
   if (metrics_info[[metric]][1] == "prob"){
     pred_func = pred_bin

@@ -150,3 +150,30 @@ check_mtry <- function(analysis_object, hyperparameters){
   return(hyperparameters)
 
 }
+
+count_possible_combinations <- function(analysis_object) {
+  
+  ranges <- analysis_object$hyperparameters$hyperparams_ranges
+  
+  counts <- lapply(ranges, function(hp) {
+    
+    if (hp$type == "double") {
+      return(NULL)
+    }
+    
+    if (hp$type == "character") {
+      return(3L)
+    }
+    
+    lower <- hp$range$lower
+    upper <- hp$range$upper
+    
+    upper - lower + 1L
+  })
+  
+  if (any(vapply(counts, is.null, logical(1)))) {
+    return(NULL)
+  }
+  
+  prod(unlist(counts))
+}
