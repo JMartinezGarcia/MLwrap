@@ -1,6 +1,6 @@
 Package: MLwrap
 Title: Machine Learning Modelling for Everyone
-Version: 0.2.0
+Version: 0.4.0
 Authors@R: c(person(given   = "Javier", family = "Martínez García",
                     role    = "aut", 
                     email   = "javier.nezcia@gmail.com",
@@ -49,7 +49,7 @@ Imports:
     yardstick,
     glue,
     innsight,
-    fastshap,
+    shapr,
     DiagrammeR,
     ggbeeswarm,
     ggplot2,
